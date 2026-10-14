@@ -164,7 +164,8 @@ var LIJSTEN = {
 };
 
 // ── PERSONAGES — openbare informatie; portret = link naar de zwart-witfoto (leeg = tijdelijk silhouet) ──
-var SPELER = 'marco';   // ingelogde speler (komt straks uit de toegangscode)
+// ingelogde speler: in de echte app uit de toegangscode, in het canvas Marco als voorbeeld
+function ikBen() { var V = typeof window !== 'undefined' && window.Villa; return V ? ((V.speler && V.speler.id) || '') : 'marco'; }
 var NEUTRAAL = 'Openbare beschrijving volgt.';
 var P = {
   alessandro: { naam: 'Don Alessandro Caruso', rol: 'Familiehoofd', tekst: NEUTRAAL, portret: '/beeld/e0c626581b05cd535f20976130225126.jpg' },
@@ -217,8 +218,17 @@ function hoogte(slot) { return slot.b * FOTO_VERHOUDING / LIJSTEN[slot.lijst].ra
 function midden(slot) { return slot.t != null ? slot.t + hoogte(slot) / 2 : slot.y; }
 
 class Component extends DCLogic {
+componentDidMount() {
+  var self = this;
+  // in de echte app: opnieuw tekenen zodra bekend is wie er is ingelogd
+  if (window.Villa) this._uit = window.Villa.aan(function () { self.setState({ live: ((self.state && self.state.live) || 0) + 1 }); });
+}
+componentWillUnmount() {
+  if (this._uit) this._uit();
+}
 renderVals() {
   var self = this;
+  var SPELER = ikBen();
   var st = this.state || {};
   var muur = st.muur !== undefined ? st.muur : (this.props.muur ?? 0);
   var sel = st.sel !== undefined ? st.sel : (this.props.ritratto || null);
