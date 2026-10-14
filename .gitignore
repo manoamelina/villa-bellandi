@@ -1,0 +1,13 @@
+test/.do-opslag/
+test/schermen/
+test/canvas/
+test/*.jpg
+test/workerd.log
+test/.pid
+test/stack.py
+tools/geheimen.json
+tools/*.voor-live.*
+__pycache__/
+.wrangler/
+node_modules/
+test/workerd.capnp

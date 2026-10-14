@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Lo Schermo — de tv van de villa</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050303">
+<meta name="robots" content="noindex, nofollow">
+<meta name="villa-rol" content="scherm">
+<script src="./live.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="/fonts.css" rel="stylesheet">
+<style>
+body{margin:0;background:#070203;overflow:hidden}
+button:focus-visible{outline:3px solid #e8c784;outline-offset:6px}
+@keyframes adem{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes rijs{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.adem{animation:adem 2.6s ease-in-out infinite}
+.rijs{animation:rijs .8s cubic-bezier(.2,.8,.2,1) both}
+.fade{transition:opacity .7s ease}
+@media (prefers-reduced-motion: reduce){.adem,.rijs{animation:none}.fade{transition:none}}
+</style>
+</helmet>
+<div style="width: 1920px; height: 1080px; position: relative; overflow: hidden; font-family: 'Jost', sans-serif; color: #efe4cc; background-color: #2a070d; background-image: url(/beeld/083078b8daec0ebf830e9b1ac26be6e4.jpg); background-size: 520px 610px; background-position: 50% 0">
+<div style="position: absolute; inset: 0; background: radial-gradient(ellipse 62% 70% at 50% 48%, rgba(12,3,5,0.55) 0%, rgba(6,1,2,0.93) 100%)"></div>
+<div style="position: absolute; left: 50%; top: -380px; width: 1800px; height: 1100px; margin-left: -900px; border-radius: 50%; background: radial-gradient(ellipse at 50% 34%, rgba(236,170,92,0.2) 0%, rgba(190,110,50,0.07) 40%, rgba(0,0,0,0) 68%)"></div>
+
+<sc-if value="{{opVerbinden}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center">
+<img src="/beeld/19dd30608b3e08bae5cb31ee458bf822.webp" alt="" style="width: 110px; filter: drop-shadow(0 10px 18px rgba(0,0,0,0.7))">
+<div class="adem" style="margin-top: 30px; font-size: 22px; letter-spacing: 0.4em; text-transform: uppercase; color: #c9a35c">Verbinding maken met de villa</div>
+</div>
+</sc-if>
+
+<sc-if value="{{opKoppelen}}" hint-placeholder-val="{{ false }}">
+<div class="rijs" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center">
+<img src="/beeld/19dd30608b3e08bae5cb31ee458bf822.webp" alt="" style="width: 110px; filter: drop-shadow(0 10px 18px rgba(0,0,0,0.7))">
+<div style="margin-top: 22px; display: flex; align-items: center; gap: 22px; font-size: 20px; letter-spacing: 0.42em; text-transform: uppercase; color: #c9a35c">
+<span style="width: 90px; height: 1px; background: linear-gradient(90deg, rgba(201,163,92,0), rgba(201,163,92,0.8))"></span>Lo Schermo<span style="width: 90px; height: 1px; background: linear-gradient(90deg, rgba(201,163,92,0.8), rgba(201,163,92,0))"></span>
+</div>
+<div style="margin-top: 14px; font-family: 'Bodoni Moda', serif; font-style: italic; font-size: 92px; line-height: 1; color: #f4ead2; text-shadow: 0 6px 30px rgba(0,0,0,0.7)">Koppel dit scherm</div>
+<div style="margin-top: 46px; display: flex; gap: 26px">
+<sc-for list="{{cijfers}}" as="c" hint-placeholder-count="4">
+<span style="display: flex; align-items: center; justify-content: center; width: 150px; height: 190px; border: 1px solid rgba(216,182,112,0.55); background: rgba(12,4,6,0.6); box-shadow: inset 0 0 30px rgba(0,0,0,0.6); font-family: 'Bodoni Moda', serif; font-size: 128px; line-height: 1; color: #e8c784">{{c.c}}</span>
+</sc-for>
+</div>
+<div style="margin-top: 46px; max-width: 1100px; font-family: 'EB Garamond', serif; font-size: 38px; line-height: 1.35; color: #e6d8b8">Open de Regia op je telefoon en vul deze code in bij <span style="font-style: italic; color: #f4ead2">De tv</span>.</div>
+</div>
+</sc-if>
+
+<sc-if value="{{opStart}}" hint-placeholder-val="{{ false }}">
+<div class="rijs" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center">
+<img src="/beeld/19dd30608b3e08bae5cb31ee458bf822.webp" alt="" style="width: 110px; filter: drop-shadow(0 10px 18px rgba(0,0,0,0.7))">
+<div style="margin-top: 22px; font-size: 20px; letter-spacing: 0.42em; text-transform: uppercase; color: #c9a35c">Het scherm is gekoppeld</div>
+<div style="margin-top: 14px; font-family: 'Bodoni Moda', serif; font-style: italic; font-size: 92px; line-height: 1; color: #f4ead2; text-shadow: 0 6px 30px rgba(0,0,0,0.7)">Villa Bellandi</div>
+<button type="button" ref="{{startRef}}" onClick="{{begin}}" style="margin-top: 56px; display: flex; align-items: center; gap: 18px; padding: 26px 54px; border: none; border-radius: 3px; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 26px; font-weight: 500; letter-spacing: 0.24em; text-transform: uppercase; color: #f1e7cf; background: linear-gradient(180deg, #741627 0%, #4a0b17 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 10px 30px rgba(40,6,12,0.7)">
+<span style="width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #c0485a 0%, #7a1424 70%); box-shadow: inset 0 0 0 1px rgba(30,2,8,0.6)"></span>
+Begin
+</button>
+<div style="margin-top: 26px; font-family: 'EB Garamond', serif; font-size: 32px; line-height: 1.35; color: #d9c9a6">Klik op de knop of druk op OK, dan mag het geluid aan.</div>
+</div>
+</sc-if>
+
+<sc-if value="{{opWacht}}" hint-placeholder-val="{{ true }}">
+<div class="rijs" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding-bottom: 20px">
+<img src="/beeld/19dd30608b3e08bae5cb31ee458bf822.webp" alt="" style="width: 130px; filter: drop-shadow(0 10px 18px rgba(0,0,0,0.7))">
+<div style="margin-top: 26px; display: flex; align-items: center; gap: 22px; font-size: 20px; letter-spacing: 0.42em; text-transform: uppercase; color: #c9a35c">
+<span style="width: 90px; height: 1px; background: linear-gradient(90deg, rgba(201,163,92,0), rgba(201,163,92,0.8))"></span>Benvenuti a<span style="width: 90px; height: 1px; background: linear-gradient(90deg, rgba(201,163,92,0.8), rgba(201,163,92,0))"></span>
+</div>
+<div style="margin-top: 16px; font-family: 'Bodoni Moda', serif; font-style: italic; font-size: 128px; line-height: 1; color: #f4ead2; text-shadow: 0 6px 30px rgba(0,0,0,0.7)">Villa Bellandi</div>
+<div style="width: 120px; height: 1px; margin-top: 40px; background: #c9a35c"></div>
+<div style="margin-top: 30px; font-family: 'Courier Prime', monospace; font-size: 24px; letter-spacing: 0.16em; color: rgba(216,182,112,0.85)">Palermo · 21 novembre MCMLXXIV</div>
+</div>
+</sc-if>
+
+<video ref="{{vidRef}}" class="fade" playsinline preload="auto" onEnded="{{klaar}}" onError="{{videoFout}}" aria-hidden="true" style="{{videoStyle}}"></video>
+
+<sc-if value="{{offline}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="position: absolute; left: 50%; bottom: 40px; transform: translateX(-50%); padding: 14px 26px; border: 1px solid rgba(216,182,112,0.55); background: rgba(20,8,8,0.9); font-size: 22px; letter-spacing: 0.06em; color: #f1e3c4">Geen verbinding met de villa. Hij komt vanzelf terug…</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"fase":{"editor":"enum","options":["verbinden","koppelen","start","wacht","video"],"default":"wacht","section":"Voorbeeld"},"$preview":{"width":1920,"height":1080}}'>
+// Lo Schermo: de tv in de woonkamer. Hij koppelt zich één keer via een code in de Regia;
+// daarna bepaalt Donna Serafina vanaf haar telefoon wat er op de tv staat.
+// Video's worden vooraf helemaal geladen, zodat ze op de avond niet haperen.
+class Component extends DCLogic {
+componentDidMount() {
+  var self = this, V = window.Villa;
+  if (!V) return;
+  this._gezien = 0;
+  this._geladen = {};
+  this._uit = V.aan(function () { self.volg(); self.setState({ live: ((self.state && self.state.live) || 0) + 1 }); });
+  V.meldAan('scherm').catch(function () {});
+  this._toets = function (e) {
+    if (self.state && self.state.gestart) return;
+    if (window.Villa.rol === 'scherm' && (e.key === 'Enter' || e.key === ' ' || e.keyCode === 13)) { e.preventDefault(); self.begin(); }
+  };
+  this._zicht = function () { if (!document.hidden && self.state && self.state.gestart) self.wakker(); };
+  document.addEventListener('keydown', this._toets);
+  document.addEventListener('visibilitychange', this._zicht);
+}
+componentWillUnmount() {
+  if (this._uit) this._uit();
+  document.removeEventListener('keydown', this._toets);
+  document.removeEventListener('visibilitychange', this._zicht);
+}
+laad() {
+  var self = this, V = window.Villa, lijst = (V.staat && V.staat.videos) || {};
+  Object.keys(lijst).forEach(function (k) {
+    if (self._geladen[k] !== undefined) return;
+    self._geladen[k] = '';
+    V.haal(lijst[k].bestand, 'video/mp4').then(function (u) { self._geladen[k] = u; self.meld(); },
+                                               function () { delete self._geladen[k]; });
+  });
+}
+meld(extra) {
+  var V = window.Villa;
+  if (!V || V.rol !== 'scherm') return;
+  var g = this._geladen || {}, n = Object.keys(g).filter(function (k) { return !!g[k]; }).length;
+  V.stuur(Object.assign({ t: 'tv', geluid: !!(this.state && this.state.gestart), speelt: this._speelt || '', geladen: n }, extra || {}));
+}
+volg() {
+  var V = window.Villa;
+  if (!V || V.rol !== 'scherm' || !V.staat) return;
+  this.laad();
+  if (!(this.state && this.state.gestart)) return;   // eerst één klik op de tv
+  var sc = V.staat.scherm || {};
+  if (sc.nonce === this._gezien) return;
+  this._gezien = sc.nonce;
+  if (sc.scene === 'video') this.speelVideo(sc.video, sc.nonce);
+  else this.stopVideo();
+}
+speelVideo(naam, nonce) {
+  var V = window.Villa, v = this._vid, self = this;
+  var info = (V.staat.videos || {})[naam];
+  if (!v || !info) return;
+  this._speelt = naam;
+  this._nonce = nonce;
+  v.muted = false;
+  v.volume = 1;
+  v.src = this._geladen[naam] || info.bestand;
+  try { v.currentTime = 0; } catch (e) {}
+  var p = v.play();
+  if (p && p.catch) p.catch(function () { v.muted = true; v.play().catch(function () {}); });
+  this.setState({ video: naam });
+  this.meld();
+}
+stopVideo() {
+  var v = this._vid;
+  if (v) { try { v.pause(); } catch (e) {} }
+  this._speelt = '';
+  if (this.state && this.state.video) this.setState({ video: '' });
+  this.meld();
+}
+klaar() {
+  var nonce = this._nonce;
+  this._speelt = '';
+  this.setState({ video: '' });
+  this.meld({ einde: nonce });
+}
+videoFout() {
+  // Deze tv kan de video niet afspelen: terug naar het wachtscherm en de Regia laten weten waarom.
+  if (!this._speelt) return;
+  var nonce = this._nonce;
+  this._speelt = '';
+  this.setState({ video: '' });
+  this.meld({ einde: nonce, fout: true });
+}
+begin() {
+  var self = this, v = this._vid;
+  if (this.state && this.state.gestart) return;
+  this.setState({ gestart: true }, function () { self.volg(); self.meld(); });
+  try {
+    var el = document.documentElement, vol = el.requestFullscreen || el.webkitRequestFullscreen;
+    if (vol) { var r = vol.call(el); if (r && r.catch) r.catch(function () {}); }
+  } catch (e) {}
+  // De videospeler één keer 'ontgrendelen' tijdens deze klik, zodat hij later geluid mag maken.
+  if (v) {
+    try {
+      var g = this._geladen || {}, eerste = Object.keys(g).map(function (k) { return g[k]; }).filter(Boolean)[0];
+      if (eerste) v.src = eerste;
+      v.muted = false;
+      v.volume = 0;
+      var p = v.play();
+      var terug = function () { if (!self._speelt) { try { v.pause(); v.currentTime = 0; } catch (e) {} } v.volume = 1; };
+      if (p && p.then) p.then(terug, function () { v.volume = 1; }); else terug();
+    } catch (e) {}
+  }
+  this.wakker();
+}
+wakker() {
+  var self = this;
+  try { if (navigator.wakeLock) navigator.wakeLock.request('screen').then(function (l) { self._slot = l; }, function () {}); } catch (e) {}
+}
+renderVals() {
+  var self = this, V = window.Villa, st = this.state || {};
+  var fase;
+  if (!V) fase = this.props.fase || 'wacht';
+  else if (V.rol === 'scherm') fase = !st.gestart ? 'start' : (st.video ? 'video' : 'wacht');
+  else if (V.koppelcode) fase = 'koppelen';
+  else fase = 'verbinden';
+  var code = V ? (V.koppelcode || '') : '4821';
+  return {
+    opVerbinden: fase === 'verbinden',
+    opKoppelen: fase === 'koppelen',
+    opStart: fase === 'start',
+    opWacht: fase === 'wacht',
+    cijfers: code.split('').map(function (c) { return { c: c }; }),
+    vidRef: function (el) { self._vid = el; },
+    startRef: function (el) { if (el && !self._focus) { self._focus = true; setTimeout(function () { try { el.focus(); } catch (e) {} }, 60); } if (!el) self._focus = false; },
+    videoStyle: 'position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #000; pointer-events: none; opacity: ' + (fase === 'video' ? 1 : 0),
+    klaar: function () { self.klaar(); },
+    videoFout: function () { self.videoFout(); },
+    begin: function () { self.begin(); },
+    offline: !!V && !V.verbonden && (V.rol === 'scherm' || !!V.koppelcode)
+  };
+}
+}
+</script>
+</body>
+</html>

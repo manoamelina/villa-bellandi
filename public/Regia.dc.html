@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>La Regia — de finale bedienen</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050303">
+<meta name="robots" content="noindex, nofollow">
+<meta name="villa-rol" content="regia">
+<script src="./live.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="/fonts.css" rel="stylesheet">
+<style>
+body{margin:0;background:#070404}
+button:focus-visible{outline:2px solid #b8873a;outline-offset:2px}
+@keyframes rijs{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.rijs{animation:rijs .45s cubic-bezier(.2,.8,.2,1) both}
+@media (prefers-reduced-motion: reduce){.rijs{animation:none}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; font-family: 'Jost', sans-serif; color: #e9dcc0; background: radial-gradient(ellipse 120% 50% at 50% 0%, #2a0c12 0%, #0b0405 70%)">
+
+<div style="position: absolute; left: 0; right: 0; top: 0; height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 18px; box-sizing: border-box">
+<span style="width: 70px; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(216,182,112,0.7)">Spelleider</span>
+<div style="display: flex; flex-direction: column; align-items: center">
+<span style="font-family: 'Bodoni Moda', serif; font-style: italic; font-size: 18px; line-height: 1.1; color: #f4ead2">La Regia</span>
+<span style="font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase; color: #d8b670">De avond bedienen</span>
+</div>
+<span style="width: 70px; text-align: right; font-family: 'Courier Prime', monospace; font-size: 13px; color: #d8b670">{{kopTeller}}</span>
+</div>
+
+<div style="position: absolute; left: 0; right: 0; top: 64px; bottom: 74px; box-sizing: border-box; color: #2a1a10; background: radial-gradient(ellipse 90% 40% at 20% 0%, rgba(255,250,235,0.7) 0%, rgba(255,250,235,0) 70%), linear-gradient(176deg, #f3ead3 0%, #e4d3ac 100%); box-shadow: 0 -12px 34px rgba(0,0,0,0.7)">
+<div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #8a6a32 0%, #d8b670 50%, #8a6a32 100%)"></div>
+<div style="position: absolute; left: 0; right: 0; top: 3px; bottom: 0; overflow-y: auto; padding: 18px 18px 24px; box-sizing: border-box">
+
+<!-- ───────── Scherm: het grote scherm bedienen ───────── -->
+<sc-if value="{{opScherm}}" hint-placeholder-val="{{ true }}">
+<div class="rijs">
+<div style="font-family: 'Bodoni Moda', serif; font-weight: 500; font-size: 26px; line-height: 1.1; color: #24110b">De avond</div>
+<div style="margin-top: 4px; font-size: 13px; line-height: 1.4; color: #5b4636">Wie er binnen is, de deuren van de villa en de tv.</div>
+
+<div style="margin-top: 16px; display: flex; align-items: baseline; justify-content: space-between">
+<span style="font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; color: #6e1424">Binnen</span>
+<span style="font-family: 'Bodoni Moda', serif; font-size: 20px; color: #24110b">{{avond.binnen}} <span style="font-size: 14px; color: #5b4636">van {{avond.totaal}}</span></span>
+</div>
+<div style="margin-top: 8px; display: grid; grid-template-columns: repeat(15, minmax(0, 1fr)); gap: 4px">
+<sc-for list="{{avond.stippen}}" as="z" hint-placeholder-count="15">
+<span title="{{z.naam}}" style="{{z.stijl}}"></span>
+</sc-for>
+</div>
+
+<div style="margin-top: 18px; font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; color: #6e1424">Deuren</div>
+<div style="margin-top: 6px; display: flex; flex-direction: column">
+<sc-for list="{{avond.deuren}}" as="d" hint-placeholder-count="2">
+<div style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid rgba(160,122,62,0.35)">
+<span style="display: flex; flex-direction: column; flex: 1; min-width: 0">
+<span style="font-family: 'Bodoni Moda', serif; font-size: 17px; line-height: 1.2; color: #24110b">{{d.it}}</span>
+<span style="font-size: 12.5px; line-height: 1.35; color: #5b4636">{{d.uitleg}}</span>
+</span>
+<button type="button" onClick="{{d.wissel}}" aria-pressed="{{d.open}}" style="{{d.knop}}">{{d.knopTekst}}</button>
+</div>
+</sc-for>
+</div>
+
+<div style="margin-top: 18px; font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; color: #6e1424">De tv</div>
+<div style="margin-top: 8px; padding: 14px 14px 12px; border: 1px solid rgba(110,20,36,0.5); background: rgba(255,251,240,0.6)">
+<div style="display: flex; align-items: center; gap: 9px">
+<span style="{{avond.tvBol}}"></span>
+<span style="font-family: 'Bodoni Moda', serif; font-size: 19px; line-height: 1.15; color: #24110b">{{avond.tvTitel}}</span>
+</div>
+<div style="margin-top: 4px; font-family: 'EB Garamond', serif; font-size: 16px; line-height: 1.3; color: #3a2618">{{avond.tvTekst}}</div>
+<sc-if value="{{avond.koppelen}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; gap: 10px; margin-top: 12px">
+<input ref="{{koppelRef}}" onKeyDown="{{koppelToets}}" type="text" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="0000" aria-label="Koppelcode van de tv" style="flex: 1; min-width: 0; height: 48px; box-sizing: border-box; padding: 0 12px; border: 1px solid #8a6a4a; border-radius: 2px; text-align: center; font-family: 'Courier Prime', monospace; font-size: 22px; letter-spacing: 0.4em; color: #24110b; background: #fffaf0">
+<button type="button" onClick="{{koppel}}" style="{{knopKoppel}}">Koppel</button>
+</div>
+<sc-if value="{{avond.koppelFout}}" hint-placeholder-val="{{ false }}">
+<div role="alert" style="margin-top: 6px; font-size: 12.5px; line-height: 1.4; color: #8a1a2c">Die code klopt niet. Kijk nog eens op de tv.</div>
+</sc-if>
+</sc-if>
+<sc-if value="{{avond.testKnop}}" hint-placeholder-val="{{ true }}">
+<button type="button" onClick="{{testVideo}}" style="{{knopTest}}">{{avond.testTekst}}</button>
+</sc-if>
+</div>
+
+<div style="height: 1px; margin: 26px 0 20px; background: linear-gradient(90deg, rgba(160,122,62,0) 0%, rgba(160,122,62,0.6) 50%, rgba(160,122,62,0) 100%)"></div>
+<div style="font-family: 'Bodoni Moda', serif; font-weight: 500; font-size: 26px; line-height: 1.1; color: #24110b">Het grote scherm</div>
+<div style="margin-top: 4px; font-size: 13px; line-height: 1.4; color: #5b4636">Wat jij hier doorzet, verschijnt op de tv.</div>
+
+<div style="margin-top: 16px; padding: 14px 14px 12px; border: 1px solid rgba(110,20,36,0.5); background: rgba(255,251,240,0.6)">
+<div style="font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: #6e1424">Nu op het scherm</div>
+<div style="margin-top: 4px; font-family: 'Bodoni Moda', serif; font-size: 22px; line-height: 1.15; color: #24110b">{{nu.titel}}</div>
+<div style="margin-top: 2px; font-family: 'EB Garamond', serif; font-size: 16.5px; line-height: 1.3; color: #3a2618">{{nu.tekst}}</div>
+<div style="display: flex; gap: 10px; margin-top: 14px">
+<button type="button" onClick="{{vorige}}" disabled="{{nu.eerste}}" style="{{knopVorige}}">Vorige</button>
+<button type="button" onClick="{{volgende}}" disabled="{{nu.laatste}}" style="{{knopVolgende}}">{{nu.knop}}</button>
+</div>
+<sc-if value="{{nu.heeftHierna}}" hint-placeholder-val="{{ true }}">
+<div style="margin-top: 10px; font-size: 12.5px; line-height: 1.4; color: #5b4636"><span style="letter-spacing: 0.18em; text-transform: uppercase; color: #6e1424">Hierna</span> · {{nu.hierna}}</div>
+</sc-if>
+<sc-if value="{{nu.waarschuwing}}" hint-placeholder-val="{{ false }}">
+<div style="margin-top: 8px; font-size: 12.5px; line-height: 1.4; color: #8a1a2c">Nog niet iedereen heeft bezegeld.</div>
+</sc-if>
+</div>
+
+<div style="margin-top: 18px; display: flex; align-items: baseline; justify-content: space-between">
+<span style="font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; color: #6e1424">Bezegeld</span>
+<span style="font-family: 'Bodoni Moda', serif; font-size: 20px; color: #24110b">{{zegels.n}} <span style="font-size: 14px; color: #5b4636">van {{zegels.totaal}}</span></span>
+</div>
+<div style="margin-top: 8px; display: grid; grid-template-columns: repeat(15, minmax(0, 1fr)); gap: 4px">
+<sc-for list="{{zegels.stippen}}" as="z" hint-placeholder-count="15">
+<span title="{{z.naam}}" style="{{z.stijl}}"></span>
+</sc-for>
+</div>
+<div style="margin-top: 8px; font-family: 'EB Garamond', serif; font-size: 15.5px; line-height: 1.35; color: #3a2618">{{zegels.wachten}}</div>
+
+<div style="margin-top: 20px; font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; color: #6e1424">Het verloop</div>
+<div style="margin-top: 8px; display: flex; flex-direction: column">
+<sc-for list="{{fases}}" as="f" hint-placeholder-count="5">
+<div style="display: flex; align-items: center; gap: 12px; padding: 9px 0; border-top: 1px solid rgba(160,122,62,0.35)">
+<span style="{{f.bol}}">{{f.nr}}</span>
+<span style="display: flex; flex-direction: column; min-width: 0">
+<span style="{{f.titelStijl}}">{{f.t}}</span>
+<span style="font-size: 12.5px; color: #5b4636">{{f.uitleg}}</span>
+</span>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<!-- ───────── Oordelen: de lijst ───────── -->
+<sc-if value="{{opLijst}}" hint-placeholder-val="{{ false }}">
+<div class="rijs">
+<div style="font-family: 'Bodoni Moda', serif; font-weight: 500; font-size: 26px; line-height: 1.1; color: #24110b">De oordelen</div>
+<div style="margin-top: 4px; font-size: 13px; line-height: 1.4; color: #5b4636">Tik op een speler om het oordeel te lezen en goed of fout te geven.</div>
+<div style="margin-top: 12px; display: flex; flex-direction: column">
+<sc-for list="{{lijst}}" as="r" hint-placeholder-count="8">
+<button type="button" onClick="{{r.open}}" disabled="{{r.dicht}}" aria-label="{{r.aria}}" style="{{r.rij}}">
+<span style="{{r.mini}}"><sc-if value="{{r.heeftPortret}}" hint-placeholder-val="{{ true }}"><img src="{{r.portret}}" alt="" style="width: 100%; height: 100%; object-fit: cover"></sc-if></span>
+<span style="flex: 1; min-width: 0; display: flex; flex-direction: column; text-align: left">
+<span style="font-family: 'Bodoni Moda', serif; font-size: 16.5px; line-height: 1.2; color: #24110b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.naam}}</span>
+<span style="{{r.subStijl}}">{{r.sub}}</span>
+</span>
+<sc-if value="{{r.binnen}}" hint-placeholder-val="{{ true }}">
+<span style="flex: none; display: flex; flex-direction: column; align-items: flex-end">
+<span style="{{r.scoreStijl}}">{{r.score}}</span>
+<span style="font-family: 'Courier Prime', monospace; font-size: 12px; color: #5b4636">{{r.bonus}}</span>
+</span>
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8a6a4a" stroke-width="2" aria-hidden="true" style="flex: none"><path d="M9 5l7 7-7 7"></path></svg>
+</sc-if>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<!-- ───────── Oordelen: één speler ───────── -->
+<sc-if value="{{opDetail}}" hint-placeholder-val="{{ false }}">
+<div class="rijs">
+<button type="button" onClick="{{sluitDetail}}" style="display: inline-flex; align-items: center; gap: 4px; min-height: 36px; padding: 0 4px 0 0; border: none; background: transparent; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #6e1424">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6e1424" stroke-width="2" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Alle oordelen</button>
+<div style="margin-top: 8px; display: flex; align-items: center; gap: 14px">
+<span style="{{d.mini}}"><sc-if value="{{d.heeftPortret}}" hint-placeholder-val="{{ true }}"><img src="{{d.portret}}" alt="" style="width: 100%; height: 100%; object-fit: cover"></sc-if></span>
+<span style="display: flex; flex-direction: column; min-width: 0">
+<span style="font-family: 'Bodoni Moda', serif; font-weight: 500; font-size: 22px; line-height: 1.15; color: #24110b">{{d.naam}}</span>
+<span style="font-size: 12.5px; color: #5b4636">{{d.sub}}</span>
+</span>
+</div>
+<div style="margin-top: 12px; padding: 9px 11px; font-size: 12.5px; line-height: 1.4; color: #4e3b2c; background: rgba(160,122,62,0.14)">De app heeft goed en fout alvast voorgesteld. Jij beslist.</div>
+<sc-for list="{{d.vragen}}" as="v" hint-placeholder-count="3">
+<div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid rgba(160,122,62,0.45)">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
+<span style="font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; color: #6e1424">{{v.kop}}</span>
+<span role="group" aria-label="{{v.aria}}" style="display: flex; border: 1px solid #8a6a4a; border-radius: 2px; overflow: hidden">
+<button type="button" onClick="{{v.goed}}" aria-pressed="{{v.isGoed}}" style="{{v.goedStijl}}">Goed</button>
+<button type="button" onClick="{{v.fout}}" aria-pressed="{{v.isFout}}" style="{{v.foutStijl}}">Fout</button>
+</span>
+</div>
+<div style="margin-top: 6px; font-family: 'EB Garamond', serif; font-style: italic; font-size: 18px; line-height: 1.35; color: #24110b; overflow-wrap: anywhere">‘{{v.tekst}}’</div>
+<sc-if value="{{v.heeftNoot}}" hint-placeholder-val="{{ false }}"><div style="margin-top: 4px; font-size: 12.5px; line-height: 1.4; color: #5b4636">{{v.noot}}</div></sc-if>
+</div>
+</sc-for>
+<div style="margin-top: 16px; padding-top: 10px; border-top: 1px solid rgba(160,122,62,0.45)">
+<div style="display: flex; align-items: baseline; justify-content: space-between">
+<span style="font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; color: #6e1424">Scherpste speurder</span>
+<span style="font-family: 'Bodoni Moda', serif; font-size: 17px; color: #24110b">{{d.bonusTekst}}</span>
+</div>
+<div style="margin-top: 2px; font-size: 12.5px; line-height: 1.4; color: #5b4636">Vervalst volgens de speler:</div>
+<div style="margin-top: 6px; display: flex; flex-direction: column; gap: 5px">
+<sc-for list="{{d.stukken}}" as="s" hint-placeholder-count="4">
+<div style="display: flex; align-items: center; gap: 10px; font-family: 'EB Garamond', serif; font-size: 16.5px; line-height: 1.25; color: #24110b">
+<span style="{{s.teken}}">{{s.symbool}}</span><span>{{s.t}}</span>
+</div>
+</sc-for>
+<sc-if value="{{d.geenStukken}}" hint-placeholder-val="{{ false }}"><div style="font-family: 'EB Garamond', serif; font-style: italic; font-size: 16.5px; color: #5b4636">Niets aangevinkt.</div></sc-if>
+</div>
+<div style="margin-top: 6px; font-size: 12.5px; line-height: 1.4; color: #5b4636">{{d.gemist}}</div>
+</div>
+</div>
+</sc-if>
+
+<!-- ───────── Winnaar ───────── -->
+<sc-if value="{{opWinnaar}}" hint-placeholder-val="{{ false }}">
+<div class="rijs">
+<div style="font-family: 'Bodoni Moda', serif; font-weight: 500; font-size: 26px; line-height: 1.1; color: #24110b">De winnaar</div>
+<div style="margin-top: 4px; font-size: 13px; line-height: 1.4; color: #5b4636">Wie wie, waarom én hoe goed heeft, wint. Hebben meer mensen alles goed, dan wint wie het eerst bezegelde. Jij kiest.</div>
+<sc-if value="{{gelijk.is}}" hint-placeholder-val="{{ false }}">
+<div style="margin-top: 12px; padding: 9px 11px; font-size: 13px; line-height: 1.4; color: #5a0d1a; border-left: 3px solid #7a1424; background: rgba(122,20,36,0.08)">{{gelijk.tekst}}</div>
+</sc-if>
+<div style="margin-top: 12px; display: flex; flex-direction: column; gap: 6px">
+<sc-for list="{{rang}}" as="r" hint-placeholder-count="8">
+<button type="button" onClick="{{r.kies}}" aria-pressed="{{r.gekozen}}" style="{{r.rij}}">
+<span style="flex: none; width: 22px; font-family: 'Bodoni Moda', serif; font-size: 18px; color: #6e1424; text-align: center">{{r.nr}}</span>
+<span style="{{r.mini}}"><sc-if value="{{r.heeftPortret}}" hint-placeholder-val="{{ true }}"><img src="{{r.portret}}" alt="" style="width: 100%; height: 100%; object-fit: cover"></sc-if></span>
+<span style="flex: 1; min-width: 0; display: flex; flex-direction: column; text-align: left">
+<span style="font-family: 'Bodoni Moda', serif; font-size: 16px; line-height: 1.2; color: #24110b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.naam}}</span>
+<span style="font-family: 'Courier Prime', monospace; font-size: 11px; color: #5b4636; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.score}}</span>
+</span>
+<span style="{{r.radio}}"><span style="{{r.stip}}"></span></span>
+</button>
+</sc-for>
+</div>
+
+</div>
+</sc-if>
+
+<!-- ───────── Prijzen: welke stukken zijn vervalst ───────── -->
+<sc-if value="{{opStukken}}" hint-placeholder-val="{{ false }}">
+<div class="rijs">
+<button type="button" onClick="{{sluitStukken}}" style="display: inline-flex; align-items: center; gap: 4px; min-height: 36px; padding: 0 4px 0 0; border: none; background: transparent; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #6e1424">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6e1424" stroke-width="2" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>De prijzen</button>
+<div style="margin-top: 6px; font-family: 'Bodoni Moda', serif; font-weight: 500; font-size: 24px; line-height: 1.1; color: #24110b">Vervalste stukken</div>
+<div style="margin-top: 4px; font-size: 13px; line-height: 1.4; color: #5b4636">Deze stukken tellen als vervalst voor De scherpste speurder. Elk goed aangevinkt stuk is een punt, elk fout stuk kost een punt.</div>
+<sc-for list="{{stukGroepen}}" as="g" hint-placeholder-count="3">
+<div style="margin-top: 14px; font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; color: #6e1424">{{g.naam}}</div>
+<div style="margin-top: 6px; display: flex; flex-direction: column; gap: 5px">
+<sc-for list="{{g.stukken}}" as="s" hint-placeholder-count="4">
+<button type="button" onClick="{{s.wissel}}" aria-pressed="{{s.aan}}" style="{{s.rij}}">
+<span style="{{s.vakje}}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f3ead3" stroke-width="3" aria-hidden="true" style="{{s.vink}}"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span>
+<span style="font-family: 'EB Garamond', serif; font-size: 16px; line-height: 1.25; text-align: left">{{s.t}}</span>
+</button>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<!-- ───────── Prijzen ───────── -->
+<sc-if value="{{opPrijzen}}" hint-placeholder-val="{{ false }}">
+<div class="rijs">
+<div style="font-family: 'Bodoni Moda', serif; font-weight: 500; font-size: 26px; line-height: 1.1; color: #24110b">De prijzen</div>
+<div style="margin-top: 4px; font-size: 13px; line-height: 1.4; color: #5b4636">Outfit en leugenaar zijn stemmen. De scherpste speurder gaat op punten voor de vervalste stukken.</div>
+<sc-for list="{{prijsLijst}}" as="z" hint-placeholder-count="3">
+<div style="margin-top: 16px; padding-top: 10px; border-top: 1px solid rgba(160,122,62,0.45)">
+<div style="font-family: 'Bodoni Moda', serif; font-size: 20px; color: #24110b">{{z.titel}}</div>
+<div style="margin-top: 6px; display: flex; flex-direction: column; gap: 6px">
+<sc-for list="{{z.top}}" as="t" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; gap: 10px">
+<span style="{{t.mini}}"><sc-if value="{{t.heeftPortret}}" hint-placeholder-val="{{ true }}"><img src="{{t.portret}}" alt="" style="width: 100%; height: 100%; object-fit: cover"></sc-if></span>
+<span style="{{t.naamStijl}}">{{t.naam}}</span>
+<span style="font-family: 'Courier Prime', monospace; font-size: 13px; color: #5b4636">{{t.n}}</span>
+</div>
+</sc-for>
+</div>
+<sc-if value="{{z.heeftGelijk}}" hint-placeholder-val="{{ false }}"><div style="margin-top: 6px; font-size: 12.5px; color: #8a1a2c">{{z.gelijk}}</div></sc-if>
+</div>
+</sc-for>
+<button type="button" onClick="{{openStukken}}" style="display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 52px; margin-top: 16px; padding: 0 14px; box-sizing: border-box; border: 1px solid #8a6a4a; border-radius: 2px; background: rgba(255,251,240,0.5); cursor: pointer; font-family: 'Jost', sans-serif; color: #24110b">
+<span style="display: flex; flex-direction: column; text-align: left">
+<span style="font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: #6e1424">Vervalste stukken</span>
+<span style="font-size: 13.5px">{{stukkenTeller}}</span>
+</span>
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8a6a4a" stroke-width="2" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+</button>
+</div>
+</sc-if>
+
+</div>
+</div>
+
+<!-- tabbalk -->
+<div role="tablist" aria-label="Regia" style="position: absolute; left: 0; right: 0; bottom: 0; height: 74px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding-bottom: 8px; box-sizing: border-box; border-top: 1px solid rgba(216,182,112,0.35); background: #0d0506">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="4">
+<button type="button" role="tab" aria-selected="{{t.aan}}" onClick="{{t.kies}}" style="{{t.stijl}}">
+<sc-if value="{{t.isScherm}}" hint-placeholder-val="{{ true }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="5" width="18" height="12" rx="1"></rect><path d="M8 20h8M12 17v3"></path></svg></sc-if>
+<sc-if value="{{t.isOordelen}}" hint-placeholder-val="{{ false }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 3h9l3 3v15H6z"></path><path d="M9 10h6M9 14h6M9 18h4"></path></svg></sc-if>
+<sc-if value="{{t.isWinnaar}}" hint-placeholder-val="{{ false }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 8l4 4 4-7 4 7 4-4-2 10H6z"></path><path d="M6 21h12"></path></svg></sc-if>
+<sc-if value="{{t.isPrijzen}}" hint-placeholder-val="{{ false }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path></svg></sc-if>
+<span>{{t.label}}</span>
+</button>
+</sc-for>
+</div>
+
+<sc-if value="{{offline}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="position: absolute; left: 12px; right: 12px; top: 70px; z-index: 20; padding: 9px 12px; border: 1px solid rgba(216,182,112,0.55); background: rgba(20,8,8,0.92); font-size: 12.5px; line-height: 1.35; color: #f1e3c4; text-align: center">Geen verbinding met de villa. Hij komt vanzelf terug…</div>
+</sc-if>
+
+<sc-if value="{{toonLogin}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; z-index: 30; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 36px 60px; box-sizing: border-box; background: radial-gradient(ellipse 120% 50% at 50% 0%, #2a0c12 0%, #0b0405 70%)">
+<span style="font-family: 'Bodoni Moda', serif; font-style: italic; font-size: 38px; line-height: 1.1; color: #f4ead2">La Regia</span>
+<span style="margin-top: 8px; font-size: 10.5px; letter-spacing: 0.26em; text-transform: uppercase; color: #d8b670">Alleen voor Donna Serafina</span>
+<label for="regia-pin" style="margin-top: 34px; font-size: 12.5px; color: rgba(233,220,192,0.8)">Vul je pincode in</label>
+<input id="regia-pin" ref="{{pinRef}}" onKeyDown="{{pinToets}}" type="password" inputmode="numeric" autocomplete="off" maxlength="6" placeholder="······" style="margin-top: 8px; width: 100%; height: 56px; box-sizing: border-box; padding: 0 12px; border: 1px solid rgba(216,182,112,0.5); border-radius: 2px; text-align: center; font-family: 'Courier Prime', monospace; font-size: 26px; letter-spacing: 0.5em; color: #efe4cc; background: linear-gradient(180deg, #120a07 0%, #1e120c 100%)">
+<button type="button" onClick="{{login}}" disabled="{{loginBezig}}" style="{{knopLogin}}">{{loginTekst}}</button>
+<sc-if value="{{loginFout}}" hint-placeholder-val="{{ false }}">
+<div role="alert" style="margin-top: 12px; font-size: 13px; line-height: 1.4; color: #e9a6b1; text-align: center">{{loginFoutTekst}}</div>
+</sc-if>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"tab":{"editor":"enum","options":["scherm","oordelen","winnaar","prijzen"],"default":"scherm","section":"Voorbeeld"},"detail":{"editor":"enum","options":["","alessandro","marco","luca","alessia","raffaele","stefano","matteo","enzo","nico","sofia","salvatore","lucia","giulia","sebastiano","caterina"],"default":"","section":"Voorbeeld"},"bezegeld":{"editor":"int","min":0,"max":15,"step":1,"default":11,"section":"Voorbeeld"},"scene":{"editor":"int","min":0,"max":30,"step":1,"default":0,"section":"Voorbeeld"},"bonuslijst":{"editor":"boolean","default":false,"section":"Voorbeeld"},"aanmelden":{"editor":"boolean","default":false,"section":"Voorbeeld"},"$preview":{"width":390,"height":844}}'>
+// La Regia: alleen voor Donna Serafina. Hier bedient zij het grote scherm,
+// geeft zij elk oordeel goed of fout, kiest zij de winnaar en ziet zij de stemmen voor de prijzen.
+// In dit prototype zijn de antwoorden voorbeeldantwoorden.
+// ── GEDEELD: hetzelfde blok staat in Sala, Sentenza en Regia (gebouwd door appqa/finale/bouw.py) ──
+var LIJSTEN = {
+  barok:  { foto: '/beeld/8065d9d26fcc56d7f018fde138a7b923.webp', ratio: 600 / 956, masker: 'm-barok' },
+  ovaal:  { foto: '/beeld/d597695ab6201be489e7fab9ef3e183b.webp', ratio: 600 / 899, masker: 'm-ovaal' },
+  boog:   { foto: '/beeld/ca9516f401e8e5ebe95f528fa1c3decb.webp', ratio: 600 / 978, masker: 'm-boog' },
+  klein:  { foto: '/beeld/bb112d47635b896cce1571280ba100cc.webp', ratio: 600 / 742, masker: 'm-klein' },
+  pavone: { foto: '/beeld/9df2326dfee33a1e0d96f95c826cdfb9.webp', ratio: 600 / 781, masker: 'm-pavone' }
+};
+// de vijftien spelers, in de volgorde van de Galleria; wapen = het teken in hun zegel
+var SPELERS = [
+  { id: 'alessandro', naam: 'Don Alessandro Caruso', voor: 'Alessandro', achter: 'Caruso', fam: 'Famiglia Caruso', wapen: 'C', lijst: 'barok', mini: '/beeld/ed23f5c3cc7fd8884a7ad01b0e4d4146.jpg', portret: '/beeld/e0c626581b05cd535f20976130225126.jpg' },
+  { id: 'marco', naam: 'Marco Caruso', voor: 'Marco', achter: 'Caruso', fam: 'Famiglia Caruso', wapen: 'C', lijst: 'ovaal', mini: '/beeld/a004401b9dd34d83eb36724aa9799bf4.jpg', portret: '/beeld/a004401b9dd34d83eb36724aa9799bf4.jpg' },
+  { id: 'luca', naam: 'Luca Caruso', voor: 'Luca', achter: 'Caruso', fam: 'Famiglia Caruso', wapen: 'C', lijst: 'klein', mini: '/beeld/1a1e5bd833f7450acbc91ba8a71d5bf5.jpg', portret: '/beeld/1a1e5bd833f7450acbc91ba8a71d5bf5.jpg' },
+  { id: 'alessia', naam: 'Donna Alessia Bellaforte', voor: 'Alessia', achter: 'Bellaforte', fam: 'Famiglia Bellaforte', wapen: 'wolf', lijst: 'barok', mini: '/beeld/0f919c1ec78c3226b4b8045f7513f1a8.jpg', portret: '/beeld/f792926f4d9042272208445377142b6c.jpg' },
+  { id: 'raffaele', naam: 'Raffaele Bellaforte', voor: 'Raffaele', achter: 'Bellaforte', fam: 'Famiglia Bellaforte', wapen: 'wolf', lijst: 'ovaal', mini: '/beeld/20eb0c38785ca1fcaf595aab4745a36b.jpg', portret: '/beeld/c14c30c8f39e982f5a6bf58cd741b11e.jpg' },
+  { id: 'stefano', naam: 'Stefano Bellaforte', voor: 'Stefano', achter: 'Bellaforte', fam: 'Famiglia Bellaforte', wapen: 'wolf', lijst: 'boog', mini: '/beeld/416452219e54a04c733cbab94f76c9c3.jpg', portret: '/beeld/416452219e54a04c733cbab94f76c9c3.jpg' },
+  { id: 'matteo', naam: 'Don Matteo Ventresca', voor: 'Matteo', achter: 'Ventresca', fam: 'Famiglia Ventresca', wapen: 'anker', lijst: 'barok', mini: '/beeld/3981978bd539a869bc51a49c6c137e25.jpg', portret: '/beeld/3981978bd539a869bc51a49c6c137e25.jpg' },
+  { id: 'enzo', naam: 'Enzo Ventresca', voor: 'Enzo', achter: 'Ventresca', fam: 'Famiglia Ventresca', wapen: 'anker', lijst: 'klein', mini: '/beeld/82ae1864f26c9565d071764d329ecfb1.jpg', portret: '/beeld/82ae1864f26c9565d071764d329ecfb1.jpg' },
+  { id: 'nico', naam: 'Nico Ventresca', voor: 'Nico', achter: 'Ventresca', fam: 'Famiglia Ventresca', wapen: 'anker', lijst: 'boog', mini: '/beeld/40923ab82b699cbba421578c3f05e76b.jpg', portret: '/beeld/40923ab82b699cbba421578c3f05e76b.jpg' },
+  { id: 'sofia', naam: 'Sofia Ventresca', voor: 'Sofia', achter: 'Ventresca', fam: 'Famiglia Ventresca', wapen: 'anker', lijst: 'ovaal', mini: '/beeld/5e86561b4f011f94a11cda8f938c70c6.jpg', portret: '/beeld/45889a17ad3c489f1379ba555380eb51.jpg' },
+  { id: 'salvatore', naam: 'Don Salvatore Morelli', voor: 'Salvatore', achter: 'Morelli', fam: 'Famiglia Morelli', wapen: 'M', lijst: 'barok', mini: '/beeld/2783b7484ef92522ee004d56dcff7fc5.jpg', portret: '/beeld/6ddb620c33adae6913f4c813f7845e20.jpg' },
+  { id: 'lucia', naam: 'Lucia Morelli', voor: 'Lucia', achter: 'Morelli', fam: 'Famiglia Morelli', wapen: 'M', lijst: 'ovaal', mini: '/beeld/c9d34612ece7e1e559fc4c612e11eb51.jpg', portret: '/beeld/9e942e04ac2754c6c7acf6b9302a7005.jpg' },
+  { id: 'giulia', naam: 'Giulia Morelli', voor: 'Giulia', achter: 'Morelli', fam: 'Famiglia Morelli', wapen: 'M', lijst: 'boog', mini: '', portret: '' },
+  { id: 'sebastiano', naam: 'Sebastiano Valenti', voor: 'Sebastiano', achter: 'Valenti', fam: 'Il Pavone', wapen: 'pavone', lijst: 'pavone', mini: '/beeld/0383923bca7bc59410830353e09ccbe1.jpg', portret: '/beeld/0383923bca7bc59410830353e09ccbe1.jpg', bijnaam: ['pavone'] },
+  { id: 'caterina', naam: 'Avvocata Caterina Rinaldi', voor: 'Caterina', achter: 'Rinaldi', fam: 'La Custode', wapen: 'bilancia', lijst: 'boog', mini: '/beeld/1ad588b44c3c884dfdd936790e7c19e6.jpg', portret: '/beeld/add1136c9af31539c4c86256b0b41114.jpg', bijnaam: ['avvocata', 'advocate', 'advocaat', 'advocatessa', 'custode'] }
+];
+var DADER = '';
+// de bonusvraag voor De scherpste speurder: welke stukken zijn vervalst? (Donna Serafina kan dit in de Regia aanpassen)
+var STUKKEN = [
+  { id: 'rapport', groep: 'Van vanavond', t: 'Het voorlopig medisch rapport', vervalst: false },
+  { id: 'tox', groep: 'Van vanavond', t: 'Het toxicologisch rapport', vervalst: false },
+  { id: 'dossier', groep: 'Van vanavond', t: 'Vittorio’s medisch dossier', vervalst: false },
+  { id: 'logboek', groep: 'Van vanavond', t: 'Het officiële logboek', vervalst: false },
+  { id: 'carbon', groep: 'Van vanavond', t: 'De carbonkopie van het logboek', vervalst: false },
+  { id: 'dreigbrief', groep: 'Van vanavond', t: 'De dreigbrief van Famiglia Falcone', vervalst: false },
+  { id: 'akte', groep: 'Van vanavond', t: 'De opvolgingsakte', vervalst: false },
+  { id: 'rapporto', groep: 'Uit 1954', t: 'Il Rapporto (18 oktober 1954)', vervalst: false },
+  { id: 'decreto', groep: 'Uit 1954', t: 'Il Decreto delle Ceneri (16 oktober 1954)', vervalst: false },
+  { id: 'conti', groep: 'Uit 1954', t: 'De Conti-betalingen', vervalst: false },
+  { id: 'bordo', groep: 'Uit 1954', t: 'De scheepskopie', vervalst: false },
+  { id: 'register', groep: 'Uit 1954', t: 'Het register van Banco San Michele', vervalst: false },
+  { id: 'elena', groep: 'Uit 1954', t: 'Elena’s brief', vervalst: false },
+  { id: 'enrico', groep: 'Uit 1954', t: 'Enrico’s brief', vervalst: false },
+  { id: 'fondazione', groep: 'Uit 1954', t: 'De statuten van Fondazione Santa Lucia', vervalst: false },
+  { id: 'bevelV', groep: 'Uit de kist', t: 'Vittorio’s bevel (30 september 1954)', vervalst: false },
+  { id: 'bevelC', groep: 'Uit de kist', t: 'Het bevel aan Conti (1 oktober 1954)', vervalst: false },
+  { id: 'francesco', groep: 'Uit de kist', t: 'Francesco’s brief (27 september 1954)', vervalst: false }
+];
+// voorbeeldantwoorden voor het prototype; op de avond komen hier de echte antwoorden binnen
+var DEMO = [];
+
+var RANG_WOORD = ['eerste', 'tweede', 'derde', 'vierde', 'vijfde', 'zesde', 'zevende', 'achtste', 'negende', 'tiende', 'elfde', 'twaalfde', 'dertiende', 'veertiende', 'vijftiende'];
+function rangWoord(n) { return RANG_WOORD[n - 1] || n + 'e'; }
+function spelerVan(id) { for (var i = 0; i < SPELERS.length; i++) if (SPELERS[i].id === id) return SPELERS[i]; return null; }
+function norm(s) { return (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim(); }
+function afstand(a, b) {
+  var m = a.length, n = b.length, d = [], i, j;
+  for (i = 0; i <= m; i++) { d[i] = [i]; }
+  for (j = 1; j <= n; j++) d[0][j] = j;
+  for (i = 1; i <= m; i++) for (j = 1; j <= n; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+  return d[m][n];
+}
+function lijkt(w, naam) { if (w === naam) return true; if (naam.length < 5 || w.length < 4) return false; return afstand(w, naam) <= (naam.length >= 7 ? 2 : 1); }
+// herken een getypte naam: { id } voor één persoon, { meerdere: 'Caruso' } bij alleen een gedeelde achternaam, anders null
+function herken(tekst) {
+  var w = norm(tekst).split(' ').filter(function (x) { return x && ['don', 'donna', 'de', 'het', 'mevrouw', 'meneer', 'signor', 'signora', 'il', 'la'].indexOf(x) < 0; });
+  if (!w.length) return null;
+  var zin = ' ' + w.join(' ') + ' ';
+  var hits = [];
+  SPELERS.forEach(function (p) {
+    var v = norm(p.voor), pos = -1, exact = false;
+    w.forEach(function (x, i) { if (pos < 0 && lijkt(x, v)) { pos = i; exact = x === v; } });
+    (p.bijnaam || []).forEach(function (bn) { var k = zin.indexOf(' ' + bn + ' '); if (k >= 0) { var i = zin.slice(0, k).split(' ').filter(Boolean).length; if (pos < 0 || i < pos) { pos = i; exact = true; } } });
+    if (pos >= 0) hits.push({ p: p, pos: pos, exact: exact });
+  });
+  if (hits.length) {
+    var metAchter = hits.filter(function (h) { var a = norm(h.p.achter); return w.some(function (x) { return lijkt(x, a); }); });
+    var kies = (metAchter.length ? metAchter : hits).sort(function (x, y) { return (y.exact - x.exact) || (x.pos - y.pos); })[0];
+    return { id: kies.p.id };
+  }
+  var achter = SPELERS.filter(function (p) { var a = norm(p.achter); return w.some(function (x) { return lijkt(x, a); }); });
+  if (achter.length === 1) return { id: achter[0].id };
+  if (achter.length > 1) return { meerdere: achter[0].achter };
+  return null;
+}
+var HOE_WOORDEN = /(?!)/;
+var WAAROM_WOORDEN = /(?!)/;
+// voorstel voor het oordeel van Donna Serafina; zij beslist zelf in de Regia
+function voorstel(a) {
+  var h = herken(a.wie), wie = !!(h && h.id === DADER);
+  return { wie: wie, waarom: wie && WAAROM_WOORDEN.test(' ' + norm(a.waarom) + ' '), hoe: HOE_WOORDEN.test(norm(a.hoe)) };
+}
+// De scherpste speurder: elk goed aangevinkt stuk is een punt, elk fout stuk kost een punt (niet onder nul)
+function standaardVervalst() { var k = {}; STUKKEN.forEach(function (s) { if (s.vervalst) k[s.id] = true; }); return k; }
+function speurVan(a, vals) {
+  var gekozen = a.vervalst || [], goed = gekozen.filter(function (s) { return !!vals[s]; }).length, fout = gekozen.length - goed;
+  return { goed: goed, fout: fout, punten: Math.max(0, goed - fout), gemist: Object.keys(vals).filter(function (k) { return vals[k] && gekozen.indexOf(k) < 0; }) };
+}
+// ranglijst voor de prijs: meeste punten, bij gelijke stand wie het eerst bezegelde
+function speurders(antwoorden, vals) {
+  return antwoorden.map(function (a) { var s = speurVan(a, vals); return { id: a.speler, n: s.punten, goed: s.goed, fout: s.fout, tijd: a.tijd }; })
+    .sort(function (x, y) { return y.n - x.n || x.tijd - y.tijd; });
+}
+// hoe vaak elke verdachte is aangewezen, van minst naar meest (gelijke stand: Galleria-volgorde)
+function telling(antwoorden) {
+  var tel = {};
+  antwoorden.forEach(function (a) { var h = herken(a.wie); if (h && h.id) tel[h.id] = (tel[h.id] || 0) + 1; });
+  return SPELERS.filter(function (p) { return tel[p.id]; }).map(function (p) { return { id: p.id, n: tel[p.id] }; })
+    .sort(function (x, y) { return x.n - y.n || SPELERS.indexOf(spelerVan(x.id)) - SPELERS.indexOf(spelerVan(y.id)); });
+}
+// ranglijst volgens de spelregel: wie wie, waarom én hoe goed heeft, wint; hebben meer mensen alles goed,
+// dan wint wie het eerst bezegelde. Daaronder de rest: meeste goed, dan wie het eerst bezegelde.
+function ranglijst(antwoorden, oordeel) {
+  return antwoorden.map(function (a) {
+    var o = oordeel[a.speler] || voorstel(a);
+    var hoofd = (o.wie ? 1 : 0) + (o.waarom ? 1 : 0) + (o.hoe ? 1 : 0);
+    return { speler: a.speler, o: o, hoofd: hoofd, alles: hoofd === 3, tijd: a.tijd, a: a };
+  }).sort(function (x, y) {
+    if (x.alles !== y.alles) return x.alles ? -1 : 1;
+    return (x.alles ? 0 : y.hoofd - x.hoofd) || x.tijd - y.tijd;
+  });
+}
+// de scènes op het grote scherm, in volgorde; Donna Serafina loopt ze door vanuit de Regia
+function scenes(antwoorden) {
+  var n = telling(antwoorden).length, s = [{ fase: 'beraad' }], i;
+  for (i = 0; i <= n; i++) s.push({ fase: 'oordeel', onthuld: i });
+  for (i = 1; i <= 4; i++) s.push({ fase: 'waarheid', deel: i });
+  s.push({ fase: 'winnaar' });
+  for (i = 0; i <= 3; i++) s.push({ fase: 'prijzen', prijs: i });
+  return s;
+}
+// de drie prijzen: outfit en leugenaar per stem, de scherpste speurder op punten
+function prijzen(antwoorden, vals) {
+  var uit = { speurder: speurders(antwoorden, vals || standaardVervalst()) };
+  ['outfit', 'leugenaar'].forEach(function (k) {
+    var tel = {};
+    antwoorden.forEach(function (a) { var v = a.stemmen && a.stemmen[k]; if (v) tel[v] = (tel[v] || 0) + 1; });
+    uit[k] = Object.keys(tel).map(function (id) { return { id: id, n: tel[id] }; })
+      .sort(function (x, y) { return y.n - x.n || SPELERS.indexOf(spelerVan(x.id)) - SPELERS.indexOf(spelerVan(y.id)); });
+  });
+  return uit;
+}
+// ── einde GEDEELD ──
+
+var TABS = [
+  { id: 'scherm', label: 'Scherm' },
+  { id: 'oordelen', label: 'Oordelen' },
+  { id: 'winnaar', label: 'Winnaar' },
+  { id: 'prijzen', label: 'Prijzen' }
+];
+var FASES = [
+  { id: 'beraad', t: 'Beraad', uitleg: 'Iedereen bezegelt; de zegels komen binnen.' },
+  { id: 'oordeel', t: 'Het oordeel', uitleg: 'Van minst naar meest beschuldigd.' },
+  { id: 'waarheid', t: 'De waarheid', uitleg: 'De dader, waarom, hoe en het bewijs.' },
+  { id: 'winnaar', t: 'De winnaar', uitleg: 'Wie jij kiest bij Winnaar.' },
+  { id: 'prijzen', t: 'De prijzen', uitleg: 'Outfit, scherpste speurder en leugenaar.' }
+];
+var PRIJS_TITELS = { outfit: 'Beste outfit', speurder: 'De scherpste speurder', leugenaar: 'Beste leugenaar' };
+var PRIJS_IDS = ['outfit', 'speurder', 'leugenaar'];
+function punten(n) { return n + (n === 1 ? ' punt' : ' punten'); }
+function maat(k, n) { return k === 'speurder' ? punten(n) : stemmen(n); }
+var KNOP = 'display: flex; align-items: center; justify-content: center; height: 48px; border-radius: 2px; font-family: \'Jost\', sans-serif; font-size: 11.5px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; ';
+function rangNr(n) { return n + 'e'; }
+function stemmen(n) { return n + (n === 1 ? ' stem' : ' stemmen'); }
+function opsomming(l) { return l.length < 2 ? l.join('') : l.slice(0, -1).join(', ') + ' en ' + l[l.length - 1]; }
+function mini(w, h, rand) { return 'position: relative; flex: none; width: ' + w + 'px; height: ' + h + 'px; overflow: hidden; border-radius: 50% / 46%; box-sizing: border-box; border: ' + (rand || '1.5px solid #b8913f') + '; background: radial-gradient(ellipse at 50% 34%, #9a968e 0%, #4e4b46 55%, #1b1a18 100%)'; }
+
+class Component extends DCLogic {
+// In de echte app (window.Villa) meldt de Regia zich aan met de pincode en volgt hij de villa live.
+componentDidMount() {
+  var self = this, V = window.Villa;
+  if (!V) return;
+  this._uit = V.aan(function () { self.setState({ live: ((self.state && self.state.live) || 0) + 1 }); });
+  if (V.bewaard('regia')) {
+    this.setState({ loginBezig: true });
+    V.meldAan('regia').then(function () { self.setState({ loginBezig: false }); },
+                            function () { self.setState({ loginBezig: false }); });
+  }
+}
+componentWillUnmount() {
+  if (this._uit) this._uit();
+}
+login() {
+  var self = this, V = window.Villa;
+  if (!V) return;
+  var pin = this._pin ? this._pin.value.replace(/\D/g, '') : '';
+  if (pin.length < 6) { this.setState({ loginFout: 'Een pincode heeft zes cijfers.' }); return; }
+  this.setState({ loginBezig: true, loginFout: '' });
+  V.meldAan('regia', pin).then(function () {
+    self.setState({ loginBezig: false });
+  }, function (reden) {
+    if (self._pin) self._pin.value = '';
+    self.setState({ loginBezig: false, loginFout: reden === 'pin' ? 'Die pincode klopt niet.' : 'Geen verbinding met de villa. Probeer het zo nog eens.' });
+  });
+}
+koppelTv() {
+  var V = window.Villa;
+  var code = this._koppel ? this._koppel.value.replace(/\D/g, '') : '';
+  if (!V || code.length !== 4) { this.setState({ koppelFout: true }); return; }
+  this._koppelPoging = Date.now();
+  V.fout = '';
+  this.setState({ koppelFout: false });
+  V.stuur({ t: 'koppel', code: code });
+}
+renderVals() {
+  var self = this, p = this.props, st = this.state || {};
+  var tab = st.tab || p.tab || 'scherm';
+  var detail = st.detail !== undefined ? st.detail : (p.detail || '');
+  var stukkenOpen = st.stukkenOpen !== undefined ? st.stukkenOpen : !!p.bonuslijst;
+  var tel = p.bezegeld != null ? p.bezegeld : 11;
+  var volgorde = DEMO.slice().sort(function (a, b) { return a.tijd - b.tijd; });
+  var binnen = volgorde.slice(0, tel), binnenIds = {};
+  binnen.forEach(function (a, i) { binnenIds[a.speler] = i + 1; });
+  var vals = st.vals || standaardVervalst();
+  var oordeel = st.oordeel || {};
+  var oordeelVan = function (a) { return oordeel[a.speler] || voorstel(a); };
+  var zet = function (id, veld, waarde) {
+    var a = DEMO.filter(function (x) { return x.speler === id; })[0];
+    var o = Object.assign({}, oordeelVan(a)); o[veld] = waarde;
+    var n = Object.assign({}, oordeel); n[id] = o; self.setState({ oordeel: n });
+  };
+
+  // ranglijst en winnaar (alleen bezegelde oordelen)
+  var rang = ranglijst(binnen, oordeel);
+  var winnaarId = st.winnaar && binnenIds[st.winnaar] ? st.winnaar : (rang[0] ? rang[0].speler : '');
+  var wSpeler = spelerVan(winnaarId);
+
+  // ── Scherm ──
+  var sc = scenes(DEMO), tal = telling(DEMO), N = tal.length, uit = prijzen(binnen, vals);
+  var si = Math.max(0, Math.min(sc.length - 1, st.scene != null ? st.scene : (p.scene || 0)));
+  var naamVan = function (id) { var s = spelerVan(id); return s ? s.naam : '—'; };
+  var beschrijf = function (x) {
+    if (x.fase === 'beraad') return { titel: 'Beraad', tekst: 'De portretten krijgen hun zegel zodra iemand bezegelt.', kort: 'Beraad' };
+    if (x.fase === 'oordeel') {
+      if (x.onthuld === 0) return { titel: 'Het oordeel', tekst: 'Alle verdachten staan nog bezegeld op het scherm.', kort: 'Het oordeel, nog niets onthuld' };
+      var t = tal[x.onthuld - 1], laatst = x.onthuld === N;
+      return { titel: 'Het oordeel · ' + x.onthuld + ' van ' + N, tekst: (laatst ? 'Meest beschuldigd: ' : 'Onthuld: ') + naamVan(t.id) + ', ' + stemmen(t.n) + '.', kort: (laatst ? 'onthul de meest beschuldigde: ' : 'onthul ') + naamVan(t.id) + ' (' + stemmen(t.n) + ')' };
+    }
+    if (x.fase === 'waarheid') {
+      var delen = ['de dader', 'waarom', 'hoe', 'het bewijs en de uitslag'];
+      return { titel: 'De waarheid · ' + delen[x.deel - 1], tekst: x.deel === 1 ? 'Caterina Rinaldi verschijnt met het stempel ‘De dader’.' : 'Op het scherm: ' + delen.slice(0, x.deel).join(', ') + '.', kort: 'de waarheid: ' + delen[x.deel - 1] };
+    }
+    if (x.fase === 'winnaar') return { titel: 'De winnaar', tekst: (wSpeler ? wSpeler.naam : '—') + ' staat groot in beeld.', kort: 'de winnaar: ' + (wSpeler ? wSpeler.naam : '—') };
+    if (x.prijs === 0) return { titel: 'De prijzen', tekst: 'Drie prijzen, nog bezegeld.', kort: 'de prijzen, nog bezegeld' };
+    var k = PRIJS_IDS[x.prijs - 1], e = uit[k][0];
+    return { titel: 'De prijzen · ' + PRIJS_TITELS[k], tekst: PRIJS_TITELS[k] + ': ' + (e ? naamVan(e.id) + ', ' + maat(k, e.n) : '—') + '.', kort: PRIJS_TITELS[k].charAt(0).toLowerCase() + PRIJS_TITELS[k].slice(1) + ': ' + (e ? naamVan(e.id) : '—') };
+  };
+  var nuB = beschrijf(sc[si]), hierna = si < sc.length - 1 ? beschrijf(sc[si + 1]) : null;
+  var faseIdx = FASES.map(function (f) { return f.id; }).indexOf(sc[si].fase);
+  var nu = { titel: nuB.titel, tekst: nuB.tekst, eerste: si === 0, laatste: si === sc.length - 1,
+    knop: sc[si].fase === 'beraad' ? 'Naar het oordeel' : 'Volgende', heeftHierna: !!hierna,
+    hierna: hierna ? hierna.kort.charAt(0).toUpperCase() + hierna.kort.slice(1) : '', waarschuwing: sc[si].fase === 'beraad' && tel < SPELERS.length };
+  var fases = FASES.map(function (f, i) {
+    var klaar = i < faseIdx, bezig = i === faseIdx;
+    return { nr: klaar ? '✓' : String(i + 1), t: f.t, uitleg: f.uitleg,
+      bol: 'flex: none; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-sizing: border-box; font-family: \'Bodoni Moda\', serif; font-size: 14px; ' + (bezig ? 'background: #7a1424; color: #f4ead2; box-shadow: 0 0 0 3px rgba(122,20,36,0.18)' : klaar ? 'background: #a07a3e; color: #f4ead2' : 'border: 1.5px solid rgba(110,84,60,0.5); color: #6b5440'),
+      titelStijl: 'font-family: \'Bodoni Moda\', serif; font-size: 17px; line-height: 1.2; ' + (bezig ? 'color: #6e1424; font-weight: 500' : 'color: #24110b') };
+  });
+  var zegels = { n: tel, totaal: SPELERS.length,
+    stippen: SPELERS.map(function (s) { var b = !!binnenIds[s.id]; return { naam: s.naam, stijl: 'display: block; aspect-ratio: 1; border-radius: 50%; ' + (b ? 'background: radial-gradient(circle at 38% 34%, #b8404f 0%, #7a1424 60%, #4a0b17 100%); box-shadow: 0 1px 2px rgba(40,6,12,0.5)' : 'border: 1.5px dashed rgba(110,84,60,0.55); box-sizing: border-box') }; }),
+    wachten: tel >= SPELERS.length ? 'Iedereen heeft bezegeld.' : 'Wachten op ' + opsomming(SPELERS.filter(function (s) { return !binnenIds[s.id]; }).map(function (s) { return s.voor; })) + '.' };
+
+  // ── Oordelen: lijst ──
+  var lijst = SPELERS.map(function (s) {
+    var a = DEMO.filter(function (x) { return x.speler === s.id; })[0], b = !!binnenIds[s.id];
+    var o = b ? oordeelVan(a) : null, h = b ? herken(a.wie) : null, hp = h && h.id ? spelerVan(h.id) : null;
+    var punten3 = o ? (o.wie ? 1 : 0) + (o.waarom ? 1 : 0) + (o.hoe ? 1 : 0) : 0;
+    return { naam: s.naam, portret: s.mini, heeftPortret: !!s.mini, binnen: b, dicht: !b,
+      aria: b ? 'Oordeel van ' + s.naam : s.naam + ', nog niet bezegeld',
+      sub: b ? 'Wees aan: ' + (hp ? hp.naam : '‘' + a.wie + '’') : 'Nog niet bezegeld',
+      subStijl: 'font-size: 12.5px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ' + (b ? 'color: #5b4636' : 'color: #8a6a4a; font-style: italic'),
+      score: punten3 + '/3', bonus: b ? speurVan(a, vals).punten + ' ptn' : '',
+      scoreStijl: 'font-family: \'Bodoni Moda\', serif; font-size: 18px; line-height: 1.1; ' + (punten3 === 3 ? 'color: #6e1424; font-weight: 500' : 'color: #24110b'),
+      mini: mini(38, 46),
+      rij: 'display: flex; align-items: center; gap: 12px; width: 100%; min-height: 60px; padding: 7px 2px; box-sizing: border-box; border: none; border-top: 1px solid rgba(160,122,62,0.35); background: transparent; font-family: \'Jost\', sans-serif; color: #24110b; ' + (b ? 'cursor: pointer' : 'cursor: default; opacity: 0.6'),
+      open: function () { if (b) self.setState({ detail: s.id }); } };
+  });
+
+  // ── Oordelen: één speler ──
+  var d = null;
+  if (detail && binnenIds[detail]) {
+    var ds = spelerVan(detail), da = DEMO.filter(function (x) { return x.speler === detail; })[0], dO = oordeelVan(da);
+    var dh = herken(da.wie), dhp = dh && dh.id ? spelerVan(dh.id) : null;
+    var seg = function (aan, goed) { return 'min-width: 58px; height: 32px; padding: 0 10px; border: none; cursor: pointer; font-family: \'Jost\', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; ' + (aan ? (goed ? 'background: #7a1424; color: #f4ead2' : 'background: #3a2a20; color: #f4ead2') : 'background: rgba(255,251,240,0.6); color: #5b4636'); };
+    var gekozen = (da.vervalst || []), sp = speurVan(da, vals);
+    d = { naam: ds.naam, portret: ds.mini, heeftPortret: !!ds.mini, mini: mini(52, 64, '2px solid #b8913f'),
+      sub: 'Als ' + rangNr(binnenIds[detail]) + ' bezegeld · ' + ds.fam,
+      vragen: [['wie', 'Wie'], ['waarom', 'Waarom'], ['hoe', 'Hoe']].map(function (x) {
+        var aan = !!dO[x[0]];
+        return { kop: x[1], tekst: da[x[0]] || '—', aria: x[1] + ': goed of fout', isGoed: aan, isFout: !aan,
+          goedStijl: seg(aan, true), foutStijl: seg(!aan, false),
+          goed: function () { zet(detail, x[0], true); }, fout: function () { zet(detail, x[0], false); },
+          heeftNoot: x[0] === 'wie', noot: x[0] === 'wie' ? (dhp ? 'Telt in de telling als ' + dhp.naam + '.' : (dh && dh.meerdere ? 'Niet duidelijk welke ' + dh.meerdere + '; telt niet mee in de telling.' : 'Niet herkend; telt niet mee in de telling.')) : '' };
+      }),
+      bonusTekst: punten(sp.punten) + ' (' + sp.goed + ' goed, ' + sp.fout + ' fout)',
+      gemist: sp.gemist.length ? 'Gemist: ' + sp.gemist.map(function (id) { var x = STUKKEN.filter(function (y) { return y.id === id; })[0]; return x ? x.t.charAt(0).toLowerCase() + x.t.slice(1) : id; }).join(', ') + '.' : 'Alle vervalste stukken gevonden.',
+      geenStukken: !gekozen.length,
+      stukken: gekozen.map(function (id) {
+        var s = STUKKEN.filter(function (x) { return x.id === id; })[0], ok = !!vals[id];
+        return { t: s ? s.t : id, symbool: ok ? '✓' : '✗', teken: 'flex: none; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: \'Jost\', sans-serif; font-size: 12px; ' + (ok ? 'background: #7a1424; color: #f4ead2' : 'border: 1px solid rgba(110,84,60,0.5); color: #8a6a4a') };
+      }) };
+  }
+
+  // ── Winnaar ──
+  var gelijk = { is: false, tekst: '' };
+  var allesGoed = rang.filter(function (r) { return r.alles; });
+  if (allesGoed.length > 1) {
+    gelijk.is = true;
+    gelijk.tekst = allesGoed.length + ' spelers hebben alles goed: ' + opsomming(allesGoed.map(function (r) { return spelerVan(r.speler).voor; })) + '. ' + spelerVan(allesGoed[0].speler).voor + ' bezegelde als eerste.';
+  } else if (!allesGoed.length && rang.length) {
+    gelijk.is = true;
+    gelijk.tekst = 'Niemand heeft alles goed. Bovenaan staat wie de meeste goed heeft; daarna wie het eerst bezegelde.';
+  }
+  var rangRijen = rang.map(function (r, i) {
+    var s = spelerVan(r.speler), kies = r.speler === winnaarId;
+    return { nr: i + 1, naam: s.naam, portret: s.mini, heeftPortret: !!s.mini, gekozen: kies, mini: mini(34, 42),
+      score: r.hoofd + '/3 · als ' + rangNr(binnenIds[r.speler]) + ' bezegeld',
+      rij: 'display: flex; align-items: center; gap: 10px; width: 100%; min-height: 56px; padding: 6px 12px 6px 8px; box-sizing: border-box; border-radius: 2px; cursor: pointer; font-family: \'Jost\', sans-serif; color: #24110b; ' + (kies ? 'border: 1.5px solid #7a1424; background: rgba(122,20,36,0.09)' : 'border: 1px solid rgba(160,122,62,0.45); background: rgba(255,251,240,0.45)'),
+      radio: 'flex: none; width: 22px; height: 22px; border-radius: 50%; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 1.5px solid ' + (kies ? '#7a1424' : '#8a6a4a'),
+      stip: 'width: 12px; height: 12px; border-radius: 50%; background: ' + (kies ? '#7a1424' : 'transparent'),
+      kies: function () { self.setState({ winnaar: r.speler }); } };
+  });
+  var aantalVals = Object.keys(vals).filter(function (k) { return vals[k]; }).length;
+  var stukGroepen = [];
+  STUKKEN.forEach(function (s) {
+    var g = stukGroepen.filter(function (x) { return x.naam === s.groep; })[0];
+    if (!g) { g = { naam: s.groep, stukken: [] }; stukGroepen.push(g); }
+    var aan = !!vals[s.id];
+    g.stukken.push({ t: s.t, aan: aan,
+      wissel: function () { var n = Object.assign({}, vals); if (n[s.id]) delete n[s.id]; else n[s.id] = true; self.setState({ vals: n }); },
+      rij: 'display: flex; align-items: center; gap: 12px; width: 100%; min-height: 44px; padding: 6px 10px; box-sizing: border-box; border-radius: 2px; cursor: pointer; color: #24110b; font-family: \'Jost\', sans-serif; ' + (aan ? 'border: 1px solid #7a1424; background: rgba(122,20,36,0.08)' : 'border: 1px solid rgba(160,122,62,0.5); background: rgba(255,251,240,0.5)'),
+      vakje: 'flex: none; width: 20px; height: 20px; box-sizing: border-box; border-radius: 2px; display: flex; align-items: center; justify-content: center; ' + (aan ? 'background: #7a1424; border: 1px solid #5a0f1c' : 'background: rgba(255,255,255,0.6); border: 1.5px solid #8a6a4a'),
+      vink: 'opacity: ' + (aan ? 1 : 0) });
+  });
+
+  // ── Prijzen ──
+  var prijsLijst = PRIJS_IDS.map(function (k) {
+    var l = uit[k], top = l.slice(0, 3), eerste = l[0];
+    var gelijkL = l.filter(function (x, j) { return j > 0 && eerste && x.n === eerste.n; });
+    return { titel: PRIJS_TITELS[k], heeftGelijk: gelijkL.length > 0,
+      gelijk: !gelijkL.length ? '' : k === 'speurder'
+        ? 'Gelijk met ' + opsomming(gelijkL.map(function (x) { return spelerVan(x.id).voor; })) + '. ' + spelerVan(eerste.id).voor + ' bezegelde eerder.'
+        : 'Gelijke stand met ' + opsomming(gelijkL.map(function (x) { return spelerVan(x.id).voor; })) + '. Jij beslist.',
+      top: top.map(function (x, j) { var s = spelerVan(x.id); return { naam: s.naam, n: maat(k, x.n), portret: s.mini, heeftPortret: !!s.mini, mini: mini(30, 37),
+        naamStijl: 'flex: 1; min-width: 0; font-family: \'Bodoni Moda\', serif; font-size: 15.5px; ' + (j === 0 ? 'color: #6e1424; font-weight: 500' : 'color: #24110b') }; }) };
+  });
+
+  var opDetail = tab === 'oordelen' && !!d, opStukken = tab === 'prijzen' && stukkenOpen;
+  // ── De avond: wie is binnen, deuren, tv ──
+  var V = window.Villa;
+  var lv = V && V.staat;
+  var status = lv && lv.status;
+  var binnenNu = V ? ((status && status.spelers) || []) : SPELERS.slice(0, 11).map(function (s) { return s.id; });
+  var deurStaat = V ? ((lv && lv.deuren) || {}) : { archivio: false, sala: false };
+  var tv = V ? ((status && status.tv) || { verbonden: 0, wacht: false, geluid: false, speelt: '', geladen: 0 }) : { verbonden: 1, wacht: false, geluid: true, speelt: '', geladen: 1 };
+  var aantalVideos = V ? ((status && status.videos) || 0) : 1;
+  var schermNu = V ? ((lv && lv.scherm) || { scene: 'wacht' }) : { scene: 'wacht' };
+  var speeltTest = schermNu.scene === 'video';
+  var koppelFout = !!st.koppelFout || !!(V && V.fout === 'koppelcode' && this._koppelPoging);
+  var DEUR_INFO = [
+    { id: 'archivio', it: "L'Archivio", dicht: 'Verzegeld. Open hem wanneer het archief aan de beurt is.', open: 'Open. Iedereen kan nu naar beneden.' },
+    { id: 'sala', it: 'La Sala del Giudizio', dicht: 'Verzegeld. Open hem voor de finale.', open: 'Open. Iedereen kan nu zijn oordeel bezegelen.' }
+  ];
+  var avond = {
+    binnen: binnenNu.length,
+    totaal: SPELERS.length,
+    stippen: SPELERS.map(function (s) { var b = binnenNu.indexOf(s.id) >= 0; return { naam: s.naam, stijl: 'display: block; aspect-ratio: 1; border-radius: 50%; ' + (b ? 'background: radial-gradient(circle at 38% 34%, #b8404f 0%, #7a1424 60%, #4a0b17 100%); box-shadow: 0 1px 2px rgba(40,6,12,0.5)' : 'border: 1.5px dashed rgba(110,84,60,0.55); box-sizing: border-box') }; }),
+    deuren: DEUR_INFO.map(function (d) {
+      var open = !!deurStaat[d.id];
+      return {
+        it: d.it, open: open, uitleg: open ? d.open : d.dicht, knopTekst: open ? 'Sluit' : 'Open de deur',
+        knop: KNOP + 'flex: none; width: 140px; height: 44px; white-space: nowrap; letter-spacing: 0.16em; cursor: pointer; ' + (open
+          ? 'border: 1px solid #8a6a4a; background: transparent; color: #4e3b2c'
+          : 'border: none; color: #f1e7cf; background: linear-gradient(180deg, #741627 0%, #4a0b17 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 4px 10px rgba(40,6,12,0.35)'),
+        wissel: function () { if (V) V.stuur({ t: 'deur', deur: d.id, open: !open }); }
+      };
+    }),
+    tvTitel: tv.verbonden ? 'Tv gekoppeld' : tv.wacht ? 'Er wacht een tv' : 'Geen tv verbonden',
+    tvTekst: tv.verbonden
+      ? (tv.fout && !tv.speelt ? 'De laatste video kon niet afspelen op deze tv. Probeer de MacBook met HDMI. ' : '') + (tv.speelt ? 'Speelt nu de uitnodiging. ' : '') + (tv.geluid ? 'Het geluid staat aan.' : 'Klik één keer op de tv (of druk op OK), dan mag het geluid aan.') + (aantalVideos ? ' Video’s geladen: ' + Math.min(tv.geladen, aantalVideos) + ' van ' + aantalVideos + '.' : '')
+      : tv.wacht ? 'Op de tv staat een code van vier cijfers. Vul die hier in.'
+      : 'Open ' + (V ? location.host : 'het adres van de villa') + '/tv in de browser van de tv.',
+    tvBol: 'flex: none; width: 10px; height: 10px; border-radius: 50%; background: ' + (tv.verbonden ? (tv.geluid ? '#3f7a3a' : '#c08a2a') : tv.wacht ? '#c08a2a' : '#8a1a2c'),
+    koppelen: !tv.verbonden && !!tv.wacht,
+    koppelFout: koppelFout,
+    testKnop: !!tv.verbonden,
+    testTekst: speeltTest ? 'Stop de video' : 'Test: speel de uitnodiging af'
+  };
+
+  return {
+    avond: avond,
+    offline: !!V && !V.verbonden && V.rol === 'regia',
+    toonLogin: V ? V.rol !== 'regia' : !!p.aanmelden,
+    pinRef: function (el) { self._pin = el; },
+    pinToets: function (e) { if (e.key === 'Enter') { e.preventDefault(); self.login(); } },
+    login: function () { self.login(); },
+    loginBezig: !!st.loginBezig,
+    loginTekst: st.loginBezig ? 'Een moment…' : 'Open de Regia',
+    loginFout: !!st.loginFout,
+    loginFoutTekst: st.loginFout || '',
+    knopLogin: KNOP + 'margin-top: 12px; width: 100%; height: 52px; border: none; color: #f1e7cf; cursor: pointer; background: linear-gradient(180deg, #741627 0%, #4a0b17 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 4px 10px rgba(40,6,12,0.6)',
+    koppelRef: function (el) { self._koppel = el; },
+    koppelToets: function (e) { if (e.key === 'Enter') { e.preventDefault(); self.koppelTv(); } },
+    koppel: function () { self.koppelTv(); },
+    knopKoppel: KNOP + 'flex: none; width: 104px; border: none; color: #f1e7cf; cursor: pointer; background: linear-gradient(180deg, #741627 0%, #4a0b17 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 4px 10px rgba(40,6,12,0.35)',
+    testVideo: function () { if (V) V.stuur(speeltTest ? { t: 'scherm', scene: 'wacht' } : { t: 'scherm', scene: 'video', video: 'uitnodiging' }); },
+    knopTest: KNOP + 'margin-top: 12px; width: 100%; cursor: pointer; ' + (speeltTest
+      ? 'border: 1px solid #8a6a4a; background: transparent; color: #4e3b2c'
+      : 'border: none; color: #f1e7cf; background: linear-gradient(180deg, #741627 0%, #4a0b17 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 4px 10px rgba(40,6,12,0.35)'),
+    kopTeller: binnen.length + '/' + SPELERS.length,
+    opScherm: tab === 'scherm', opLijst: tab === 'oordelen' && !d, opDetail: opDetail, opWinnaar: tab === 'winnaar', opStukken: opStukken, opPrijzen: tab === 'prijzen' && !stukkenOpen,
+    nu: nu, fases: fases, zegels: zegels,
+    knopVorige: KNOP + 'flex: none; width: 96px; border: 1px solid #8a6a4a; background: transparent; color: #4e3b2c; ' + (si === 0 ? 'opacity: 0.4; cursor: default' : 'cursor: pointer'),
+    knopVolgende: KNOP + 'flex: 1; border: none; color: #f1e7cf; background: linear-gradient(180deg, #741627 0%, #4a0b17 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 4px 10px rgba(40,6,12,0.35); ' + (si === sc.length - 1 ? 'opacity: 0.45; cursor: default' : 'cursor: pointer'),
+    vorige: function () { if (si > 0) self.setState({ scene: si - 1 }); },
+    volgende: function () { if (si < sc.length - 1) self.setState({ scene: si + 1 }); },
+    lijst: lijst, d: d || { naam: '', portret: '', heeftPortret: false, mini: '', sub: '', vragen: [], bonusTekst: '', gemist: '', geenStukken: false, stukken: [] },
+    sluitDetail: function () { self.setState({ detail: '' }); },
+    gelijk: gelijk, rang: rangRijen,
+    stukkenTeller: aantalVals + ' van de ' + STUKKEN.length + ' stukken tellen als vervalst',
+    openStukken: function () { self.setState({ stukkenOpen: true }); },
+    sluitStukken: function () { self.setState({ stukkenOpen: false }); },
+    stukGroepen: stukGroepen,
+    prijsLijst: prijsLijst,
+    tabs: TABS.map(function (t) {
+      var aan = t.id === tab;
+      return { label: t.label, aan: aan, isScherm: t.id === 'scherm', isOordelen: t.id === 'oordelen', isWinnaar: t.id === 'winnaar', isPrijzen: t.id === 'prijzen',
+        kies: function () { self.setState({ tab: t.id, detail: '', stukkenOpen: false }); },
+        stijl: 'display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border: none; background: transparent; cursor: pointer; font-family: \'Jost\', sans-serif; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; ' + (aan ? 'color: #e8c784' : 'color: rgba(233,220,192,0.55)') };
+    })
+  };
+}
+}
+</script>
+</body>
+</html>

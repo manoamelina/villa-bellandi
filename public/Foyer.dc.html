@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Villa Bellandi — La Foyer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050303">
+<meta name="robots" content="noindex, nofollow">
+<meta name="villa-rol" content="speler">
+<script src="./live.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="/fonts.css" rel="stylesheet">
+<style>
+body{margin:0;background:#070404}
+a{color:#d8b670}a:hover{color:#efd59a}
+button:focus-visible,a:focus-visible{outline:2px solid #d8b670;outline-offset:3px}
+@keyframes flame{0%,100%{opacity:.55}28%{opacity:.38}52%{opacity:.5}76%{opacity:.34}}
+@keyframes drift{0%{transform:translateX(-24px)}50%{transform:translateX(24px)}100%{transform:translateX(-24px)}}
+@keyframes glans{0%{background-position:120% 0;opacity:0}15%{opacity:1}100%{background-position:-20% 0;opacity:0}}
+@keyframes verschijn{from{opacity:0}to{opacity:1}}
+.flame{animation:flame 3.8s ease-in-out infinite}
+.flame2{animation:flame 4.7s ease-in-out .9s infinite}
+.haze{animation:drift 30s ease-in-out infinite}
+.lijn{position:absolute;box-sizing:border-box;pointer-events:none;border:1px solid rgba(216,182,112,.42);box-shadow:0 0 0 1px rgba(0,0,0,.3),inset 0 0 18px rgba(216,182,112,.06);
+background:linear-gradient(#e2c27e,#e2c27e) 0 0/12px 1.5px no-repeat,linear-gradient(#e2c27e,#e2c27e) 0 0/1.5px 12px no-repeat,linear-gradient(#e2c27e,#e2c27e) 100% 0/12px 1.5px no-repeat,linear-gradient(#e2c27e,#e2c27e) 100% 0/1.5px 12px no-repeat,linear-gradient(#e2c27e,#e2c27e) 0 100%/12px 1.5px no-repeat,linear-gradient(#e2c27e,#e2c27e) 0 100%/1.5px 12px no-repeat,linear-gradient(#e2c27e,#e2c27e) 100% 100%/12px 1.5px no-repeat,linear-gradient(#e2c27e,#e2c27e) 100% 100%/1.5px 12px no-repeat;
+animation:verschijn 1.2s ease both;animation-delay:var(--d)}
+.lijn.dicht{border-color:rgba(201,163,92,.28)}
+.lijn::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,rgba(255,230,180,0) 40%,rgba(255,232,186,.38) 50%,rgba(255,230,180,0) 60%);background-size:260% 100%;animation:glans 2s ease-out 1 both;animation-delay:calc(var(--d) + .4s)}
+.sheet{transition:transform .55s cubic-bezier(.2,.8,.2,1)}
+@media (prefers-reduced-motion: reduce){.flame,.flame2,.haze,.lijn,.lijn::after{animation:none}.sheet{transition:none}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; font-family: 'Jost', sans-serif; color: #e9dcc0; background: #070404">
+
+<div onPointerMove="{{sleep}}" onPointerUp="{{los}}" onPointerLeave="{{los}}" style="{{podium}}">
+<img src="/beeld/54f4b3032c6d00168fd07da30866ecfd.jpg" alt="De foyer van Villa Bellandi bij kaarslicht" style="display: block; width: 100%; height: 100%; object-fit: cover; user-select: none; pointer-events: none">
+
+<div class="flame" style="position: absolute; left: 50.5%; top: 36%; width: 260px; height: 260px; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; mix-blend-mode: screen; background: radial-gradient(circle, rgba(255,196,120,0.45) 0%, rgba(255,170,90,0.12) 40%, rgba(0,0,0,0) 70%)"></div>
+<div class="flame2" style="position: absolute; left: 9%; top: 77%; width: 140px; height: 140px; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; mix-blend-mode: screen; background: radial-gradient(circle, rgba(255,190,110,0.5) 0%, rgba(0,0,0,0) 65%)"></div>
+<div class="flame" style="position: absolute; left: 40%; top: 50%; width: 90px; height: 90px; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; mix-blend-mode: screen; background: radial-gradient(circle, rgba(255,190,110,0.45) 0%, rgba(0,0,0,0) 65%)"></div>
+<div class="flame2" style="position: absolute; left: 60.5%; top: 50%; width: 90px; height: 90px; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; mix-blend-mode: screen; background: radial-gradient(circle, rgba(255,190,110,0.45) 0%, rgba(0,0,0,0) 65%)"></div>
+<div class="flame" style="position: absolute; left: 87%; top: 64%; width: 80px; height: 80px; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; mix-blend-mode: screen; background: radial-gradient(circle, rgba(255,190,110,0.45) 0%, rgba(0,0,0,0) 65%)"></div>
+<div style="{{archiefGlow}}"></div>
+<div class="haze" style="position: absolute; left: -10%; right: -10%; top: 55%; height: 25%; pointer-events: none; background: radial-gradient(ellipse 45% 40% at 35% 50%, rgba(240,210,170,0.06) 0%, rgba(0,0,0,0) 70%), radial-gradient(ellipse 35% 35% at 70% 55%, rgba(240,210,170,0.05) 0%, rgba(0,0,0,0) 70%)"></div>
+
+<sc-for list="{{plekken}}" as="h" hint-placeholder-count="4">
+<div class="{{h.lijnClass}}" style="{{h.lijnStyle}}"></div>
+</sc-for>
+
+<sc-if value="{{uitlijnen}}" hint-placeholder-val="{{ false }}">
+<sc-for list="{{plekken}}" as="u" hint-placeholder-count="4">
+<div onPointerDown="{{u.pakVlak}}" style="{{u.kaderStyle}}">
+<span style="position: absolute; left: 0; top: -18px; padding: 1px 5px; font-family: 'Courier Prime', monospace; font-size: 10px; color: #120806; background: #f0d494; white-space: nowrap">{{u.id}}</span>
+<span onPointerDown="{{u.pakMaat}}" style="position: absolute; right: -9px; bottom: -9px; width: 18px; height: 18px; border-radius: 50%; background: #f0d494; border: 2px solid #120806; cursor: nwse-resize"></span>
+</div>
+</sc-for>
+</sc-if>
+
+<sc-for list="{{plekken}}" as="b" hint-placeholder-count="4">
+<button type="button" onClick="{{b.pick}}" onPointerDown="{{b.pakBordje}}" style="{{b.bordjeStyle}}">
+<sc-if value="{{b.dicht}}" hint-placeholder-val="{{ false }}">
+<span style="flex: none; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #a82638 0%, #5a0f1c 72%); box-shadow: 0 1px 2px rgba(0,0,0,0.7), inset 0 0 0 1px rgba(40,4,10,0.6)"></span>
+</sc-if>
+<span style="display: flex; flex-direction: column; align-items: flex-start; gap: 2px">
+<span style="font-family: 'Bodoni Moda', serif; font-size: 15px; line-height: 1.1; color: #f4ead2; white-space: nowrap">{{b.it}}</span>
+<span style="font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: #d8b670; white-space: nowrap">{{b.label}}</span>
+</span>
+</button>
+</sc-for>
+</div>
+
+<div style="position: absolute; left: 0; right: 0; top: 0; height: 110px; pointer-events: none; background: linear-gradient(180deg, rgba(5,2,2,0.7) 0%, rgba(5,2,2,0) 100%)"></div>
+<div style="position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 90px 18px rgba(0,0,0,0.55)"></div>
+
+<div style="position: absolute; left: 0; right: 0; top: 0; height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 18px; box-sizing: border-box">
+<div style="display: flex; flex-direction: column">
+<span style="font-family: 'Bodoni Moda', serif; font-style: italic; font-size: 18px; line-height: 1.1; color: #f4ead2">Villa Bellandi</span>
+<span style="font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: #d8b670">La Foyer</span>
+</div>
+<div style="display: flex; gap: 8px">
+<button type="button" aria-label="Geluid aanzetten" style="width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(216,182,112,0.5); background: rgba(20,8,8,0.55); display: flex; align-items: center; justify-content: center; cursor: pointer">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d8b670" stroke-width="1.5" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M17 9l5 6M22 9l-5 6"></path></svg>
+</button>
+<button type="button" aria-label="Overzicht van alle ruimtes" onClick="{{toonOverzicht}}" style="width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(216,182,112,0.5); background: rgba(20,8,8,0.55); display: flex; align-items: center; justify-content: center; cursor: pointer">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d8b670" stroke-width="1.5" aria-hidden="true"><path d="M3 21V9l9-6 9 6v12"></path><path d="M3 13h18M9 21v-8M15 21v-8"></path></svg>
+</button>
+</div>
+</div>
+
+<sc-if value="{{toonHint}}" hint-placeholder-val="{{ true }}">
+<div style="position: absolute; left: 50%; top: 684px; transform: translateX(-50%); white-space: nowrap; padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(216,182,112,0.35); background: rgba(14,6,5,0.72); font-size: 12px; letter-spacing: 0.04em; color: #e9dcc0; pointer-events: none">Tik op een messing bordje om rond te kijken</div>
+</sc-if>
+
+<sc-if value="{{uitlijnen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; left: 10px; right: 10px; top: 70px; padding: 8px 12px; border: 1px dashed #f0d494; background: rgba(12,6,4,0.88); font-size: 12px; line-height: 1.4; color: #f4ead2">
+<span style="font-family: 'Courier Prime', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #f0d494">Uitlijnmodus · alleen Game Master</span><br>Sleep een kader of bordje; het rondje rechtsonder past de maat aan.
+</div>
+<div style="position: absolute; left: 10px; right: 10px; bottom: 10px; padding: 10px 12px; border: 1px dashed #f0d494; background: rgba(12,6,4,0.92); font-family: 'Courier Prime', monospace; font-size: 11px; line-height: 1.55; color: #f4ead2">
+<div style="color: #f0d494; letter-spacing: 0.1em">POSITIES (% VAN DE FOTO)</div>
+<sc-for list="{{plekken}}" as="w" hint-placeholder-count="4">
+<div>{{w.uitlezing}}</div>
+</sc-for>
+<button type="button" onClick="{{herstel}}" style="margin-top: 8px; min-height: 36px; padding: 0 12px; border: 1px solid rgba(240,212,148,0.6); background: transparent; color: #f0d494; font-family: 'Courier Prime', monospace; font-size: 11px; cursor: pointer">Terug naar opgeslagen posities</button>
+</div>
+</sc-if>
+
+<div class="sheet" style="{{sheetStyle}}">
+<div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #8a6a32 0%, #d8b670 50%, #8a6a32 100%)"></div>
+<button type="button" aria-label="Sluiten" onClick="{{sluit}}" style="position: absolute; top: 10px; right: 10px; width: 44px; height: 44px; border: none; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5b4636" stroke-width="1.6" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+</button>
+
+<sc-if value="{{toonKamer}}" hint-placeholder-val="{{ false }}">
+<div style="font-family: 'Courier Prime', monospace; font-size: 11px; letter-spacing: 0.08em; color: #7a6048">{{kamer.plek}}</div>
+<div style="margin-top: 6px; font-family: 'Bodoni Moda', serif; font-weight: 500; font-size: 30px; line-height: 1.05; color: #24110b">{{kamer.it}}</div>
+<div style="margin-top: 4px; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: #6e1424">{{kamer.nl}}</div>
+<p style="margin: 12px 0 0; font-size: 14px; line-height: 1.5; color: #4e3b2c">{{kamer.tekst}}</p>
+<sc-if value="{{kamer.isLink}}" hint-placeholder-val="{{ false }}">
+<a href="{{kamer.href}}" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 52px; margin-top: 18px; box-sizing: border-box; border-radius: 2px; text-decoration: none; font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.24em; text-transform: uppercase; color: #f1e7cf; background: linear-gradient(180deg, #741627 0%, #4a0b17 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.15)">{{kamer.actie}}</a>
+</sc-if>
+<sc-if value="{{kamer.isKnop}}" hint-placeholder-val="{{ true }}">
+<button type="button" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 52px; margin-top: 18px; border: none; border-radius: 2px; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.24em; text-transform: uppercase; color: #f1e7cf; background: linear-gradient(180deg, #741627 0%, #4a0b17 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.15)">{{kamer.actie}}</button>
+</sc-if>
+<sc-if value="{{kamer.dicht}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; align-items: center; gap: 14px; margin-top: 18px; padding: 12px 14px; border: 1px dashed rgba(110,20,36,0.5)">
+<span style="flex: none; width: 30px; height: 30px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #9a2234 0%, #5a0f1c 70%); box-shadow: 0 2px 4px rgba(0,0,0,0.3)"></span>
+<span style="font-size: 13px; line-height: 1.4; color: #4e3b2c">{{kamer.slot}}</span>
+</div>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{toonOverzichtLijst}}" hint-placeholder-val="{{ false }}">
+<div style="font-family: 'Courier Prime', monospace; font-size: 11px; letter-spacing: 0.08em; color: #7a6048">Pianta della villa</div>
+<div style="margin-top: 6px; font-family: 'Bodoni Moda', serif; font-weight: 500; font-size: 28px; color: #24110b">Alle ruimtes</div>
+<div style="display: flex; flex-direction: column; margin-top: 10px">
+<sc-for list="{{plekken}}" as="r" hint-placeholder-count="4">
+<button type="button" onClick="{{r.kies}}" style="display: flex; align-items: center; justify-content: space-between; min-height: 48px; padding: 0 2px; border: none; border-bottom: 1px solid rgba(91,70,54,0.25); background: transparent; cursor: pointer; text-align: left">
+<span style="display: flex; flex-direction: column"><span style="font-family: 'Bodoni Moda', serif; font-size: 17px; color: #24110b">{{r.it}}</span><span style="font-size: 11px; color: #6b5440">{{r.nl}}</span></span>
+<span style="font-family: 'Courier Prime', monospace; font-size: 12px; letter-spacing: 0.1em; color: #6e1424">{{r.status}}</span>
+</button>
+</sc-for>
+</div>
+</sc-if>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"archivio":{"editor":"boolean","default":false,"section":"Game Master"},"sala":{"editor":"boolean","default":false,"section":"Game Master"},"uitlijnen":{"editor":"boolean","default":false,"section":"Game Master"},"sel":{"editor":null},"$preview":{"width":390,"height":844}}'>
+// ── ACHTERGROND ──
+// Vervang FOTO door een nieuwe foyerfoto; FOTO_VERHOUDING = breedte / hoogte van die foto.
+var FOTO_VERHOUDING = 1536 / 2720;
+
+// ── RUIMTES VAN DE VILLA ──
+// vlak   = het object in de foto (l/t = linksboven, b/h = breedte/hoogte), in % van de foto.
+// bordje = plek van het messing naambordje in % van de foto; anker = welke kant van het bordje daar staat.
+// Posities stel je af met de uitlijnmodus en neem je daarna hier over.
+var RUIMTES = [
+  { id: 'galleria', it: 'La Galleria', nl: 'De families', plek: 'Ala ovest · I ritratti',
+    vlak: { l: 13.5, t: 47.5, b: 14.5, h: 21 }, bordje: { x: 12.5, y: 70.5, anker: 'links' },
+    tekst: 'Portretten van de vier families en wie er bij hen hoort. Wat zij geheimhouden, hangt hier niet aan de muur.', actie: 'Bekijk de portretten', altijdOpen: true, href: 'Galleria.dc.html' },
+  { id: 'sala', it: 'La Sala del Giudizio', nl: 'De beschuldiging', plek: 'Primo piano',
+    vlak: { l: 43.5, t: 41.5, b: 15.5, h: 20 }, bordje: { x: 51, y: 64.5, anker: 'midden' },
+    tekst: 'Hier bezegel je aan het einde van de avond je oordeel, en strijd je om de prijzen: beste outfit, scherpste speurder en beste leugenaar.', actie: 'Ga naar boven',
+    slot: 'Deze deur gaat open wanneer Donna Serafina de Commissione bijeenroept.', href: 'Sala.dc.html' },
+  { id: 'archivio', it: "L'Archivio", nl: 'Het geheime archief', plek: 'Ala est · Sotterraneo',
+    vlak: { l: 73, t: 57.5, b: 13.5, h: 23 }, bordje: { x: 88, y: 54, anker: 'rechts' },
+    tekst: 'Het archief van Don Vittorio. Alleen samen, met alle bewijsstukken die jullie vanavond verzamelen, krijgen jullie het open.', actie: 'Daal af naar het archief',
+    slot: 'Verzegeld. Donna Serafina opent deze deur later in de avond.', href: 'Archivio.dc.html' },
+  { id: 'tavolo', it: 'Il Tavolo', nl: 'Brieven & huisregels', plek: "Il tavolo d'ingresso",
+    vlak: { l: 8, t: 85, b: 40, h: 9.5 }, bordje: { x: 47, y: 89.5, anker: 'links' },
+    tekst: 'Een welkomstbrief van Donna Serafina, het programma van de avond en de huisregels van de villa.', actie: 'Lees de brieven', altijdOpen: true, href: 'Tavolo.dc.html' }
+];
+
+function r1(n) { return Math.round(n * 10) / 10; }
+
+class Component extends DCLogic {
+// In de echte app (window.Villa) volgen de deuren live wat Donna Serafina in de Regia opent.
+componentDidMount() {
+  var self = this;
+  if (window.Villa) this._uit = window.Villa.aan(function () { self.setState({ live: ((self.state && self.state.live) || 0) + 1 }); });
+}
+componentWillUnmount() {
+  if (this._uit) this._uit();
+}
+renderVals() {
+  var self = this;
+  var p = this.props;
+  var st = this.state || {};
+  var uit = !!p.uitlijnen;
+  var aanp = st.aanp || {};
+  var live = window.Villa && window.Villa.staat && window.Villa.staat.deuren;
+  var archivioOpen = live ? !!live.archivio : !!p.archivio;
+  var salaOpen = live ? !!live.sala : !!p.sala;
+  var isOpen = function (r) { return r.altijdOpen || (r.id === 'archivio' && archivioOpen) || (r.id === 'sala' && salaOpen); };
+  var sel = uit ? null : (st.sel !== undefined ? st.sel : (p.sel || null));
+  var pos = function (r) { var a = aanp[r.id] || {}; return { vlak: a.vlak || r.vlak, bordje: a.bordje || r.bordje }; };
+
+  var pak = function (r, soort) {
+    return function (e) {
+      if (!uit) return;
+      e.stopPropagation();
+      var q = pos(r);
+      self._sleep = { id: r.id, soort: soort, x: e.clientX, y: e.clientY, vlak: q.vlak, bordje: q.bordje };
+    };
+  };
+
+  var plekken = RUIMTES.map(function (r, i) {
+    var open = isOpen(r), nieuw = open && !r.altijdOpen, q = pos(r), v = q.vlak, b = q.bordje;
+    var verschuif = b.anker === 'links' ? 'translate(0, -50%)' : b.anker === 'rechts' ? 'translate(-100%, -50%)' : 'translate(-50%, -50%)';
+    return {
+      id: r.id, it: r.it, nl: r.nl, dicht: !open,
+      label: open ? (nieuw ? r.nl + ' · nu open' : r.nl) : 'Verzegeld',
+      status: open ? 'Open' : 'Verzegeld',
+      lijnClass: open ? 'lijn' : 'lijn dicht',
+      lijnStyle: 'left: ' + v.l + '%; top: ' + v.t + '%; width: ' + v.b + '%; height: ' + v.h + '%; --d: ' + (0.5 + i * 0.35) + 's',
+      kaderStyle: 'position: absolute; left: ' + v.l + '%; top: ' + v.t + '%; width: ' + v.b + '%; height: ' + v.h + '%; box-sizing: border-box; border: 2px dashed #f0d494; background: rgba(240,212,148,0.12); cursor: move; touch-action: none',
+      bordjeStyle: 'position: absolute; left: ' + b.x + '%; top: ' + b.y + '%; transform: ' + verschuif + '; display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 6px 12px; box-sizing: border-box; text-align: left; border-radius: 2px; touch-action: ' + (uit ? 'none' : 'manipulation') + '; cursor: ' + (uit ? 'move' : 'pointer') + '; ' +
+        (uit ? 'outline: 2px dashed #f0d494; outline-offset: 2px; ' : '') +
+        (nieuw ? 'border: 1px solid rgba(232,200,130,0.95); background: linear-gradient(180deg, rgba(110,20,36,0.94) 0%, rgba(60,10,20,0.94) 100%); box-shadow: 0 6px 18px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,220,170,0.2)'
+               : 'border: 1px solid rgba(201,163,92,0.7); background: linear-gradient(180deg, rgba(52,34,20,0.93) 0%, rgba(24,14,9,0.93) 100%); box-shadow: 0 6px 16px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,220,170,0.18)'),
+      pick: function () { if (!uit) self.setState({ sel: r.id }); },
+      kies: function () { self.setState({ sel: r.id }); },
+      pakVlak: pak(r, 'vlak'),
+      pakMaat: pak(r, 'maat'),
+      pakBordje: pak(r, 'bordje'),
+      uitlezing: r.id + '  vlak l ' + r1(v.l) + ' t ' + r1(v.t) + ' b ' + r1(v.b) + ' h ' + r1(v.h) + '  ·  bordje x ' + r1(b.x) + ' y ' + r1(b.y)
+    };
+  });
+
+  var r = RUIMTES.filter(function (x) { return x.id === sel; })[0];
+  var kamer = r ? { plek: r.plek, it: r.it, nl: r.nl, tekst: r.tekst, actie: r.actie, slot: r.slot || '', open: isOpen(r), dicht: !isOpen(r),
+                    href: r.href || '', isLink: isOpen(r) && !!r.href, isKnop: isOpen(r) && !r.href }
+                : { plek: '', it: '', nl: '', tekst: '', actie: '', slot: '', open: false, dicht: false, href: '', isLink: false, isKnop: false };
+  var zichtbaar = !!sel;
+
+  return {
+    plekken: plekken,
+    kamer: kamer,
+    uitlijnen: uit,
+    toonKamer: !!r,
+    toonOverzichtLijst: sel === 'overzicht',
+    toonHint: !zichtbaar && !uit,
+    toonOverzicht: function () { self.setState({ sel: 'overzicht' }); },
+    sluit: function () { self.setState({ sel: null }); },
+    herstel: function () { self.setState({ aanp: {} }); },
+    podium: 'position: absolute; top: 0; left: 50%; height: 100%; aspect-ratio: ' + FOTO_VERHOUDING + '; transform: translateX(-50%); touch-action: ' + (uit ? 'none' : 'auto'),
+    sleep: function (e) {
+      var s = self._sleep;
+      if (!s) return;
+      var box = e.currentTarget.getBoundingClientRect();
+      var dx = (e.clientX - s.x) / box.width * 100, dy = (e.clientY - s.y) / box.height * 100;
+      var nieuw = Object.assign({}, (self.state && self.state.aanp) || {});
+      var huidig = Object.assign({ vlak: s.vlak, bordje: s.bordje }, nieuw[s.id] || {});
+      if (s.soort === 'vlak') huidig.vlak = Object.assign({}, s.vlak, { l: s.vlak.l + dx, t: s.vlak.t + dy });
+      else if (s.soort === 'maat') huidig.vlak = Object.assign({}, s.vlak, { b: Math.max(3, s.vlak.b + dx), h: Math.max(3, s.vlak.h + dy) });
+      else huidig.bordje = Object.assign({}, s.bordje, { x: s.bordje.x + dx, y: s.bordje.y + dy });
+      nieuw[s.id] = huidig;
+      self.setState({ aanp: nieuw });
+    },
+    los: function () { self._sleep = null; },
+    archiefGlow: 'position: absolute; left: 80%; top: 68%; width: 230px; height: 300px; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; mix-blend-mode: screen; background: radial-gradient(ellipse, rgba(255,205,135,0.42) 0%, rgba(0,0,0,0) 62%); opacity: ' + (archivioOpen ? 1 : 0),
+    sheetStyle: 'position: absolute; left: 10px; right: 10px; bottom: 0; box-sizing: border-box; padding: 26px 24px 30px; border-radius: 2px 2px 0 0; color: #2a1610; background: radial-gradient(ellipse 90% 60% at 20% 0%, rgba(255,250,235,0.7) 0%, rgba(255,250,235,0) 70%), linear-gradient(176deg, #f1e7cf 0%, #e6d6b1 100%); box-shadow: 0 -20px 50px rgba(0,0,0,0.7); ' +
+      (zichtbaar ? 'transform: translateY(0)' : 'transform: translateY(110%)')
+  };
+}
+}
+</script>
+</body>
+</html>

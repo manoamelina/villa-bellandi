@@ -1,0 +1,18 @@
+{
+  // Cloudflare-instellingen voor Villa Bellandi.
+  // De naam moet gelijk zijn aan de naam van de Worker in het Cloudflare-dashboard.
+  "name": "villa-bellandi",
+  "main": "src/worker.js",
+  "compatibility_date": "2025-10-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    // Bestanden precies op hun eigen pad serveren (geen .html-omleidingen): de ontwerp-runtime leest zijn eigen bestandsnaam.
+    "html_handling": "none"
+  },
+  "durable_objects": {
+    "bindings": [{ "name": "VILLA", "class_name": "Villa" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Villa"] }],
+  "observability": { "enabled": true }
+}

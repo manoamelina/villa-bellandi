@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Villa Bellandi — De poort</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050303">
+<meta name="robots" content="noindex, nofollow">
+<meta name="villa-rol" content="entree">
+<script src="./live.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="/fonts.css" rel="stylesheet">
+<style>
+body{margin:0;background:#050303}
+a{color:#d8b670}a:hover{color:#efd59a}
+input::placeholder{color:rgba(233,220,192,0.35);letter-spacing:.5em}
+input:focus{outline:none;box-shadow:inset 0 2px 6px rgba(0,0,0,.8),0 0 0 2px rgba(216,182,112,.7)}
+button:focus-visible,a:focus-visible{outline:2px solid #d8b670;outline-offset:3px}
+@keyframes flame{0%,100%{opacity:.6}30%{opacity:.4}55%{opacity:.55}78%{opacity:.36}}
+@keyframes kier{0%,100%{opacity:.55}40%{opacity:.8}70%{opacity:.5}}
+@keyframes welkom{0%{opacity:0;transform:translateY(10px)}18%{opacity:1;transform:none}75%{opacity:1}100%{opacity:0}}
+.flame{animation:flame 3.6s ease-in-out infinite}
+.flame2{animation:flame 4.3s ease-in-out .7s infinite}
+.kier{animation:kier 5s ease-in-out infinite}
+.welkom{animation:welkom 4.6s ease .7s both}
+.fade{transition:opacity .6s ease}
+@media (prefers-reduced-motion: reduce){.flame,.flame2,.kier{animation:none}.welkom{animation:none;opacity:0}.fade{transition:none}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; font-family: 'Jost', sans-serif; color: #e9dcc0; background: #050303">
+
+<div style="position: absolute; top: 0; left: 50%; height: 100%; aspect-ratio: 0.5647; transform: translateX(-50%)">
+<img src="/beeld/570b6b9a79c0ab5a5ac22961b4fe7850.jpg" alt="De voordeur van Villa Bellandi bij nacht" style="display: block; width: 100%; height: 100%; object-fit: cover">
+<div class="flame" style="position: absolute; left: 6%; top: 46%; width: 150px; height: 150px; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; mix-blend-mode: screen; background: radial-gradient(circle, rgba(255,190,110,0.5) 0%, rgba(0,0,0,0) 65%)"></div>
+<div class="flame2" style="position: absolute; left: 94%; top: 46%; width: 150px; height: 150px; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; mix-blend-mode: screen; background: radial-gradient(circle, rgba(255,190,110,0.5) 0%, rgba(0,0,0,0) 65%)"></div>
+<div class="kier" style="position: absolute; left: 50%; top: 58%; width: 60px; height: 360px; transform: translate(-50%, -50%); pointer-events: none; mix-blend-mode: screen; background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255,200,120,0.35) 0%, rgba(0,0,0,0) 70%)"></div>
+</div>
+
+<video ref="{{vidRef}}" class="fade" src="/beeld/e926726c46ecb22a4b15343f2495ccb2.mp4" muted playsinline preload="auto" onEnded="{{naarBinnen}}" onError="{{fout}}" aria-hidden="true" style="{{videoStyle}}"></video>
+
+<div style="position: absolute; left: 0; right: 0; top: 0; height: 120px; pointer-events: none; background: linear-gradient(180deg, rgba(3,2,2,0.7) 0%, rgba(3,2,2,0) 100%)"></div>
+<div style="position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 90px 20px rgba(0,0,0,0.6)"></div>
+
+<sc-if value="{{opPortaal}}" hint-placeholder-val="{{ true }}">
+<div style="position: absolute; left: 0; right: 0; top: 0; height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 18px; box-sizing: border-box">
+<span style="font-family: 'Courier Prime', monospace; font-size: 11px; letter-spacing: 0.14em; color: rgba(216,182,112,0.85)">Palermo · 21 novembre MCMLXXIV</span>
+<button type="button" aria-label="Geluid aanzetten" style="width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(216,182,112,0.45); background: rgba(14,8,6,0.6); display: flex; align-items: center; justify-content: center; cursor: pointer">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d8b670" stroke-width="1.5" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M17 9l5 6M22 9l-5 6"></path></svg>
+</button>
+</div>
+
+<div style="position: absolute; left: 50%; top: 498px; width: 248px; margin-left: -124px; box-sizing: border-box; padding: 16px 18px 16px; border-radius: 3px; background: linear-gradient(160deg, #c49c56 0%, #8a6630 38%, #b08640 70%, #7a5a2a 100%); box-shadow: 0 18px 40px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,236,190,0.5), inset 0 -1px 0 rgba(0,0,0,0.35)">
+<div style="position: absolute; left: 9px; top: 9px; width: 5px; height: 5px; border-radius: 50%; background: #5a4220; box-shadow: inset 0 1px 0 rgba(255,230,170,0.5)"></div>
+<div style="position: absolute; right: 9px; top: 9px; width: 5px; height: 5px; border-radius: 50%; background: #5a4220; box-shadow: inset 0 1px 0 rgba(255,230,170,0.5)"></div>
+<div style="position: absolute; left: 9px; bottom: 9px; width: 5px; height: 5px; border-radius: 50%; background: #5a4220; box-shadow: inset 0 1px 0 rgba(255,230,170,0.5)"></div>
+<div style="position: absolute; right: 9px; bottom: 9px; width: 5px; height: 5px; border-radius: 50%; background: #5a4220; box-shadow: inset 0 1px 0 rgba(255,230,170,0.5)"></div>
+<div style="text-align: center; font-family: 'Bodoni Moda', serif; font-style: italic; font-size: 21px; line-height: 1.1; color: #2a1808; text-shadow: 0 1px 0 rgba(255,232,180,0.45)">Villa Bellandi</div>
+<div style="width: 60px; height: 1px; margin: 8px auto 0; background: rgba(42,24,8,0.45); box-shadow: 0 1px 0 rgba(255,232,180,0.35)"></div>
+<label for="toegang" style="display: block; margin-top: 8px; text-align: center; font-family: 'Bodoni Moda', serif; font-size: 12px; letter-spacing: 0.3em; color: #2e1d0b; text-shadow: 0 1px 0 rgba(255,232,180,0.45)">CODICE D'ACCESSO</label>
+<div style="margin-top: 3px; text-align: center; font-size: 12px; color: #3a2610">Voer de code uit je envelop in</div>
+<input id="toegang" ref="{{codeRef}}" onKeyDown="{{toets}}" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="12" aria-describedby="toegang-fout" placeholder="——————" style="display: block; width: 100%; box-sizing: border-box; height: 46px; margin-top: 10px; padding: 0 12px; border: none; border-radius: 2px; text-align: center; font-family: 'Courier Prime', monospace; font-size: 22px; letter-spacing: 0.42em; color: #efe4cc; background: linear-gradient(180deg, #120a07 0%, #1e120c 100%); box-shadow: inset 0 2px 6px rgba(0,0,0,0.8), 0 1px 0 rgba(255,232,180,0.35)">
+<sc-if value="{{toonFout}}" hint-placeholder-val="{{ false }}">
+<div id="toegang-fout" role="alert" style="margin-top: 8px; text-align: center; font-size: 12.5px; line-height: 1.3; color: #5a0f1c; text-shadow: 0 1px 0 rgba(255,232,180,0.4)">{{foutTekst}}</div>
+</sc-if>
+<button type="button" onClick="{{entra}}" disabled="{{bezig}}" style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; height: 50px; margin-top: 10px; border: none; border-radius: 2px; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #f1e7cf; background: linear-gradient(180deg, #741627 0%, #4a0b17 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 4px 10px rgba(40,6,12,0.6)">
+<span style="width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #c0485a 0%, #7a1424 70%); box-shadow: inset 0 0 0 1px rgba(30,2,8,0.6)"></span>
+{{knopTekst}}
+</button>
+</div>
+</sc-if>
+
+<sc-if value="{{inVideo}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; left: 0; right: 0; top: 0; height: 64px; display: flex; align-items: center; justify-content: flex-end; padding: 0 12px; box-sizing: border-box">
+<button type="button" onClick="{{naarBinnen}}" style="display: flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 22px; border: 1px solid rgba(216,182,112,0.5); background: rgba(14,8,6,0.55); cursor: pointer; font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #e9dcc0">Intro overslaan →</button>
+</div>
+</sc-if>
+
+<sc-if value="{{binnen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0">
+<dc-import name="Foyer" hint-size="390px,844px"></dc-import>
+</div>
+<div class="welkom" style="position: absolute; left: 24px; right: 24px; top: 150px; text-align: center; pointer-events: none">
+<div style="display: inline-block; padding: 14px 22px 16px; background: radial-gradient(ellipse at 50% 50%, rgba(8,4,3,0.72) 0%, rgba(8,4,3,0) 75%)">
+<div style="font-family: 'Bodoni Moda', serif; font-style: italic; font-size: 18px; color: #e2c27e">Benvenuti a</div>
+<div style="font-family: 'Bodoni Moda', serif; font-size: 40px; line-height: 1.05; color: #f6eedb; text-shadow: 0 4px 24px rgba(0,0,0,0.9)">Villa Bellandi</div>
+<div style="margin-top: 8px; font-size: 14px; color: rgba(246,238,219,0.92); text-shadow: 0 2px 10px rgba(0,0,0,0.9)">{{welkomTekst}}</div>
+</div>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"fase":{"editor":"enum","options":["portaal","video","binnen"],"default":"portaal"},"$preview":{"width":390,"height":844}}'>
+// De intro: portaal → video (deuren open, camera naar binnen) → de foyer.
+// In de echte app (window.Villa) controleert "Ontzegel uw toegang" eerst de code bij de villa;
+// in het ontwerpcanvas werkt elke code.
+class Component extends DCLogic {
+componentDidMount() {
+  var self = this, V = window.Villa;
+  if ((this.props.fase || 'portaal') === 'video') this.speel();
+  if (!V) return;
+  this._uit = V.aan(function () { self.setState({ live: ((self.state && self.state.live) || 0) + 1 }); });
+  // De intro alvast helemaal ophalen, zodat hij straks meteen soepel speelt.
+  var bron = this._vid && this._vid.getAttribute('src');
+  if (bron) V.haal(bron).then(function (u) { self._intro = u; }, function () {});
+  // Al eerder binnen geweest op deze telefoon: meteen door naar de foyer.
+  if (V.bewaard('speler')) {
+    this.setState({ bezig: true });
+    V.meldAan('speler').then(function () { self.setState({ bezig: false, fase: 'binnen' }); },
+                             function () { self.setState({ bezig: false }); });
+  }
+}
+componentWillUnmount() {
+  if (this._uit) this._uit();
+}
+speel() {
+  var v = this._vid;
+  if (!v) return;
+  v.muted = true;
+  if (this._intro && v.src !== this._intro) v.src = this._intro;
+  try { v.currentTime = 0; } catch (e) {}
+  var p = v.play();
+  var self = this;
+  if (p && p.catch) p.catch(function () { self.setState({ fase: 'binnen' }); });
+}
+start() {
+  var self = this, rustig = false;
+  try { rustig = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  if (rustig) { this.setState({ fase: 'binnen' }); return; }
+  this.setState({ fase: 'video' }, function () { self.speel(); });
+}
+controleer() {
+  var self = this, V = window.Villa;
+  if (!V) { this.start(); return; }
+  var code = this._code ? this._code.value : '';
+  if (!code.replace(/[^A-Za-z0-9]/g, '')) { this.setState({ fout: 'Vul eerst de code uit je envelop in.' }); return; }
+  this.setState({ bezig: true, fout: '' });
+  V.meldAan('speler', code).then(function () {
+    self.setState({ bezig: false });
+    if (self._code) self._code.blur();
+    self.start();
+  }, function (reden) {
+    self.setState({ bezig: false, fout: reden === 'code'
+      ? 'Deze code kennen we niet. Kijk nog eens goed in je envelop.'
+      : 'Geen verbinding met de villa. Probeer het zo nog eens.' });
+  });
+}
+renderVals() {
+  var self = this, V = window.Villa;
+  var st = this.state || {};
+  var fase = st.fase || this.props.fase || 'portaal';
+  var naam = V && V.speler ? V.speler.naam : 'Marco Caruso';
+  return {
+    opPortaal: fase === 'portaal',
+    inVideo: fase === 'video',
+    binnen: fase === 'binnen',
+    vidRef: function (el) { self._vid = el; if (el) el.muted = true; },
+    codeRef: function (el) { self._code = el; },
+    videoStyle: 'position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; background: transparent; opacity: ' + (fase === 'video' ? 1 : 0),
+    bezig: !!st.bezig,
+    knopTekst: st.bezig ? 'Een moment…' : 'Ontzegel uw toegang',
+    toonFout: !!st.fout,
+    foutTekst: st.fout || '',
+    welkomTekst: 'Donna Serafina verwacht u, ' + naam + '.',
+    toets: function (e) { if (e.key === 'Enter') { e.preventDefault(); self.controleer(); } },
+    entra: function () { self.controleer(); },
+    fout: function () { if (fase === 'video') self.setState({ fase: 'binnen' }); },
+    naarBinnen: function () {
+      if (self._vid) { try { self._vid.pause(); } catch (e) {} }
+      self.setState({ fase: 'binnen' });
+    }
+  };
+}
+}
+</script>
+</body>
+</html>

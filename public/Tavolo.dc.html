@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Villa Bellandi — Il Tavolo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050303">
+<meta name="robots" content="noindex, nofollow">
+<meta name="villa-rol" content="speler">
+<script src="./live.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="/fonts.css" rel="stylesheet">
+<style>
+body{margin:0;background:#070404}
+a{color:#d8b670}a:hover{color:#efd59a}
+button:focus-visible,a:focus-visible{outline:2px solid #d8b670;outline-offset:3px}
+@keyframes flame{0%,100%{opacity:.7}28%{opacity:.48}52%{opacity:.66}76%{opacity:.42}}
+@keyframes brief{from{opacity:0;transform:translateY(60px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes dim{from{opacity:0}to{opacity:1}}
+.flame{animation:flame 3.6s ease-in-out infinite}
+.brief{animation:brief .55s cubic-bezier(.2,.8,.2,1) both}
+.dim{animation:dim .4s ease both}
+.helft{transition:transform .45s cubic-bezier(.3,1.3,.5,1),opacity .45s ease}
+.env{transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+@media (prefers-reduced-motion: reduce){.flame,.brief,.dim{animation:none}.helft,.env{transition:none}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; font-family: 'Jost', sans-serif; color: #e9dcc0; background: #070404">
+
+<div style="position: absolute; top: 0; left: 50%; height: 100%; aspect-ratio: 1536 / 2752; transform: translateX(-50%)">
+<img src="/beeld/8259e3a5128f9db8712eec668b25a711.jpg" alt="De ontvangsttafel bij kaarslicht" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block; user-select: none; pointer-events: none">
+<div class="flame" style="position: absolute; left: 21%; top: 9%; width: 70%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; mix-blend-mode: screen; background: radial-gradient(circle, rgba(255,196,120,0.4) 0%, rgba(255,160,80,0.1) 38%, rgba(0,0,0,0) 66%)"></div>
+
+<sc-for list="{{brieven}}" as="b" hint-placeholder-count="4">
+<button type="button" class="env" onClick="{{b.tik}}" aria-label="{{b.aria}}" style="{{b.knop}}">
+<span style="position: relative; display: block; width: 100%; aspect-ratio: 900 / 710">
+<img src="/beeld/28f65ba79a576c958f6d81289810c9a0.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block; filter: sepia(0.35) brightness(0.8) saturate(1.05) drop-shadow(0 8px 10px rgba(0,0,0,0.6))">
+<span style="position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 20% 0%, rgba(255,200,130,0.16) 0%, rgba(0,0,0,0) 60%)"></span>
+<img class="helft" src="/beeld/19dd30608b3e08bae5cb31ee458bf822.webp" alt="" style="{{b.links}}">
+<img class="helft" src="/beeld/19dd30608b3e08bae5cb31ee458bf822.webp" alt="" style="{{b.rechts}}">
+</span>
+<span style="position: absolute; left: 50%; top: 88%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; padding: 4px 12px 5px; white-space: nowrap; background: linear-gradient(160deg, #dcbd78 0%, #a47c40 55%, #c49c56 100%); box-shadow: 0 3px 8px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,236,190,0.5)">
+<span style="font-family: 'Bodoni Moda', serif; font-style: italic; font-size: 13px; line-height: 1.15; color: #2a1808">{{b.titel}}</span>
+<span style="font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: #3e2810">{{b.sub}}</span>
+</span>
+</button>
+</sc-for>
+</div>
+
+<div style="position: absolute; left: 0; right: 0; top: 0; height: 110px; pointer-events: none; background: linear-gradient(180deg, rgba(5,2,2,0.72) 0%, rgba(5,2,2,0) 100%)"></div>
+<div style="position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 90px 18px rgba(0,0,0,0.55)"></div>
+
+<div style="position: absolute; left: 0; right: 0; top: 0; height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px; box-sizing: border-box">
+<a href="Foyer.dc.html" style="display: flex; align-items: center; gap: 6px; height: 44px; padding: 0 14px 0 10px; border-radius: 22px; border: 1px solid rgba(216,182,112,0.5); background: rgba(20,8,8,0.6); text-decoration: none; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #e9dcc0">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#d8b670" stroke-width="1.6" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Foyer</a>
+<div style="display: flex; flex-direction: column; align-items: center">
+<span style="font-family: 'Bodoni Moda', serif; font-style: italic; font-size: 18px; line-height: 1.1; color: #f4ead2">Il Tavolo</span>
+<span style="font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase; color: #d8b670">Brieven &amp; huisregels</span>
+</div>
+<span style="width: 44px"></span>
+</div>
+
+<div style="position: absolute; left: 50%; bottom: 34px; transform: translateX(-50%); white-space: nowrap; padding: 9px 18px; border-radius: 20px; border: 1px solid rgba(216,182,112,0.4); background: rgba(14,6,5,0.75); font-size: 12px; letter-spacing: 0.03em; color: #e9dcc0; pointer-events: none">Tik op een envelop om het zegel te breken</div>
+
+<sc-if value="{{toonBrief}}" hint-placeholder-val="{{ false }}">
+<div class="dim" style="position: absolute; inset: 0; background: rgba(6,3,3,0.84)">
+<div class="brief" style="position: absolute; left: 12px; right: 12px; top: 22px; bottom: 22px; display: flex; flex-direction: column; color: #2a1a10; background: radial-gradient(ellipse 90% 40% at 15% 0%, rgba(255,250,235,0.75) 0%, rgba(255,250,235,0) 70%), radial-gradient(ellipse 70% 40% at 100% 100%, rgba(120,80,30,0.16) 0%, rgba(120,80,30,0) 70%), linear-gradient(176deg, #f3ead3 0%, #e7d8b4 100%); box-shadow: 0 24px 60px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(122,96,72,0.35)">
+<div style="position: absolute; inset: 7px; border: 1px solid rgba(122,96,72,0.28); pointer-events: none"></div>
+<div style="flex: none; display: flex; justify-content: flex-end; padding: 8px 8px 0">
+<button type="button" onClick="{{sluit}}" aria-label="Brief sluiten" style="width: 44px; height: 44px; border: none; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5b4636" stroke-width="1.6" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+</button>
+</div>
+<div style="flex: 1; min-height: 0; overflow-y: auto; padding: 0 28px 24px">
+<div style="display: flex; flex-direction: column; align-items: center; text-align: center">
+<img src="/beeld/19dd30608b3e08bae5cb31ee458bf822.webp" alt="" style="width: 46px; height: auto; display: block; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3))">
+<div style="margin-top: 12px; font-family: 'Bodoni Moda', serif; font-style: italic; font-size: 27px; line-height: 1.1; color: #24110b">{{brief.titel}}</div>
+<div style="margin-top: 6px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #6e1424">{{brief.sub}}</div>
+<div style="width: 46px; height: 1px; margin-top: 14px; background: #a07a3e"></div>
+</div>
+<div style="margin-top: 16px; font-family: 'EB Garamond', serif; font-size: 18px; line-height: 1.5; color: #2a1a10">
+<sc-for list="{{brief.blokken}}" as="k" hint-placeholder-count="4">
+<sc-if value="{{k.isP}}" hint-placeholder-val="{{ true }}"><p style="margin: 0 0 12px">{{k.tekst}}</p></sc-if>
+<sc-if value="{{k.isItem}}" hint-placeholder-val="{{ false }}"><div style="margin: 0 0 12px"><div style="font-family: 'Bodoni Moda', serif; font-weight: 500; font-size: 16px; color: #4a0b17">{{k.kop}}</div><div>{{k.tekst}}</div></div></sc-if>
+<sc-if value="{{k.isSign}}" hint-placeholder-val="{{ false }}"><p style="margin: 18px 0 0; font-style: italic; font-size: 20px; color: #24110b">{{k.tekst}}</p></sc-if>
+</sc-for>
+</div>
+<button type="button" onClick="{{sluit}}" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 50px; margin-top: 18px; border: none; border-radius: 2px; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #f1e7cf; background: linear-gradient(180deg, #741627 0%, #4a0b17 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.15)">Terug naar de tafel</button>
+</div>
+</div>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"open":{"editor":null},"$preview":{"width":390,"height":844}}'>
+// ── DE VIER BRIEVEN — teksten zijn hier los aan te passen ──
+// x / y = midden van de envelop in % van de tafelfoto, draai = graden.
+var BRIEVEN = [
+  { id: 'benvenuto', titel: 'Lettera di benvenuto', sub: 'Welkomstbrief', x: 29, y: 40, draai: -13, blokken: [
+    { p: 'Geachte gasten,' },
+    { p: 'Namens de familie Bellandi heet ik u van harte welkom in Villa Bellandi.' },
+    { p: 'Wij zijn hier vanavond samengekomen onder omstandigheden die niemand van ons had gewenst. Het overlijden van Don Vittorio Bellandi heeft een stilte achtergelaten die zelfs deze oude muren niet kunnen verbergen.' },
+    { p: 'Toch zou Don Vittorio hebben gewild dat wij samenkomen. Dat wij spreken, luisteren en elkaar in de ogen durven kijken.' },
+    { p: 'Onder dit dak hebben vier families een plaats aan tafel: Famiglia Caruso, Bellaforte, Ventresca en Morelli.' },
+    { p: 'Ik verzoek u onze gastvrijheid te respecteren. Niet alles wat u vanavond hoort, zal eenvoudig zijn.' },
+    { p: 'Moge deze avond ons dichter bij de waarheid brengen.' },
+    { sign: 'Donna Serafina Bellandi' } ] },
+  { id: 'programma', titel: 'Il programma della serata', sub: 'Het verloop van de avond', x: 64, y: 36, draai: 9, blokken: [
+    { kop: '1 · Il Benvenuto — De ontvangst', p: 'Neem plaats, maak kennis met de aanwezigen en ontdek Villa Bellandi.' },
+    { kop: '2 · La Riunione — De bijeenkomst', p: 'Voer gesprekken, wissel informatie uit en onderzoek wat anderen u vertellen.' },
+    { kop: '3 · I Segreti — De geheimen', p: 'Nieuwe informatie komt beschikbaar. Gebruik deze zorgvuldig.' },
+    { kop: '4 · L’Archivio — Het archief', p: 'Werk samen om het verzegelde archief van de familie te onderzoeken.' },
+    { kop: '5 · La Sala del Giudizio — Het oordeel', p: 'Breng uw beschuldiging uit en laat uw stem gelden.' },
+    { kop: '6 · La Sentenza — Het vonnis', p: 'Donna Serafina maakt het gezamenlijke oordeel bekend.' } ] },
+  { id: 'regole', titel: 'Le regole della casa', sub: 'De huisregels', x: 41, y: 60, draai: 4, blokken: [
+    { p: '1. Blijf in uw rol en respecteer uw medespelers.' },
+    { p: '2. U mag liegen, bluffen en informatie achterhouden.' },
+    { p: '3. Bewijsstukken mogen worden getoond en besproken. Uw persoonlijke dossier is alleen voor uw ogen.' },
+    { p: '4. Vernietig, wijzig of verstop geen originele bewijsstukken.' },
+    { p: '5. Bewaar alle documenten die u ontvangt.' },
+    { p: '6. Gebruik alleen informatie die u in het spel heeft ontvangen.' },
+    { p: '7. Respecteer de aanwijzingen en beslissingen van Donna Serafina.' },
+    { p: '8. Vergeet niet: vertrouwen is kostbaar in Villa Bellandi.' } ] },
+  { id: 'istruzioni', titel: 'Istruzioni riservate', sub: 'Vertrouwelijke instructies', x: 68, y: 62, draai: -8, blokken: [
+    { p: 'Deze telefoon wordt tijdens het spel doorgegeven. Gebruik uw eigen telefoon pas aan het einde, wanneer Donna Serafina daarom vraagt.' },
+    { kop: 'La Galleria — De portrettengalerij', p: 'Bekijk wie bij Famiglia Caruso, Bellaforte, Ventresca en Morelli hoort. Ook Sebastiano Valenti en Avvocata Caterina Rinaldi, die bij geen van de families horen, hebben er een eigen wand. Hier vindt u uitsluitend openbare informatie.' },
+    { kop: 'L’Archivio — Het archief', p: 'Het archief is verzegeld. Donna Serafina opent het later. Los de opdracht gezamenlijk op met uw verzamelde bewijsstukken. Bewaar alles wat u ontvangt.' },
+    { kop: 'La Sala del Giudizio — Het oordeel', p: 'Gebruik aan het einde uw eigen telefoon en de persoonlijke code uit uw envelop. Schrijf in uw eigen woorden wie Don Vittorio vermoordde, waarom en hoe, en bezegel uw oordeel. Dat kan maar één keer. Wie als eerste alles goed heeft, wint.' },
+    { p: 'Daarna volgt een bonusvraag voor de prijs van de scherpste speurder, en stemt u op de beste outfit en de beste leugenaar.' },
+    { p: 'De uitslag blijft verborgen totdat Donna Serafina Bellandi het oordeel uitspreekt.' } ] }
+];
+
+var OPSLAG = 'bellandi-tavolo-gelezen';
+var LINKS = 'polygon(0 0, 50% 0, 44% 22%, 56% 41%, 46% 63%, 54% 82%, 49% 100%, 0 100%)';
+var RECHTS = 'polygon(50% 0, 100% 0, 100% 100%, 49% 100%, 54% 82%, 46% 63%, 56% 41%, 44% 22%)';
+
+class Component extends DCLogic {
+componentDidMount() {
+  var g = {};
+  try { g = JSON.parse(window.localStorage.getItem(OPSLAG) || '{}') || {}; } catch (e) { g = {}; }
+  this.setState({ gelezen: g });
+}
+componentWillUnmount() { if (this._t) clearTimeout(this._t); }
+renderVals() {
+  var self = this;
+  var st = this.state || {};
+  var gelezen = st.gelezen || {};
+  var open = st.open !== undefined ? st.open : (this.props.open || null);
+  var basis = 'position: absolute; left: 52%; top: 62%; width: 22%; height: auto; display: block; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); ';
+
+  var tik = function (b) {
+    return function () {
+      if (gelezen[b.id]) { self.setState({ open: b.id }); return; }
+      var g = Object.assign({}, gelezen); g[b.id] = true;
+      try { window.localStorage.setItem(OPSLAG, JSON.stringify(g)); } catch (e) {}
+      var rustig = false;
+      try { rustig = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+      self.setState({ gelezen: g, breek: b.id });
+      if (self._t) clearTimeout(self._t);
+      self._t = setTimeout(function () { self.setState({ open: b.id, breek: null }); }, rustig ? 0 : 560);
+    };
+  };
+
+  var brieven = BRIEVEN.map(function (b) {
+    var stuk = !!gelezen[b.id] || st.breek === b.id || open === b.id;
+    return {
+      titel: b.titel, sub: b.sub,
+      aria: b.titel + ' — ' + b.sub + (gelezen[b.id] ? ', gelezen' : ', verzegeld'),
+      tik: tik(b),
+      knop: 'position: absolute; left: ' + b.x + '%; top: ' + b.y + '%; width: 34%; padding: 0 0 18px; border: none; background: transparent; cursor: pointer; transform: translate(-50%, -50%) rotate(' + b.draai + 'deg)' + (st.breek === b.id ? ' scale(1.06)' : ''),
+      links: basis + 'clip-path: ' + LINKS + '; transform: translate(-50%, -50%)' + (stuk ? ' translate(-7%, 4%) rotate(-14deg)' : ''),
+      rechts: basis + 'clip-path: ' + RECHTS + '; transform: translate(-50%, -50%)' + (stuk ? ' translate(7%, -3%) rotate(11deg)' : '')
+    };
+  });
+
+  var b = BRIEVEN.filter(function (x) { return x.id === open; })[0];
+  var brief = b ? {
+    titel: b.titel, sub: b.sub,
+    blokken: b.blokken.map(function (k) {
+      return { isP: !!k.p && !k.kop, isItem: !!k.kop, isSign: !!k.sign, kop: k.kop || '', tekst: k.p || k.sign || '' };
+    })
+  } : { titel: '', sub: '', blokken: [] };
+
+  return {
+    brieven: brieven,
+    toonBrief: !!b,
+    brief: brief,
+    sluit: function () { self.setState({ open: null }); }
+  };
+}
+}
+</script>
+</body>
+</html>
