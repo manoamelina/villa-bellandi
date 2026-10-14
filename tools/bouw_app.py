@@ -20,7 +20,7 @@ PUBLIC = VILLA / 'public'
 MEDIA = {'uitnodiging.mp4': KLAD / 'out' / 'uitnodiging' / 'Uitnodiging Villa Bellandi.mp4'}
 
 # pagina: rol ('entree' regelt het aanmelden zelf)
-PAGINAS = {'Entree': 'entree', 'Foyer': 'speler', 'Galleria': 'speler', 'Tavolo': 'speler', 'Regia': 'regia', 'Scherm': 'scherm'}
+PAGINAS = {'Entree': 'entree', 'Foyer': 'speler', 'Galleria': 'speler', 'Tavolo': 'speler', 'Regia': 'regia', 'Scherm': 'scherm', 'Zegel': 'onderdeel'}
 NOG_NIET = {
     'Sala': ('La Sala del Giudizio', 'Hier bezegel je straks je oordeel. Deze kamer komt in een volgende versie van de app.'),
     'Archivio': ("L'Archivio", 'Het archief van Don Vittorio komt in een volgende versie van de app.'),

@@ -165,6 +165,15 @@ with sync_playwright() as p:
     tv.reload()
     check(wacht_op(lambda: tv.get_by_text('Het scherm is gekoppeld').is_visible(), 10), 'tv na herladen meteen weer gekoppeld (alleen nog "Begin")')
 
+    # ── de vier zegels van Il Pavone ──
+    regia.get_by_role('button', name='Famiglia Morelli: nog niet bezegeld').click()
+    check(wacht_op(lambda: regia.get_by_role('button', name='Famiglia Morelli: bezegeld').is_visible()), 'Regia: zegel van Morelli aangetikt')
+    check(wacht_op(lambda: tv.evaluate('window.Villa.staat && window.Villa.staat.zegels && window.Villa.staat.zegels.morelli === true')), 'de tv weet het meteen')
+    check(all(s.evaluate('window.Villa.staat && window.Villa.staat.zegels === undefined') for s in spelers[:2]), 'de telefoons van de spelers zien de zegels niet')
+    regia.screenshot(path=str(UIT / 'regia-6-zegels.png'))
+    regia.get_by_role('button', name='Famiglia Morelli: bezegeld').click()
+    check(wacht_op(lambda: regia.get_by_role('button', name='Famiglia Morelli: nog niet bezegeld').is_visible()), 'Regia: zegel weer uit')
+
     # ── de finale-tabbladen mogen niet stuk gaan zonder antwoorden ──
     voor = len([l for l in logs if '[regia] pageerror' in l])
     for tab in ('Oordelen', 'Winnaar', 'Prijzen', 'Scherm'):

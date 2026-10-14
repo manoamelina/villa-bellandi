@@ -80,8 +80,17 @@ check(laatste(r2, 'welkom')?.rol === 'regia', 'regia komt terug met token');
 const r3 = await verbind('r3'); r3.stuur({ t: 'hallo', rol: 'regia', token: 'nep' }); await wacht(150);
 check(laatste(r3, 'fout')?.reden === 'token', 'nep-token geweigerd');
 
+regia.stuur({ t: 'zegel', fam: 'morelli', aan: true }); await wacht(200);
+check(laatste(regia, 'staat')?.staat?.zegels?.morelli === true, 'regia zet het zegel van Morelli');
+check(laatste(tv2, 'staat')?.staat?.zegels?.morelli === true, 'de tv weet van het zegel van Morelli');
+check(p.every((c) => c.inbox.filter((m) => m.t === 'staat').every((m) => m.staat.zegels === undefined)), 'spelers zien de zegels van Il Pavone niet');
+regia.stuur({ t: 'zegel', fam: 'falcone', aan: true }); await wacht(100);
+check(laatste(regia, 'staat')?.staat?.zegels?.falcone === undefined, 'onbekende familie genegeerd');
+p[0].stuur({ t: 'zegel', fam: 'caruso', aan: true }); await wacht(150);
+check(laatste(regia, 'staat')?.staat?.zegels?.caruso === false, 'speler kan geen zegel zetten');
 regia.stuur({ t: 'opnieuw' }); await wacht(200);
 check(laatste(p[0], 'staat')?.staat?.deuren?.archivio === false, 'opnieuw beginnen sluit de deuren weer');
+check(laatste(regia, 'staat')?.staat?.zegels?.morelli === false, 'opnieuw beginnen wist de zegels');
 
 for (const c of [tv, regia, ...p, fout, tv2, r2, r3]) try { c.ws.close(); } catch (e) {}
 console.log(fouten.length ? `\n${fouten.length} FOUT(EN)` : '\nalles in orde');

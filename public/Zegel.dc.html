@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Zegel — lakzegel met familieteken</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050303">
+<meta name="robots" content="noindex, nofollow">
+<meta name="villa-rol" content="onderdeel">
+<script src="./live.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="/fonts.css" rel="stylesheet">
+<style>body{margin:0;background:transparent}</style>
+</helmet>
+<div style="{{doos}}">
+<svg viewBox="0 0 120 120" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 3px 4px rgba(0,0,0,0.55))">
+<defs>
+<radialGradient id="{{idWas}}" cx="38%" cy="32%" r="78%">
+<stop offset="0" stop-color="#b8404f"></stop>
+<stop offset="0.32" stop-color="#8c2133"></stop>
+<stop offset="0.68" stop-color="#6a1424"></stop>
+<stop offset="1" stop-color="#3a0912"></stop>
+</radialGradient>
+<radialGradient id="{{idKuil}}" cx="45%" cy="40%" r="70%">
+<stop offset="0" stop-color="#7e1a2b"></stop>
+<stop offset="1" stop-color="#55101d"></stop>
+</radialGradient>
+<radialGradient id="{{idGlans}}" cx="50%" cy="50%" r="50%">
+<stop offset="0" stop-color="#ffffff" stop-opacity="0.32"></stop>
+<stop offset="1" stop-color="#ffffff" stop-opacity="0"></stop>
+</radialGradient>
+</defs>
+<path d="M118 60 C118.5 62.9 116.7 66 115.9 68.9 C115.1 71.7 114.4 74.6 113.2 77.3 C112.1 80 110.8 82.7 109.1 85 C107.4 87.3 104.9 89.1 103.1 91.3 C101.2 93.5 100.2 96.3 98 98 C95.8 99.7 92.6 100.3 90.1 101.4 C87.5 102.4 84.8 102.5 82.6 104.4 C80.4 106.2 79.3 110.4 77 112.4 C74.7 114.4 71.8 115.9 68.9 116.4 C66.1 116.9 62.9 115.7 60 115.3 C57.1 114.8 54.2 114.6 51.5 113.7 C48.8 112.7 46.5 110.6 43.9 109.5 C41.3 108.4 38.7 107.9 36 107.1 C33.3 106.2 29.9 106.1 27.7 104.4 C25.6 102.7 24.8 99.2 22.9 97.1 C21 95 18.9 93.4 16.5 91.6 C14.1 89.8 10.1 88.7 8.3 86.3 C6.6 84 6.2 80.6 5.8 77.6 C5.4 74.6 5.5 71.5 5.9 68.6 C6.3 65.6 7.3 62.7 8.2 60 C9.1 57.3 11 55 11.3 52.3 C11.6 49.6 9.8 46.5 9.9 43.7 C9.9 40.9 10.4 37.8 11.7 35.4 C12.9 32.9 16 31.6 17.5 29.1 C19 26.7 19.3 23.3 20.7 20.7 C22.2 18.1 23.9 15.2 26.2 13.4 C28.5 11.7 31.7 10.9 34.5 10 C37.3 9.1 40.2 8 43.1 8 C46 7.9 49.2 9.5 52 9.7 C54.9 9.9 57.2 9.8 60 9 C62.8 8.2 65.9 5.2 68.7 4.9 C71.6 4.7 74.5 6.3 77.1 7.4 C79.7 8.6 81.9 10.7 84.5 12 C87 13.3 90.2 13.6 92.5 15.3 C94.8 16.9 96.6 19.4 98.4 21.6 C100.2 23.9 102 26.1 103.3 28.5 C104.7 31 105.8 33.6 106.4 36.3 C107 39.1 105.8 42.2 106.9 44.8 C107.9 47.3 110.7 49.1 112.6 51.7 C114.5 54.2 117.4 57.1 118 60Z" fill="{{vulWas}}"></path>
+<circle cx="60" cy="60" r="41" fill="{{vulKuil}}"></circle>
+<circle cx="60.8" cy="60.8" r="41" fill="none" stroke="#24050c" stroke-opacity="0.55" stroke-width="2.4"></circle>
+<circle cx="59.2" cy="59.2" r="41.6" fill="none" stroke="#ffb3bd" stroke-opacity="0.22" stroke-width="1.2"></circle>
+<circle cx="60" cy="60" r="35" fill="none" stroke="#2a060d" stroke-opacity="0.5" stroke-width="1.1" stroke-dasharray="0.6 3.2" stroke-linecap="round"></circle>
+<ellipse cx="40" cy="31" rx="22" ry="10" fill="{{vulGlans}}" transform="rotate(-30 40 31)"></ellipse>
+</svg>
+<sc-if value="{{isLetter}}" hint-placeholder-val="{{ true }}">
+<span aria-hidden="true" style="{{letterStijl}}">{{letter}}</span>
+</sc-if>
+<sc-if value="{{isWolf}}" hint-placeholder-val="{{ false }}">
+<svg viewBox="8 6 24 33" aria-hidden="true" style="{{tekenStijl}}"><path d="M12.5 9 L16.5 15.5 L20 14 L23.5 15.5 L27.5 9 L28.2 18.5 L29.5 22.5 L25.5 28.5 L20 36.5 L14.5 28.5 L10.5 22.5 L11.8 18.5 Z" fill="#5c0f1d"></path><path d="M15.6 21.6 L18.4 22.6 M24.4 21.6 L21.6 22.6" stroke="#2e0710" stroke-width="1.2" stroke-linecap="round"></path><path d="M18.6 31.4 L21.4 31.4 L20 33.4 Z" fill="#2e0710"></path></svg>
+</sc-if>
+<sc-if value="{{isAnker}}" hint-placeholder-val="{{ false }}">
+<svg viewBox="8 6 24 32" aria-hidden="true" style="{{tekenStijl}}"><g fill="none" stroke="#5c0f1d" stroke-width="2.4" stroke-linecap="round"><circle cx="20" cy="11" r="2.6"></circle><line x1="20" y1="14" x2="20" y2="35"></line><line x1="14" y1="18" x2="26" y2="18"></line><path d="M11 27 Q12 35 20 35 Q28 35 29 27"></path></g></svg>
+</sc-if>
+<sc-if value="{{isPavone}}" hint-placeholder-val="{{ false }}">
+<svg viewBox="9 6 22 26" aria-hidden="true" style="{{tekenStijl}}"><ellipse cx="20" cy="18" rx="7" ry="9.5" fill="none" stroke="#5c0f1d" stroke-width="2"></ellipse><ellipse cx="20" cy="19" rx="4" ry="5.5" fill="#5c0f1d"></ellipse><circle cx="20" cy="20" r="1.8" fill="#2e0710"></circle></svg>
+</sc-if>
+<sc-if value="{{isBilancia}}" hint-placeholder-val="{{ false }}">
+<svg viewBox="7 8 26 26" aria-hidden="true" style="{{tekenStijl}}"><g fill="none" stroke="#5c0f1d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v19"></path><path d="M12 15.5h16"></path><path d="M12 15.5l-3.5 7h7z"></path><path d="M28 15.5l-3.5 7h7z"></path><path d="M15.5 31h9"></path></g><circle cx="20" cy="11" r="1.5" fill="#5c0f1d"></circle></svg>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"wapen":{"editor":"enum","options":["C","M","B","wolf","anker","pavone","bilancia"],"default":"B"},"maat":{"editor":"int","min":40,"max":400,"step":2,"default":120},"uid":{"editor":null},"$preview":{"width":120,"height":120}}'>
+// Een lakzegel met het teken van een familie: letter (Caruso C, Morelli M, Bellandi B) of wolf, anker, pauwenoog, weegschaal.
+class Component extends DCLogic {
+renderVals() {
+  var w = this.props.wapen || 'B';
+  var m = this.props.maat || 120;
+  var u = 'z' + (this.props.uid || w + m);
+  var letter = w === 'C' || w === 'M' || w === 'B';
+  var relief = 'filter: drop-shadow(' + (m * 0.008) + 'px ' + (m * 0.01) + 'px 0 rgba(20,0,5,0.6)) drop-shadow(-' + (m * 0.006) + 'px -' + (m * 0.006) + 'px 0 rgba(255,170,182,0.3))';
+  return {
+    doos: 'position: relative; width: ' + m + 'px; height: ' + m + 'px; flex: none',
+    idWas: u + 'w', idKuil: u + 'k', idGlans: u + 'g',
+    vulWas: 'url(#' + u + 'w)', vulKuil: 'url(#' + u + 'k)', vulGlans: 'url(#' + u + 'g)',
+    isLetter: letter, letter: letter ? w : '',
+    isWolf: w === 'wolf', isAnker: w === 'anker', isPavone: w === 'pavone', isBilancia: w === 'bilancia',
+    letterStijl: 'position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding-bottom: ' + (m * 0.03) + 'px; font-family: \'Bodoni Moda\', Georgia, serif; font-style: italic; font-size: ' + Math.round(m * 0.4) + 'px; line-height: 1; color: #5c0f1d; text-shadow: ' + (m * 0.008) + 'px ' + (m * 0.01) + 'px 0 rgba(20,0,5,0.6), -' + (m * 0.006) + 'px -' + (m * 0.006) + 'px 0 rgba(255,170,182,0.3)',
+    tekenStijl: 'position: absolute; left: 31%; top: 30%; width: 38%; height: 40%; ' + relief
+  };
+}
+}
+</script>
+</body>
+</html>

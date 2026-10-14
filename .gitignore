@@ -11,3 +11,5 @@ __pycache__/
 .wrangler/
 node_modules/
 test/workerd.capnp
+test/istr/
+test/*.png

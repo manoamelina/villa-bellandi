@@ -66,6 +66,24 @@ button:focus-visible{outline:2px solid #b8873a;outline-offset:2px}
 </sc-for>
 </div>
 
+<div style="margin-top: 18px; display: flex; align-items: baseline; justify-content: space-between">
+<span style="font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; color: #6e1424">De vier zegels · Il Pavone</span>
+<span style="font-family: 'Bodoni Moda', serif; font-size: 20px; color: #24110b">{{pavone.n}} <span style="font-size: 14px; color: #5b4636">van 4</span></span>
+</div>
+<div style="margin-top: 10px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{pavone.families}}" as="f" hint-placeholder-count="4">
+<button type="button" onClick="{{f.wissel}}" aria-pressed="{{f.aan}}" aria-label="{{f.label}}" style="{{f.knop}}">
+<span style="display: flex; align-items: center; justify-content: center; width: 58px; height: 58px">
+<sc-if value="{{f.aan}}" hint-placeholder-val="{{ true }}"><dc-import name="Zegel" wapen="{{f.wapen}}" maat="{{ 56 }}" uid="{{f.uid}}" hint-size="56px,56px"></dc-import></sc-if>
+<sc-if value="{{f.uit}}" hint-placeholder-val="{{ false }}"><span style="{{f.leeg}}">{{f.letter}}</span></sc-if>
+</span>
+<span style="font-family: 'Bodoni Moda', serif; font-size: 14px; line-height: 1.1; color: #24110b">{{f.naam}}</span>
+<span style="{{f.statusStijl}}">{{f.status}}</span>
+</button>
+</sc-for>
+</div>
+<div style="margin-top: 8px; font-size: 12.5px; line-height: 1.4; color: #5b4636">Tik op een zegel zodra Sebastiano een geldig, bezegeld contract van die familie bij je inlevert. Uiterlijk vóór je de Sala opent.</div>
+
 <div style="margin-top: 18px; font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; color: #6e1424">De tv</div>
 <div style="margin-top: 8px; padding: 14px 14px 12px; border: 1px solid rgba(110,20,36,0.5); background: rgba(255,251,240,0.6)">
 <div style="display: flex; align-items: center; gap: 9px">
@@ -315,7 +333,7 @@ button:focus-visible{outline:2px solid #b8873a;outline-offset:2px}
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"tab":{"editor":"enum","options":["scherm","oordelen","winnaar","prijzen"],"default":"scherm","section":"Voorbeeld"},"detail":{"editor":"enum","options":["","alessandro","marco","luca","alessia","raffaele","stefano","matteo","enzo","nico","sofia","salvatore","lucia","giulia","sebastiano","caterina"],"default":"","section":"Voorbeeld"},"bezegeld":{"editor":"int","min":0,"max":15,"step":1,"default":11,"section":"Voorbeeld"},"scene":{"editor":"int","min":0,"max":30,"step":1,"default":0,"section":"Voorbeeld"},"bonuslijst":{"editor":"boolean","default":false,"section":"Voorbeeld"},"aanmelden":{"editor":"boolean","default":false,"section":"Voorbeeld"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"tab":{"editor":"enum","options":["scherm","oordelen","winnaar","prijzen"],"default":"scherm","section":"Voorbeeld"},"detail":{"editor":"enum","options":["","alessandro","marco","luca","alessia","raffaele","stefano","matteo","enzo","nico","sofia","salvatore","lucia","giulia","sebastiano","caterina"],"default":"","section":"Voorbeeld"},"bezegeld":{"editor":"int","min":0,"max":15,"step":1,"default":11,"section":"Voorbeeld"},"scene":{"editor":"int","min":0,"max":30,"step":1,"default":0,"section":"Voorbeeld"},"bonuslijst":{"editor":"boolean","default":false,"section":"Voorbeeld"},"aanmelden":{"editor":"boolean","default":false,"section":"Voorbeeld"},"pavone":{"editor":"int","min":0,"max":4,"step":1,"default":3,"section":"Voorbeeld"},"$preview":{"width":390,"height":844}}'>
 // La Regia: alleen voor Donna Serafina. Hier bedient zij het grote scherm,
 // geeft zij elk oordeel goed of fout, kiest zij de winnaar en ziet zij de stemmen voor de prijzen.
 // In dit prototype zijn de antwoorden voorbeeldantwoorden.
@@ -441,11 +459,25 @@ function ranglijst(antwoorden, oordeel) {
     return (x.alles ? 0 : y.hoofd - x.hoofd) || x.tijd - y.tijd;
   });
 }
+// de vier families uit de opdracht van Il Pavone, met hun familiezegel
+var FAMILIES = [
+  { id: 'caruso', naam: 'Caruso', fam: 'Famiglia Caruso', capo: 'Don Alessandro', wapen: 'C', letter: 'C' },
+  { id: 'bellaforte', naam: 'Bellaforte', fam: 'Famiglia Bellaforte', capo: 'Donna Alessia', wapen: 'wolf', letter: 'B' },
+  { id: 'ventresca', naam: 'Ventresca', fam: 'Famiglia Ventresca', capo: 'Don Matteo', wapen: 'anker', letter: 'V' },
+  { id: 'morelli', naam: 'Morelli', fam: 'Famiglia Morelli', capo: 'Don Salvatore', wapen: 'M', letter: 'M' }
+];
+// welke families hun zegel voor Il Pavone zetten: live uit de villa, anders de eerste n (voorbeeld)
+function pavoneZegels(n) {
+  var V = typeof window !== 'undefined' && window.Villa, z = V && V.staat && V.staat.zegels, uit = {};
+  FAMILIES.forEach(function (f, i) { uit[f.id] = z ? !!z[f.id] : i < n; });
+  return uit;
+}
 // de scènes op het grote scherm, in volgorde; Donna Serafina loopt ze door vanuit de Regia
 function scenes(antwoorden) {
   var n = telling(antwoorden).length, s = [{ fase: 'beraad' }], i;
   for (i = 0; i <= n; i++) s.push({ fase: 'oordeel', onthuld: i });
   for (i = 1; i <= 4; i++) s.push({ fase: 'waarheid', deel: i });
+  for (i = 1; i <= 2; i++) s.push({ fase: 'testament', deel: i });
   s.push({ fase: 'winnaar' });
   for (i = 0; i <= 3; i++) s.push({ fase: 'prijzen', prijs: i });
   return s;
@@ -473,6 +505,7 @@ var FASES = [
   { id: 'beraad', t: 'Beraad', uitleg: 'Iedereen bezegelt; de zegels komen binnen.' },
   { id: 'oordeel', t: 'Het oordeel', uitleg: 'Van minst naar meest beschuldigd.' },
   { id: 'waarheid', t: 'De waarheid', uitleg: 'De dader, waarom, hoe en het bewijs.' },
+  { id: 'testament', t: 'Het testament', uitleg: 'De vier zegels van Il Pavone: opvolger of lege stoel.' },
   { id: 'winnaar', t: 'De winnaar', uitleg: 'Wie jij kiest bij Winnaar.' },
   { id: 'prijzen', t: 'De prijzen', uitleg: 'Outfit, scherpste speurder en leugenaar.' }
 ];
@@ -525,6 +558,9 @@ koppelTv() {
 }
 renderVals() {
   var self = this, p = this.props, st = this.state || {};
+  // de vier zegels van Il Pavone: live uit de villa, in het canvas een voorbeeld dat je kunt aantikken
+  var zgR = window.Villa ? pavoneZegels(0) : (st.pavoneDemo || pavoneZegels(p.pavone != null ? p.pavone : 3));
+  var nPavone = FAMILIES.filter(function (f) { return zgR[f.id]; }).length;
   var tab = st.tab || p.tab || 'scherm';
   var detail = st.detail !== undefined ? st.detail : (p.detail || '');
   var stukkenOpen = st.stukkenOpen !== undefined ? st.stukkenOpen : !!p.bonuslijst;
@@ -560,6 +596,12 @@ renderVals() {
     if (x.fase === 'waarheid') {
       var delen = ['de dader', 'waarom', 'hoe', 'het bewijs en de uitslag'];
       return { titel: 'De waarheid · ' + delen[x.deel - 1], tekst: x.deel === 1 ? 'Caterina Rinaldi verschijnt met het stempel ‘De dader’.' : 'Op het scherm: ' + delen.slice(0, x.deel).join(', ') + '.', kort: 'de waarheid: ' + delen[x.deel - 1] };
+    }
+    if (x.fase === 'testament') {
+      if (x.deel === 1) return { titel: 'Het testament · de vier zegels', tekst: 'Vittorio’s testament; de zegels van de families verschijnen een voor een.', kort: 'het testament: de vier zegels' };
+      return nPavone === 4
+        ? { titel: 'Het testament · de opvolger', tekst: 'Sebastiano Valenti wordt het nieuwe hoofd van La Commissione.', kort: 'het testament: Sebastiano wordt Don Supremo' }
+        : { titel: 'Het testament · de lege stoel', tekst: nPavone + ' van de 4 zegels: de stoel van Don Vittorio blijft leeg.', kort: 'het testament: de lege stoel' };
     }
     if (x.fase === 'winnaar') return { titel: 'De winnaar', tekst: (wSpeler ? wSpeler.naam : '—') + ' staat groot in beeld.', kort: 'de winnaar: ' + (wSpeler ? wSpeler.naam : '—') };
     if (x.prijs === 0) return { titel: 'De prijzen', tekst: 'Drie prijzen, nog bezegeld.', kort: 'de prijzen, nog bezegeld' };
@@ -680,7 +722,7 @@ renderVals() {
   var koppelFout = !!st.koppelFout || !!(V && V.fout === 'koppelcode' && this._koppelPoging);
   var DEUR_INFO = [
     { id: 'archivio', it: "L'Archivio", dicht: 'Verzegeld. Open hem wanneer het archief aan de beurt is.', open: 'Open. Iedereen kan nu naar beneden.' },
-    { id: 'sala', it: 'La Sala del Giudizio', dicht: 'Verzegeld. Open hem voor de finale.', open: 'Open. Iedereen kan nu zijn oordeel bezegelen.' }
+    { id: 'sala', it: 'La Sala del Giudizio', dicht: 'Verzegeld. Open hem voor de finale, als de zegels van Il Pavone binnen zijn.', open: 'Open. Iedereen kan nu zijn oordeel bezegelen.' }
   ];
   var avond = {
     binnen: binnenNu.length,
@@ -708,8 +750,23 @@ renderVals() {
     testTekst: speeltTest ? 'Stop de video' : 'Test: speel de uitnodiging af'
   };
 
+  var pavone = { n: nPavone, families: FAMILIES.map(function (f) {
+    var aan = !!zgR[f.id];
+    return { naam: f.naam, wapen: f.wapen, letter: f.letter, uid: 'rg' + f.id, aan: aan, uit: !aan,
+      label: 'Famiglia ' + f.naam + (aan ? ': bezegeld' : ': nog niet bezegeld'),
+      status: aan ? 'Bezegeld' : 'Nog niet',
+      statusStijl: 'font-size: 9.5px; letter-spacing: 0.16em; text-transform: uppercase; color: ' + (aan ? '#6e1424' : '#8a7a66'),
+      knop: 'display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 9px 2px 8px; box-sizing: border-box; border-radius: 2px; cursor: pointer; font-family: \'Jost\', sans-serif; border: 1px solid ' + (aan ? 'rgba(110,20,36,0.55)' : 'rgba(160,122,62,0.5)') + '; background: ' + (aan ? 'rgba(255,251,240,0.85)' : 'transparent'),
+      leeg: 'display: flex; align-items: center; justify-content: center; width: 50px; height: 50px; box-sizing: border-box; border-radius: 50%; border: 1.5px dashed rgba(110,84,60,0.55); font-family: \'Bodoni Moda\', serif; font-size: 21px; color: rgba(110,84,60,0.6)',
+      wissel: function () {
+        if (V) { V.stuur({ t: 'zegel', fam: f.id, aan: !aan }); return; }
+        var n = Object.assign({}, zgR); n[f.id] = !aan; self.setState({ pavoneDemo: n });
+      } };
+  }) };
+
   return {
     avond: avond,
+    pavone: pavone,
     offline: !!V && !V.verbonden && V.rol === 'regia',
     toonLogin: V ? V.rol !== 'regia' : !!p.aanmelden,
     pinRef: function (el) { self._pin = el; },

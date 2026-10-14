@@ -48,6 +48,9 @@ export const VIDEOS = {
 
 export const DEUREN = ['archivio', 'sala'];
 
+// De vier families waarvan Il Pavone vóór de finale een zegel moet hebben.
+export const FAMILIES = ['caruso', 'bellaforte', 'ventresca', 'morelli'];
+
 export function normCode(c) {
   return String(c || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
 }
