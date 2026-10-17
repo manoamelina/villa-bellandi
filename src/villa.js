@@ -1,7 +1,11 @@
 // Villa: één Durable Object dat de hele avond bijhoudt en live doorgeeft aan alle schermen.
 // Rollen: 'speler' (telefoon met envelopcode), 'regia' (Donna Serafina, pincode) en 'scherm' (de tv, gekoppeld vanuit de Regia).
 import { DurableObject } from 'cloudflare:workers';
-import { REGIA_PIN, VIDEOS, DEUREN, FAMILIES, FASEN, spelerBijCode } from './spel.js';
+import { REGIA_PIN, VIDEOS, DEUREN, FAMILIES, FASEN, ARCHIVARISSEN, spelerBijCode } from './spel.js';
+import { LADES, KLEM, MAX_KLEM } from './lades.js';
+
+// De drie lades van L'Archivio: open of niet, foute pogingen, tot wanneer het slot klemt (ms), hint aan of uit.
+const LEEG_ARCHIEF = () => ({ open: [false, false, false], fout: [0, 0, 0], tot: [0, 0, 0], tips: [false, false, false] });
 
 const BEGIN = () => ({
   fase: 'benvenuto',
@@ -9,7 +13,22 @@ const BEGIN = () => ({
   scherm: { scene: 'wacht', video: '', nonce: 1 },
   // de vier zegels van Il Pavone (alleen de Regia en de tv zien ze)
   zegels: { caruso: false, bellaforte: false, ventresca: false, morelli: false },
+  archief: LEEG_ARCHIEF(),
 });
+
+// Een bewaarde stand van het archief veilig terugzetten (drie waarden per veld).
+function herstelArchief(a) {
+  const b = LEEG_ARCHIEF();
+  if (!a || typeof a !== 'object') return b;
+  const drie = (x, d, f) => (Array.isArray(x) && x.length === 3 ? x.map(f) : d);
+  return {
+    open: drie(a.open, b.open, (v) => !!v),
+    fout: drie(a.fout, b.fout, (v) => Math.max(0, Number(v) || 0)),
+    tot: drie(a.tot, b.tot, (v) => Math.max(0, Number(v) || 0)),
+    tips: drie(a.tips, b.tips, (v) => !!v),
+  };
+}
+const ladeNr = (x) => (Number.isInteger(x) && x >= 0 && x < LADES.length ? x : -1);
 
 const OPEN = 1; // WebSocket.readyState
 const nieuwToken = () => crypto.randomUUID().replace(/-/g, '');
@@ -24,7 +43,7 @@ export class Villa extends DurableObject {
       const t = await ctx.storage.get('tokens');
       if (s) {
         const b = BEGIN();
-        this.staat = { ...b, ...s, deuren: { ...b.deuren, ...(s.deuren || {}) }, scherm: { ...b.scherm, ...(s.scherm || {}) }, zegels: { ...b.zegels, ...(s.zegels || {}) } };
+        this.staat = { ...b, ...s, deuren: { ...b.deuren, ...(s.deuren || {}) }, scherm: { ...b.scherm, ...(s.scherm || {}) }, zegels: { ...b.zegels, ...(s.zegels || {}) }, archief: herstelArchief(s.archief) };
         if (!FASEN.includes(this.staat.fase)) this.staat.fase = b.fase;
       }
       if (t) this.tokens = { regia: t.regia || [], scherm: t.scherm || [] };
@@ -52,6 +71,7 @@ export class Villa extends DurableObject {
     if (!a.ok) return;
     if (a.rol === 'regia') return this.vanRegia(ws, m);
     if (a.rol === 'scherm') return this.vanScherm(ws, a, m);
+    if (a.rol === 'speler') return this.vanSpeler(ws, a, m);
   }
 
   async webSocketClose(ws) {
@@ -71,9 +91,10 @@ export class Villa extends DurableObject {
         ws.serializeAttachment({ rol: '', ok: false });
         return this.stuur(ws, { t: 'fout', reden: 'code' });
       }
-      ws.serializeAttachment({ rol: 'speler', ok: true, speler: s.id });
+      const x = { rol: 'speler', ok: true, speler: s.id, archief: ARCHIVARISSEN.includes(s.id) };
+      ws.serializeAttachment(x);
       this.stuur(ws, { t: 'welkom', rol: 'speler', speler: s });
-      this.stuur(ws, { t: 'staat', staat: this.staatVoor('speler') });
+      this.stuur(ws, { t: 'staat', staat: this.staatVoor('speler', null, x) });
       return this.meldStatus();
     }
 
@@ -123,6 +144,19 @@ export class Villa extends DurableObject {
       return this.zendStaat();
     }
 
+    // L'Archivio: een lade zelf open- of dichtzetten (als de tafel vastzit), of een hint sturen
+    if (m.t === 'lade' && ladeNr(m.nr) >= 0) {
+      const A = this.staat.archief;
+      A.open[m.nr] = !!m.open; A.fout[m.nr] = 0; A.tot[m.nr] = 0;
+      await this.bewaar();
+      return this.zendStaat();
+    }
+    if (m.t === 'tip' && ladeNr(m.nr) >= 0) {
+      this.staat.archief.tips[m.nr] = !!m.aan;
+      await this.bewaar();
+      return this.zendStaat();
+    }
+
     if (m.t === 'zegel' && FAMILIES.includes(m.fam)) {
       this.staat.zegels[m.fam] = !!m.aan;
       await this.bewaar();
@@ -164,6 +198,25 @@ export class Villa extends DurableObject {
       await this.bewaar();
       return this.zendStaat();
     }
+  }
+
+  // ── een cijfer op een lade van L'Archivio ──────────────────
+  // Alleen de familiehoofden, Sebastiano en Caterina, en alleen als Donna Serafina het archief heeft geopend.
+  // Fout: het slot klemt 15 seconden per foute poging op die lade, tot hooguit 2 minuten.
+  async vanSpeler(ws, a, m) {
+    if (m.t !== 'lade' || !a.archief || !this.staat.deuren.archivio) return;
+    const nr = ladeNr(m.nr), cijfer = m.cijfer;
+    if (nr < 0 || !Number.isInteger(cijfer) || cijfer < 0 || cijfer > 9) return;
+    const A = this.staat.archief, nu = Date.now();
+    if (A.open[nr] || A.tot[nr] > nu) return this.stuur(ws, { t: 'staat', staat: this.staatVoor('speler', null, a) });
+    if (cijfer === LADES[nr].antwoord) {
+      A.open[nr] = true; A.fout[nr] = 0; A.tot[nr] = 0;
+    } else {
+      A.fout[nr] += 1;
+      A.tot[nr] = nu + Math.min(A.fout[nr] * KLEM, MAX_KLEM) * 1000;
+    }
+    await this.bewaar();
+    return this.zendStaat();
   }
 
   // ── meldingen van de tv ────────────────────────────────────
@@ -209,16 +262,34 @@ export class Villa extends DurableObject {
     return { spelers: [...spelers], tv, videos: Object.keys(VIDEOS).length };
   }
 
-  staatVoor(rol, behalve) {
-    if (rol === 'speler') return { deuren: this.staat.deuren };
-    if (rol === 'scherm') return { fase: this.staat.fase, deuren: this.staat.deuren, scherm: this.staat.scherm, zegels: this.staat.zegels, videos: VIDEOS };
-    return { fase: this.staat.fase, deuren: this.staat.deuren, scherm: this.staat.scherm, zegels: this.staat.zegels, videos: VIDEOS, status: this.status(behalve) };
+  // Wat er over het archief naar buiten mag: cijfer en onthulling alleen van lades die al open zijn,
+  // de tekst van een hint alleen als Donna Serafina hem heeft gestuurd. klem = hoeveel ms het slot nog klemt.
+  archiefNaarBuiten() {
+    const A = this.staat.archief, nu = Date.now();
+    return {
+      mag: true,
+      namen: LADES.map((l) => l.naam),
+      vragen: LADES.map((l) => l.vraag),
+      open: [...A.open],
+      fout: [...A.fout],
+      klem: A.tot.map((t) => Math.max(0, t - nu)),
+      cijfers: A.open.map((o, i) => (o ? LADES[i].antwoord : null)),
+      regels: A.open.map((o, i) => (o ? LADES[i].regel : '')),
+      tips: A.tips.map((t, i) => (t ? LADES[i].tip : '')),
+    };
+  }
+
+  // x = de gegevens van de verbinding (voor een speler: mag hij in het archief?)
+  staatVoor(rol, behalve, x) {
+    if (rol === 'speler') return { deuren: this.staat.deuren, archief: x && x.archief ? this.archiefNaarBuiten() : { mag: false } };
+    if (rol === 'scherm') return { fase: this.staat.fase, deuren: this.staat.deuren, scherm: this.staat.scherm, zegels: this.staat.zegels, videos: VIDEOS, archief: this.archiefNaarBuiten() };
+    return { fase: this.staat.fase, deuren: this.staat.deuren, scherm: this.staat.scherm, zegels: this.staat.zegels, videos: VIDEOS, archief: this.archiefNaarBuiten(), status: this.status(behalve) };
   }
 
   zendStaat() {
     for (const s of this.open()) {
       const x = s.deserializeAttachment() || {};
-      if (x.ok) this.stuur(s, { t: 'staat', staat: this.staatVoor(x.rol) });
+      if (x.ok) this.stuur(s, { t: 'staat', staat: this.staatVoor(x.rol, null, x) });
     }
   }
 

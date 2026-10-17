@@ -3,11 +3,14 @@ Gebruik: python3 villa/tools/bouw_app.py
 
 - Elke pagina krijgt een viewport, haar rol (speler / regia / scherm) en live.js vóór de runtime.
 - Plaatjes en video's krijgen een extensie (/beeld/<id>.jpg), zodat elke host het juiste type meestuurt.
-- Wat de oplossing verraadt, komt niet in public/: de Regia krijgt een 'veilige' versie van het gedeelde blok
-  en de kamers die nog niet live zijn (Sala, Archivio) zijn voorlopig een eenvoudige tussenpagina.
+- Wat de oplossing verraadt, komt niet in public/: de Regia krijgt een 'veilige' versie van het gedeelde blok,
+  L'Archivio krijgt zijn lades zonder antwoorden, hints en onthullingen (die schrijven we naar src/lades.js,
+  dat alleen op de server draait) en de Sala is voorlopig een eenvoudige tussenpagina.
 """
+import json
 import re
 import shutil
+import subprocess
 from pathlib import Path
 
 VILLA = Path(__file__).resolve().parent.parent
@@ -20,10 +23,9 @@ PUBLIC = VILLA / 'public'
 MEDIA = {'uitnodiging.mp4': KLAD / 'out' / 'uitnodiging' / 'Uitnodiging Villa Bellandi.mp4'}
 
 # pagina: rol ('entree' regelt het aanmelden zelf)
-PAGINAS = {'Entree': 'entree', 'Foyer': 'speler', 'Galleria': 'speler', 'Tavolo': 'speler', 'Regia': 'regia', 'Scherm': 'scherm', 'Zegel': 'onderdeel'}
+PAGINAS = {'Entree': 'entree', 'Foyer': 'speler', 'Galleria': 'speler', 'Tavolo': 'speler', 'Archivio': 'speler', 'Regia': 'regia', 'Scherm': 'scherm', 'Zegel': 'onderdeel'}
 NOG_NIET = {
     'Sala': ('La Sala del Giudizio', 'Hier bezegel je straks je oordeel. Deze kamer komt in een volgende versie van de app.'),
-    'Archivio': ("L'Archivio", 'Het archief van Don Vittorio komt in een volgende versie van de app.'),
 }
 # woorden die nooit in public/ mogen staan (ze verraden de oplossing)
 VERBODEN = ['Ventricor', 'Corvessa', "DADER = 'caterina'", 'vervalst: true', 'Sei in anticipo', '22:28']
@@ -48,7 +50,43 @@ def veilig_gedeeld():
     return g.rstrip() + '\n'
 
 
-def bron(naam):
+LADES_BLOK = re.compile(r'var LADES = (\[.*?\n\]);', re.S)
+
+
+def lades_uit_ontwerp():
+    """De drie sloten zoals ze in het ontwerp staan (vraag, antwoord, hint, onthulling) en de wachttijden."""
+    s = (PROJECT / 'Archivio.dc.html').read_text(encoding='utf-8')
+    m = LADES_BLOK.search(s)
+    assert m, 'LADES niet gevonden in Archivio.dc.html'
+    js = "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>process.stdout.write(JSON.stringify(eval(s))))"
+    lades = json.loads(subprocess.run(['node', '-e', js], input=m.group(1), capture_output=True, text=True, check=True).stdout)
+    klem = int(re.search(r'var KLEM = (\d+);', s).group(1))
+    max_klem = int(re.search(r'var MAX_KLEM = (\d+);', s).group(1))
+    assert len(lades) == 3 and all(isinstance(l['antwoord'], int) for l in lades), lades
+    return lades, klem, max_klem
+
+
+def schrijf_lades_js(lades, klem, max_klem):
+    geheim = [{k: l[k] for k in ('n', 'naam', 'vraag', 'antwoord', 'tip', 'regel')} for l in lades]
+    (VILLA / 'src' / 'lades.js').write_text(
+        '// Gemaakt door tools/bouw_app.py uit het ontwerp (concept/project/Archivio.dc.html): pas de lades daar aan.\n'
+        '// Dit bestand draait alleen op de server; de antwoorden komen nooit in public/ terecht.\n'
+        'export const LADES = ' + json.dumps(geheim, ensure_ascii=False, indent=2) + ';\n'
+        f'export const KLEM = {klem};          // seconden extra per foute poging\n'
+        f'export const MAX_KLEM = {max_klem};     // langste wachttijd\n', encoding='utf-8')
+
+
+def veilig_archief(s, lades):
+    """Archivio zonder antwoorden: alleen nummer, naam en vraag; de rest komt van de server zodra een lade open is."""
+    veilig = [{'n': l['n'], 'naam': l['naam'], 'antwoord': None, 'vraag': l['vraag'], 'tip': '', 'regel': ''} for l in lades]
+    s, n = LADES_BLOK.subn(lambda m: 'var LADES = ' + json.dumps(veilig, ensure_ascii=False, indent=2) + ';', s)
+    assert n == 1
+    return s
+
+
+def bron(naam, lades=None):
+    if naam == 'Archivio':
+        return veilig_archief((PROJECT / 'Archivio.dc.html').read_text(encoding='utf-8'), lades)
     if naam == 'Regia':
         tpl = (FINALE / 'Regia.tpl.html').read_text(encoding='utf-8')
         assert tpl.count('/*@@GEDEELD@@*/') == 1
@@ -109,9 +147,13 @@ def main():
     PUBLIC.mkdir(parents=True)
     (PUBLIC / 'live.js').write_text(live, encoding='utf-8')
 
+    lades, klem, max_klem = lades_uit_ontwerp()
+    schrijf_lades_js(lades, klem, max_klem)
+    verboden = VERBODEN + [l['regel'] for l in lades] + [l['tip'] for l in lades]
+
     gebruikt = set()
     for naam, rol in PAGINAS.items():
-        s = bron(naam)
+        s = bron(naam, lades)
         s = GOOGLE.sub('<link href="/fonts.css" rel="stylesheet">', s)
         assert s.count('<script src="./support.js"></script>') == 1, naam
         s = s.replace('<script src="./support.js"></script>', KOP.format(rol=rol) + '<script src="./support.js"></script>')
@@ -143,7 +185,7 @@ def main():
     for f in PUBLIC.rglob('*'):
         if f.is_file() and f.suffix in ('.html', '.js', '.css', '.txt'):
             t = f.read_text(encoding='utf-8', errors='ignore')
-            fout += [f'{f.relative_to(PUBLIC)}: {w}' for w in VERBODEN if w in t]
+            fout += [f'{f.relative_to(PUBLIC)}: {w}' for w in verboden if w in t]
     if fout:
         raise SystemExit('GEHEIM GELEKT:\n  ' + '\n  '.join(fout))
     groot = [f for f in PUBLIC.rglob('*') if f.is_file() and f.stat().st_size > 25 * 1024 * 1024]

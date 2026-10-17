@@ -2,23 +2,498 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
+<title>Villa Bellandi — L’Archivio</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050303">
 <meta name="robots" content="noindex, nofollow">
-<title>L'Archivio — Villa Bellandi</title>
-<link href="/fonts.css" rel="stylesheet">
-<style>
-html,body{margin:0;height:100%;background:#050303;color:#e9dcc0;font-family:'Jost',sans-serif}
-main{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 32px;box-sizing:border-box;text-align:center}
-h1{margin:0;font-family:'Bodoni Moda',serif;font-style:italic;font-weight:400;font-size:34px;color:#f4ead2}
-p{max-width:300px;font-family:'EB Garamond',serif;font-size:19px;line-height:1.4;color:#d9c9a6}
-a{margin-top:14px;display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border:1px solid rgba(216,182,112,.55);color:#e9dcc0;text-decoration:none;font-size:12px;letter-spacing:.2em;text-transform:uppercase}
-</style>
+<meta name="villa-rol" content="speler">
+<script src="./live.js"></script>
+<script src="./support.js"></script>
 </head>
 <body>
-<main>
-<h1>L'Archivio</h1>
-<p>Het archief van Don Vittorio komt in een volgende versie van de app.</p>
-<a href="Foyer.dc.html">← Terug naar de foyer</a>
-</main>
+<x-dc>
+<helmet>
+<link href="/fonts.css" rel="stylesheet">
+<style>
+body{margin:0;background:#050303}
+a{color:#d8b670}a:hover{color:#efd59a}
+button:focus-visible,a:focus-visible{outline:2px solid #d8b670;outline-offset:3px}
+@keyframes flame{0%,100%{opacity:.75}28%{opacity:.5}52%{opacity:.7}76%{opacity:.45}}
+@keyframes rammel{0%,100%{transform:translateX(0)}18%{transform:translateX(-5px)}36%{transform:translateX(5px)}54%{transform:translateX(-3px)}72%{transform:translateX(2px)}}
+@keyframes kaart{from{opacity:0;transform:translate(-50%,-30%) rotate(var(--r)) scale(.9)}to{opacity:1;transform:translate(-50%,-50%) rotate(var(--r))}}
+@keyframes dim{from{opacity:0}to{opacity:1}}
+@keyframes rijs{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes adem{0%,100%{opacity:.55}50%{opacity:1}}
+.flame{animation:flame 3.6s ease-in-out infinite}
+.trilt{animation:rammel .55s ease both}
+.kaart{animation:kaart .7s cubic-bezier(.2,.8,.2,1) .45s both}
+.dim{animation:dim .35s ease both}
+.rijs{animation:rijs .8s cubic-bezier(.2,.8,.2,1) both}
+.adem{animation:adem 2.6s ease-in-out infinite}
+.zoom{transition:transform 1.9s cubic-bezier(.45,0,.2,1)}
+.helft{transition:transform .5s cubic-bezier(.3,1.3,.5,1),opacity .45s ease .5s}
+.vervaag{transition:opacity .8s ease}
+.sheet{transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+@media (prefers-reduced-motion: reduce){.flame,.trilt,.kaart,.dim,.rijs,.adem{animation:none}.zoom,.helft,.vervaag,.sheet{transition:none}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; font-family: 'Jost', sans-serif; color: #e9dcc0; background: #050303">
+
+<div style="position: absolute; top: 0; left: 50%; height: 100%; aspect-ratio: 1536 / 2720; transform: translateX(-50%)">
+
+<div class="zoom" style="{{kamerStijl}}">
+<img src="/beeld/6eb4e54828cda236512e04bcab6851ab.jpg" alt="Het archief in de kelder van Villa Bellandi, met achterin het bureau van Don Vittorio" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block; user-select: none; pointer-events: none">
+<div class="flame" style="position: absolute; left: 50%; top: 52%; width: 70%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; mix-blend-mode: screen; background: radial-gradient(circle, rgba(255,196,120,0.16) 0%, rgba(0,0,0,0) 62%)"></div>
+<sc-if value="{{inKamer}}" hint-placeholder-val="{{ true }}">
+<button type="button" onClick="{{naarBureau}}" aria-label="Loop naar het bureau van Don Vittorio" style="position: absolute; left: 28%; top: 52%; width: 46%; height: 17%; padding: 0; border: none; background: transparent; cursor: pointer"></button>
+</sc-if>
+</div>
+
+<div class="vervaag" style="{{bureauStijl}}">
+<img src="/beeld/acfccdce80fcd0c6ae4624cf685488d6.jpg" alt="Het bureau van Don Vittorio met drie lades" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block; user-select: none; pointer-events: none">
+<div class="flame" style="position: absolute; left: 75%; top: 37%; width: 60%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; mix-blend-mode: screen; background: radial-gradient(circle, rgba(255,200,130,0.18) 0%, rgba(0,0,0,0) 60%)"></div>
+<sc-for list="{{lades}}" as="l" hint-placeholder-count="3">
+<img class="vervaag" src="{{l.openFoto}}" alt="" style="{{l.openStijl}}">
+</sc-for>
+<sc-for list="{{lades}}" as="l" hint-placeholder-count="3">
+<span style="{{l.plaatStijl}}">{{l.n}}</span>
+<span class="{{l.zegelKlasse}}" aria-hidden="true" style="{{l.zegelDoos}}">
+<img class="helft" src="/beeld/19dd30608b3e08bae5cb31ee458bf822.webp" alt="" style="{{l.links}}">
+<img class="helft" src="/beeld/19dd30608b3e08bae5cb31ee458bf822.webp" alt="" style="{{l.rechts}}">
+</span>
+<sc-if value="{{l.isOpen}}" hint-placeholder-val="{{ false }}">
+<span class="{{l.kaartKlasse}}" style="{{l.kaartStijl}}">
+<span style="font-size: 8px; letter-spacing: 0.22em; text-transform: uppercase; color: #6e1424">Cifra</span>
+<span style="font-family: 'Bodoni Moda', serif; font-size: 30px; line-height: 1; color: #24110b">{{l.cijfer}}</span>
+</span>
+</sc-if>
+<button type="button" onClick="{{l.kies}}" aria-label="{{l.aria}}" style="{{l.knop}}"></button>
+</sc-for>
+</div>
+</div>
+
+<div style="position: absolute; left: 0; right: 0; top: 0; height: 190px; pointer-events: none; background: linear-gradient(180deg, rgba(5,2,2,0.82) 0%, rgba(5,2,2,0.45) 55%, rgba(5,2,2,0) 100%)"></div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 260px; pointer-events: none; background: linear-gradient(0deg, rgba(5,2,2,0.9) 0%, rgba(5,2,2,0.55) 45%, rgba(5,2,2,0) 100%)"></div>
+<div style="position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 90px 18px rgba(0,0,0,0.5)"></div>
+
+<div style="position: absolute; left: 0; right: 0; top: 0; height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px; box-sizing: border-box">
+<a href="Foyer.dc.html" style="display: flex; align-items: center; gap: 6px; height: 44px; padding: 0 14px 0 10px; border-radius: 22px; border: 1px solid rgba(216,182,112,0.5); background: rgba(20,8,8,0.6); text-decoration: none; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #e9dcc0">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#d8b670" stroke-width="1.6" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Foyer</a>
+<div style="display: flex; flex-direction: column; align-items: center">
+<span style="font-family: 'Bodoni Moda', serif; font-style: italic; font-size: 18px; line-height: 1.1; color: #f4ead2">L’Archivio</span>
+<span style="font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase; color: #d8b670">{{plek}}</span>
+</div>
+<span style="width: 44px"></span>
+</div>
+
+<div style="position: absolute; left: 24px; right: 24px; top: 72px; text-align: center; pointer-events: none">
+<div style="font-family: 'Bodoni Moda', serif; font-style: italic; font-size: 19px; line-height: 1.2; color: #e2c27e; text-shadow: 0 2px 10px rgba(0,0,0,0.9)">{{introTitel}}</div>
+<div style="margin-top: 5px; font-size: 13px; line-height: 1.45; color: rgba(246,238,219,0.9); text-shadow: 0 2px 8px rgba(0,0,0,0.95)">{{introTekst}}</div>
+</div>
+
+<sc-if value="{{inKamer}}" hint-placeholder-val="{{ true }}">
+<button type="button" class="adem" onClick="{{naarBureau}}" style="position: absolute; left: 50%; bottom: 40px; transform: translateX(-50%); white-space: nowrap; min-height: 44px; padding: 0 20px; border-radius: 22px; border: 1px solid rgba(216,182,112,0.55); background: rgba(14,6,5,0.78); cursor: pointer; font-family: 'Jost', sans-serif; font-size: 12px; letter-spacing: 0.06em; color: #f4ead2">Tik op het bureau</button>
+</sc-if>
+
+<div class="vervaag" style="{{codeDoos}}">
+<span style="font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: #d8b670">{{codeLabel}}</span>
+<div style="display: flex; gap: 12px">
+<sc-for list="{{cijfers}}" as="c" hint-placeholder-count="3">
+<span style="{{c.vak}}">{{c.tekst}}</span>
+</sc-for>
+</div>
+</div>
+
+<sc-if value="{{toonBericht}}" hint-placeholder-val="{{ false }}">
+<button type="button" class="rijs" onClick="{{sluitBericht}}" style="position: absolute; left: 18px; right: 18px; top: 612px; display: flex; align-items: center; gap: 12px; padding: 10px 14px 11px; border: none; border-radius: 2px; cursor: pointer; text-align: left; color: #2a1a10; background: radial-gradient(ellipse 90% 60% at 20% 0%, rgba(255,250,235,0.7) 0%, rgba(255,250,235,0) 70%), linear-gradient(176deg, #f3ead3 0%, #e4d3ac 100%); box-shadow: 0 10px 26px rgba(0,0,0,0.7), inset 0 0 0 1px rgba(122,96,72,0.3)">
+<span style="flex: none; font-family: 'Courier Prime', monospace; font-size: 11px; letter-spacing: 0.08em; color: #6e1424">{{bericht.n}}</span>
+<span style="font-family: 'EB Garamond', serif; font-style: italic; font-size: 15.5px; line-height: 1.35">{{bericht.regel}}</span>
+</button>
+</sc-if>
+
+<sc-if value="{{toonSheet}}" hint-placeholder-val="{{ false }}">
+<div class="dim" onClick="{{sluit}}" style="position: absolute; inset: 0; background: rgba(6,3,3,0.6)"></div>
+</sc-if>
+
+<div class="sheet" role="dialog" aria-label="{{s.aria}}" style="{{sheetStijl}}">
+<div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #8a6a32 0%, #d8b670 50%, #8a6a32 100%)"></div>
+<button type="button" aria-label="Sluiten" onClick="{{sluit}}" style="position: absolute; top: 8px; right: 8px; width: 44px; height: 44px; border: none; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5b4636" stroke-width="1.6" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+</button>
+<div style="font-family: 'Courier Prime', monospace; font-size: 11px; letter-spacing: 0.08em; color: #7a6048">{{s.meta}}</div>
+<div style="margin-top: 4px; font-family: 'Bodoni Moda', serif; font-weight: 500; font-size: 28px; line-height: 1.05; color: #24110b">{{s.naam}}</div>
+<p style="margin: 10px 0 0; font-family: 'EB Garamond', serif; font-size: 19px; line-height: 1.38; color: #2a1a10">{{s.vraag}}</p>
+
+<sc-if value="{{s.toonTip}}" hint-placeholder-val="{{ false }}">
+<div style="margin-top: 12px; padding: 9px 12px 10px; border: 1px dashed rgba(110,20,36,0.55); background: rgba(110,20,36,0.05)">
+<div style="font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #6e1424">Hint van Donna Serafina</div>
+<div style="margin-top: 3px; font-size: 13.5px; line-height: 1.45; color: #4e3b2c">{{s.tip}}</div>
+</div>
+</sc-if>
+
+<sc-if value="{{s.dicht}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; gap: 12px; margin-top: 14px">
+<div aria-live="polite" style="flex: none; width: 70px; height: 94px; display: flex; align-items: center; justify-content: center; border-radius: 2px; font-family: 'Courier Prime', monospace; font-size: 40px; color: #efe4cc; background: linear-gradient(180deg, #120a07 0%, #1e120c 100%); box-shadow: inset 0 2px 6px rgba(0,0,0,0.8), 0 1px 0 rgba(255,232,180,0.35)">{{s.venster}}</div>
+<div style="flex: 1; min-width: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px">
+<sc-for list="{{toetsen}}" as="t" hint-placeholder-count="10">
+<button type="button" onClick="{{t.druk}}" aria-label="{{t.aria}}" aria-pressed="{{t.gekozen}}" style="{{t.stijl}}">{{t.cijfer}}</button>
+</sc-for>
+</div>
+</div>
+<button type="button" onClick="{{probeer}}" style="{{s.knop}}">
+<span style="width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #c0485a 0%, #7a1424 70%); box-shadow: inset 0 0 0 1px rgba(30,2,8,0.6)"></span>
+Probeer het slot
+</button>
+<div aria-live="polite" style="min-height: 19px; margin-top: 10px; font-size: 13px; line-height: 1.45; color: #6e1424">{{s.melding}}</div>
+<div style="margin-top: 2px; font-size: 11.5px; line-height: 1.4; color: #7a6048">Elke foute poging laat het slot langer klemmen.</div>
+</sc-if>
+
+<sc-if value="{{s.open}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; align-items: center; gap: 14px; margin-top: 14px; padding: 12px 14px; border: 1px solid rgba(160,122,62,0.6); background: rgba(255,251,240,0.55)">
+<span style="flex: none; display: flex; flex-direction: column; align-items: center; width: 52px">
+<span style="font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: #6e1424">Cifra</span>
+<span style="font-family: 'Bodoni Moda', serif; font-size: 50px; line-height: 1; color: #24110b">{{s.cijfer}}</span>
+</span>
+<span style="font-family: 'EB Garamond', serif; font-style: italic; font-size: 17px; line-height: 1.35; color: #2a1a10">{{s.regel}}</span>
+</div>
+<button type="button" onClick="{{sluit}}" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 52px; margin-top: 16px; border: none; border-radius: 2px; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #f1e7cf; background: linear-gradient(180deg, #741627 0%, #4a0b17 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.15)">Terug naar het bureau</button>
+</sc-if>
+</div>
+
+<sc-if value="{{toonDicht}}" hint-placeholder-val="{{ false }}">
+<div class="dim" style="position: absolute; inset: 0; background: radial-gradient(ellipse 80% 45% at 50% 40%, rgba(120,60,24,0.22) 0%, rgba(0,0,0,0) 70%), rgba(6,3,3,0.82)">
+<div class="rijs" role="dialog" aria-label="{{dicht.titel}}" style="position: absolute; left: 22px; right: 22px; top: 170px; box-sizing: border-box; padding: 28px 24px 24px; display: flex; flex-direction: column; align-items: center; text-align: center; color: #2a1a10; background: radial-gradient(ellipse 90% 40% at 15% 0%, rgba(255,250,235,0.75) 0%, rgba(255,250,235,0) 70%), linear-gradient(176deg, #f3ead3 0%, #e7d8b4 100%); box-shadow: 0 24px 60px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(122,96,72,0.35)">
+<div aria-hidden="true" style="position: absolute; inset: 7px; border: 1px solid rgba(122,96,72,0.28); pointer-events: none"></div>
+<img src="/beeld/19dd30608b3e08bae5cb31ee458bf822.webp" alt="" style="width: 52px; height: auto; display: block; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3))">
+<div style="margin-top: 12px; font-family: 'Bodoni Moda', serif; font-style: italic; font-size: 29px; line-height: 1.1; color: #24110b">{{dicht.titel}}</div>
+<div style="width: 46px; height: 1px; margin-top: 16px; background: #a07a3e"></div>
+<p style="margin: 14px 0 0; font-family: 'EB Garamond', serif; font-size: 19px; line-height: 1.45; color: #2a1a10">{{dicht.tekst}}</p>
+<sc-if value="{{dicht.heeftTv}}" hint-placeholder-val="{{ true }}">
+<p style="margin: 10px 0 0; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: #6e1424">{{dicht.tv}}</p>
+</sc-if>
+<a href="Foyer.dc.html" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 52px; margin-top: 20px; box-sizing: border-box; border-radius: 2px; text-decoration: none; font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #f1e7cf; background: linear-gradient(180deg, #741627 0%, #4a0b17 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.15)">Terug naar de foyer</a>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{toonFinale}}" hint-placeholder-val="{{ false }}">
+<div class="dim" style="position: absolute; inset: 0; background: radial-gradient(ellipse 80% 45% at 50% 40%, rgba(120,60,24,0.3) 0%, rgba(0,0,0,0) 70%), rgba(6,3,3,0.88)">
+<div class="rijs" role="dialog" aria-label="Het archief is open" style="position: absolute; left: 22px; right: 22px; top: 150px; box-sizing: border-box; padding: 28px 24px 24px; display: flex; flex-direction: column; align-items: center; text-align: center; color: #2a1a10; background: radial-gradient(ellipse 90% 40% at 15% 0%, rgba(255,250,235,0.75) 0%, rgba(255,250,235,0) 70%), linear-gradient(176deg, #f3ead3 0%, #e7d8b4 100%); box-shadow: 0 24px 60px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(122,96,72,0.35)">
+<div aria-hidden="true" style="position: absolute; inset: 7px; border: 1px solid rgba(122,96,72,0.28); pointer-events: none"></div>
+<img src="/beeld/19dd30608b3e08bae5cb31ee458bf822.webp" alt="" style="width: 52px; height: auto; display: block; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3))">
+<div style="margin-top: 12px; font-family: 'Bodoni Moda', serif; font-style: italic; font-size: 30px; line-height: 1.1; color: #24110b">L’archivio è aperto</div>
+<div style="margin-top: 8px; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: #6e1424">De archiefkist opent met</div>
+<div style="margin-top: 10px; font-family: 'Bodoni Moda', serif; font-size: 62px; line-height: 1; letter-spacing: 0.06em; color: #24110b">{{codeGroot}}</div>
+<div style="width: 46px; height: 1px; margin-top: 16px; background: #a07a3e"></div>
+<p style="margin: 14px 0 0; font-family: 'EB Garamond', serif; font-size: 18px; line-height: 1.45; color: #2a1a10">Zet deze drie cijfers, in deze volgorde, op het slot van de kist.</p>
+<button type="button" onClick="{{sluitFinale}}" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 52px; margin-top: 20px; border: none; border-radius: 2px; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #f1e7cf; background: linear-gradient(180deg, #741627 0%, #4a0b17 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.15)">Terug naar het bureau</button>
+</div>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"fase":{"editor":"enum","options":["kamer","bureau"],"default":"kamer"},"tip1":{"editor":"boolean","default":false,"section":"Game Master"},"tip2":{"editor":"boolean","default":false,"section":"Game Master"},"tip3":{"editor":"boolean","default":false,"section":"Game Master"},"testmodus":{"editor":"boolean","default":false,"section":"Game Master"},"geenToegang":{"editor":"boolean","default":false,"section":"Voorbeeld"},"geopend":{"editor":null},"lade":{"editor":null},"keuze":{"editor":null},"$preview":{"width":390,"height":844}}'>
+// ── DE DRIE SLOTEN — vragen, antwoorden en teksten zijn hier los aan te passen ──
+// De antwoorden vormen samen de code van de kist, in de volgorde I · II · III (links, midden, rechts).
+// tip1 / tip2 / tip3 (Game Master) tonen de hint van Donna Serafina bij die lade.
+// testmodus (Game Master): niets onthouden en opgeslagen voortgang wissen, om te oefenen.
+// In de echte app (window.Villa) staan de antwoorden, hints en onthullingen niet in deze pagina:
+// de server controleert elk cijfer en stuurt pas na het openen van een lade het cijfer en de onthulling.
+// Alleen de familiehoofden, Sebastiano en Caterina mogen erin; de rest kijkt mee op de tv.
+var LADES = [
+  {
+    "n": "I",
+    "naam": "Il Decreto",
+    "antwoord": null,
+    "vraag": "Hoeveel dagen vóór het bewijs tegen Francesco Falcone lag zijn bezit al verdeeld?",
+    "tip": "",
+    "regel": ""
+  },
+  {
+    "n": "II",
+    "naam": "Il Veleno",
+    "antwoord": null,
+    "vraag": "Hoeveel keer zo sterk als zijn recept was wat er in Vittorio’s potje zat?",
+    "tip": "",
+    "regel": ""
+  },
+  {
+    "n": "III",
+    "naam": "Il Pagamento",
+    "antwoord": null,
+    "vraag": "Hoe vaak werd Gabriele Conti betaald voordat hij de lampolie ophaalde?",
+    "tip": "",
+    "regel": ""
+  }
+];
+
+// ── BEELD — posities in % van de foto (1536 x 2720) ──
+// knop = tikvlak over de lade; zegel / plaat / kaart = middelpunt; open = de uitgeknipte open lade.
+var POS = [
+  { knop: { x: 12, y: 63.4, b: 21.3, h: 7.4 }, zegel: { x: 22.7, y: 64.75 }, plaat: { x: 22.7, y: 70.15 }, kaart: { x: 22.7, y: 66.2, r: -3 },
+    open: { foto: '/beeld/3b88691eef7ec285ad22f3d50982e727.webp', x: 7.487, y: 61.176, b: 25.456, h: 20.588 } },
+  { knop: { x: 33.3, y: 63.4, b: 34, h: 7.4 }, zegel: { x: 50.2, y: 64.75 }, plaat: { x: 50.2, y: 70.15 }, kaart: { x: 50.2, y: 66.2, r: 2 },
+    open: { foto: '/beeld/ea8c833030647f3bb8e168f58e60bc60.webp', x: 32.943, y: 61.176, b: 34.896, h: 20.588 } },
+  { knop: { x: 67.3, y: 63.4, b: 21.4, h: 7.4 }, zegel: { x: 77.8, y: 64.75 }, plaat: { x: 77.8, y: 70.15 }, kaart: { x: 77.8, y: 66.2, r: -2 },
+    open: { foto: '/beeld/8d368294d91a263911c2c4dccef07632.webp', x: 67.839, y: 61.176, b: 26.107, h: 20.588 } }
+];
+var ZOOM = 'transform-origin: 52% 52%; transform: scale(1.84)';   // van de kamer naar het bureau
+var ZOOM_TIJD = 2000;
+
+var OPSLAG = 'bellandi-archivio';
+var KLEM = 15;        // seconden extra per foute poging
+var MAX_KLEM = 120;   // langste wachttijd
+var ZEGEL = 'position: absolute; left: 50%; top: 50%; width: 100%; height: auto; display: block; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.65)); ';
+var LINKS = 'polygon(0 0, 50% 0, 44% 22%, 56% 41%, 46% 63%, 54% 82%, 49% 100%, 0 100%)';
+var RECHTS = 'polygon(50% 0, 100% 0, 100% 100%, 49% 100%, 54% 82%, 46% 63%, 56% 41%, 44% 22%)';
+
+function leeg() { return { open: [false, false, false], fout: [0, 0, 0], tot: [0, 0, 0], gezien: false }; }
+function lees() {
+  try { var v = JSON.parse(window.localStorage.getItem(OPSLAG) || 'null'); if (v && v.open && v.open.length === 3) return v; } catch (e) {}
+  return leeg();
+}
+function bewaar(v) { try { window.localStorage.setItem(OPSLAG, JSON.stringify(v)); } catch (e) {} }
+function wis() { try { window.localStorage.removeItem(OPSLAG); } catch (e) {} }
+function kopie(v) { return { open: v.open.slice(), fout: v.fout.slice(), tot: v.tot.slice(), gezien: !!v.gezien }; }
+function mmss(s) { var m = Math.floor(s / 60), r = s % 60; return m + ':' + (r < 10 ? '0' : '') + r; }
+function rustig() { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } }
+
+class Component extends DCLogic {
+start() {
+  if (this._v) return this._v;
+  var p = this.props;
+  var v;
+  if (window.Villa) {
+    v = leeg();
+  } else if (p.geopend != null) {
+    v = leeg();
+    var g = Math.max(0, Math.min(3, Number(p.geopend) || 0));
+    for (var i = 0; i < g; i++) v.open[i] = true;
+  } else if (p.testmodus) {
+    wis(); v = leeg();
+  } else {
+    v = lees();
+  }
+  this._v = v;
+  return v;
+}
+onthoud(v) {
+  if (window.Villa || this.props.geopend != null || this.props.testmodus) return;
+  bewaar(v);
+}
+// In de echte app: de stand van de lades komt van de server. Aan het verschil met de vorige stand
+// zien we of een poging lukte (de lade gaat open) of niet (er komt een foute poging bij en het slot klemt).
+volg() {
+  var V = window.Villa, A = V && V.staat && V.staat.archief, st = this.state || {}, self = this;
+  if (!A || !A.mag) { this.setState({ live: (st.live || 0) + 1, bezig: null }); return; }
+  var nu = Date.now(), oud = this._A;
+  var alle = A.open[0] && A.open[1] && A.open[2];
+  var v = { open: A.open.slice(), fout: A.fout.slice(), tot: A.klem.map(function (ms) { return ms > 0 ? nu + ms : 0; }), gezien: alle && !!(this._v && this._v.gezien) };
+  this._v = v;
+  var upd = { v: v, nu: nu, bezig: null };
+  if (oud) {
+    for (var i = 0; i < 3; i++) {
+      if (A.open[i] && !oud.open[i]) {
+        upd.net = i; upd.wacht = alle; upd.bericht = alle ? null : i;
+        if (st.sel === i) { upd.sel = null; upd.keuze = null; upd.melding = ''; }
+        if (this._t2) clearTimeout(this._t2);
+        this._t2 = setTimeout(function () { self.setState({ net: null, wacht: false }); }, alle ? 1700 : 1300);
+        if (this._t4) clearTimeout(this._t4);
+        if (!alle) this._t4 = setTimeout(function () { self.setState({ bericht: null }); }, 7000);
+      } else if (A.fout[i] > oud.fout[i]) {
+        upd.schud = i; upd.keuze = null;
+        if (st.sel === i) upd.melding = 'Het slot geeft niet mee.';
+        if (this._t) clearTimeout(this._t);
+        this._t = setTimeout(function () { self.setState({ schud: null }); }, 650);
+      }
+    }
+  }
+  this._A = { open: A.open.slice(), fout: A.fout.slice() };
+  this.setState(upd);
+}
+componentDidMount() {
+  var self = this;
+  if (window.Villa) this._uit = window.Villa.aan(function () { self.volg(); });
+  this._iv = setInterval(function () {
+    var s = self.state || {};
+    var v = s.v || self._v;
+    var nu = Date.now();
+    var klem = !!v && (v.tot[0] > nu || v.tot[1] > nu || v.tot[2] > nu);
+    if ((s.sel != null && s.sel !== undefined) || klem) self.setState({ nu: nu });
+  }, 1000);
+}
+componentWillUnmount() {
+  if (this._uit) this._uit();
+  if (this._t5) clearTimeout(this._t5);
+  if (this._iv) clearInterval(this._iv);
+  if (this._t) clearTimeout(this._t);
+  if (this._t2) clearTimeout(this._t2);
+  if (this._t3) clearTimeout(this._t3);
+  if (this._t4) clearTimeout(this._t4);
+}
+renderVals() {
+  var self = this;
+  var p = this.props;
+  var st = this.state || {};
+  var v = st.v || this.start();
+  var nu = st.nu || Date.now();
+  var fase = st.fase || p.fase || 'kamer';
+  var bijBureau = fase === 'bureau';
+  var sel = st.sel !== undefined ? st.sel : (p.lade ? Number(p.lade) - 1 : null);
+  var keuze = st.keuze !== undefined ? st.keuze : (p.keuze != null ? Number(p.keuze) : null);
+  var tips = [!!p.tip1, !!p.tip2, !!p.tip3];
+  var alleOpen = v.open[0] && v.open[1] && v.open[2];
+  // in de echte app komen cijfer, onthulling en hint van de server, en alleen voor wie in het archief mag
+  var V = window.Villa, live = !!V, A = live && V.staat ? V.staat.archief : null;
+  var cijferVan = function (i) { return live ? (A && A.cijfers && A.cijfers[i] != null ? String(A.cijfers[i]) : '') : String(LADES[i].antwoord); };
+  var regelVan = function (i) { return live ? ((A && A.regels && A.regels[i]) || '') : LADES[i].regel; };
+  var tipVan = function (i) { return live ? ((A && A.tips && A.tips[i]) || '') : (tips[i] ? LADES[i].tip : ''); };
+  var geenToegang = live ? !!(A && A.mag === false) : !!p.geenToegang;
+  var verzegeld = live && !geenToegang && !!V.staat && !(V.staat.deuren && V.staat.deuren.archivio);
+
+  var naarBureau = function () {
+    if ((self.state || {}).fase && (self.state || {}).fase !== 'kamer') return;
+    if (rustig()) { self.setState({ fase: 'bureau' }); return; }
+    self.setState({ fase: 'zoom' });
+    if (self._t3) clearTimeout(self._t3);
+    self._t3 = setTimeout(function () { self.setState({ fase: 'bureau' }); }, ZOOM_TIJD);
+  };
+
+  var lades = LADES.map(function (L, i) {
+    var P = POS[i];
+    var open = !!v.open[i];
+    var zw = 6.6;   // breedte van het zegel in % van de foto
+    return {
+      n: L.n,
+      aria: 'Lade ' + L.n + ', ' + L.naam + (open ? ', geopend' : ', verzegeld'),
+      kies: function () { if (bijBureau) self.setState({ sel: i, keuze: null, melding: '' }); },
+      isOpen: open,
+      cijfer: cijferVan(i),
+      openFoto: P.open.foto,
+      openStijl: 'position: absolute; left: ' + P.open.x + '%; top: ' + P.open.y + '%; width: ' + P.open.b + '%; height: ' + P.open.h + '%; display: block; pointer-events: none; opacity: ' + (open ? 1 : 0),
+      plaatStijl: 'position: absolute; left: ' + P.plaat.x + '%; top: ' + P.plaat.y + '%; transform: translate(-50%, -50%); padding: 1px 8px 2px; font-family: \'Bodoni Moda\', serif; font-style: italic; font-size: 11px; line-height: 1.2; color: #2a1808; background: linear-gradient(160deg, #dcbd78 0%, #a47c40 55%, #c49c56 100%); box-shadow: 0 2px 4px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,236,190,0.5); pointer-events: none; transition: opacity .5s ease; opacity: ' + (open || !bijBureau ? 0 : 1),
+      zegelKlasse: st.schud === i ? 'trilt' : '',
+      zegelDoos: 'position: absolute; left: ' + (P.zegel.x - zw / 2) + '%; top: ' + P.zegel.y + '%; width: ' + zw + '%; aspect-ratio: 360 / 388; margin-top: -3.5%; pointer-events: none; transition: opacity .5s ease; opacity: ' + (bijBureau ? 1 : 0),
+      links: ZEGEL + 'clip-path: ' + LINKS + '; transform: translate(-50%, -50%)' + (open ? ' translate(-16%, 10%) rotate(-18deg); opacity: 0' : ''),
+      rechts: ZEGEL + 'clip-path: ' + RECHTS + '; transform: translate(-50%, -50%)' + (open ? ' translate(16%, -6%) rotate(15deg); opacity: 0' : ''),
+      kaartKlasse: st.net === i ? 'kaart' : '',
+      kaartStijl: '--r: ' + P.kaart.r + 'deg; position: absolute; left: ' + P.kaart.x + '%; top: ' + P.kaart.y + '%; width: 58px; padding: 5px 0 6px; transform: translate(-50%, -50%) rotate(' + P.kaart.r + 'deg); display: flex; flex-direction: column; align-items: center; pointer-events: none; ' +
+        'background: radial-gradient(ellipse 90% 60% at 20% 0%, rgba(255,250,235,0.7) 0%, rgba(255,250,235,0) 70%), linear-gradient(176deg, #f3ead3 0%, #e2d0a6 100%); box-shadow: 0 6px 12px rgba(0,0,0,0.65), inset 0 0 0 1px rgba(122,96,72,0.3)',
+      knop: 'position: absolute; left: ' + P.knop.x + '%; top: ' + P.knop.y + '%; width: ' + P.knop.b + '%; height: ' + P.knop.h + '%; padding: 0; border: none; background: transparent; cursor: ' + (bijBureau ? 'pointer' : 'default') + '; pointer-events: ' + (bijBureau ? 'auto' : 'none')
+    };
+  });
+
+  var cijfers = LADES.map(function (L, i) {
+    var open = !!v.open[i];
+    return {
+      tekst: open ? cijferVan(i) : '·',
+      vak: 'width: 56px; height: 62px; display: flex; align-items: center; justify-content: center; border-radius: 2px; font-family: \'Bodoni Moda\', serif; font-size: 36px; line-height: 1; ' +
+        'background: linear-gradient(180deg, rgba(18,10,7,0.92) 0%, rgba(30,18,12,0.92) 100%); ' +
+        (open ? 'color: #efe4cc; ' : 'color: rgba(233,220,192,0.3); ') +
+        (alleOpen ? 'border: 1px solid #e2c27e; box-shadow: inset 0 2px 6px rgba(0,0,0,0.8), 0 0 18px rgba(226,194,126,0.35)' : 'border: 1px solid rgba(216,182,112,0.45); box-shadow: inset 0 2px 6px rgba(0,0,0,0.8)')
+    };
+  });
+
+  var L = sel != null ? LADES[sel] : null;
+  var rest = L ? Math.max(0, Math.ceil(((v.tot[sel] || 0) - nu) / 1000)) : 0;
+  var klemt = rest > 0;
+  var kanProberen = !!L && !v.open[sel] && keuze != null && !klemt && !(live && st.bezig != null);
+  var melding = st.melding || '';
+  if (L && klemt) melding = (melding ? melding + ' ' : '') + 'Het klemt nog ' + mmss(rest) + '.';
+
+  var toetsen = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map(function (d) {
+    var gekozen = keuze === d;
+    return {
+      cijfer: String(d),
+      aria: 'Cijfer ' + d,
+      gekozen: gekozen ? 'true' : 'false',
+      druk: function () { if (!klemt) self.setState({ keuze: d, melding: '' }); },
+      stijl: 'height: 44px; padding: 0; border: none; border-radius: 2px; cursor: ' + (klemt ? 'not-allowed' : 'pointer') + '; font-family: \'Bodoni Moda\', serif; font-size: 22px; line-height: 1; ' +
+        (gekozen
+          ? 'color: #f4ead2; background: linear-gradient(180deg, #741627 0%, #4a0b17 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 2px 4px rgba(40,6,12,0.5)'
+          : 'color: #2a1808; background: linear-gradient(160deg, #dcbd78 0%, #a47c40 55%, #c49c56 100%); box-shadow: inset 0 1px 0 rgba(255,236,190,0.5), 0 2px 4px rgba(0,0,0,0.35)') +
+        (klemt ? '; opacity: 0.45' : '')
+    };
+  });
+
+  var s = L ? {
+    aria: 'Lade ' + L.n + ', ' + L.naam,
+    meta: 'Cassetto ' + L.n + ' · ' + (v.open[sel] ? 'geopend' : 'verzegeld'),
+    naam: L.naam, vraag: L.vraag,
+    toonTip: !!tipVan(sel), tip: tipVan(sel),
+    dicht: !v.open[sel], open: !!v.open[sel],
+    venster: keuze != null ? String(keuze) : '–',
+    melding: melding,
+    cijfer: cijferVan(sel), regel: regelVan(sel),
+    knop: 'display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; height: 52px; margin-top: 14px; border: none; border-radius: 2px; font-family: \'Jost\', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #f1e7cf; background: linear-gradient(180deg, #741627 0%, #4a0b17 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.15); ' +
+      (kanProberen ? 'cursor: pointer' : 'cursor: not-allowed; opacity: 0.45')
+  } : { aria: '', meta: '', naam: '', vraag: '', toonTip: false, tip: '', dicht: false, open: false, venster: '–', melding: '', cijfer: '', regel: '', knop: '' };
+
+  var probeer = function () {
+    if (!kanProberen) return;
+    if (live) {
+      // de server controleert het cijfer; het antwoord komt terug als nieuwe stand van de lades
+      V.stuur({ t: 'lade', nr: sel, cijfer: keuze });
+      self.setState({ keuze: null, melding: '', bezig: sel });
+      if (self._t5) clearTimeout(self._t5);
+      self._t5 = setTimeout(function () { self.setState({ bezig: null }); }, 4000);
+      return;
+    }
+    var i = sel, w = kopie(v);
+    if (keuze === LADES[i].antwoord) {
+      w.open[i] = true; w.fout[i] = 0; w.tot[i] = 0;
+      self.onthoud(w);
+      var laatste = w.open[0] && w.open[1] && w.open[2];
+      self.setState({ v: w, sel: null, keuze: null, melding: '', net: i, wacht: laatste, bericht: laatste ? null : i });
+      if (self._t2) clearTimeout(self._t2);
+      self._t2 = setTimeout(function () { self.setState({ net: null, wacht: false }); }, laatste ? 1700 : 1300);
+      if (self._t4) clearTimeout(self._t4);
+      if (!laatste) self._t4 = setTimeout(function () { self.setState({ bericht: null }); }, 7000);
+    } else {
+      var f = (w.fout[i] || 0) + 1;
+      w.fout[i] = f; w.tot[i] = Date.now() + Math.min(f * KLEM, MAX_KLEM) * 1000;
+      self.onthoud(w);
+      self.setState({ v: w, keuze: null, melding: 'Het slot geeft niet mee.', schud: i, nu: Date.now() });
+      if (self._t) clearTimeout(self._t);
+      self._t = setTimeout(function () { self.setState({ schud: null }); }, 650);
+    }
+  };
+
+  var sheetOpen = !!L && bijBureau;
+  var b = st.bericht != null ? LADES[st.bericht] : null;
+  return {
+    inKamer: fase === 'kamer',
+    naarBureau: naarBureau,
+    kamerStijl: 'position: absolute; inset: 0; ' + (fase === 'kamer' ? 'transform-origin: 52% 52%; transform: none' : ZOOM),
+    bureauStijl: 'position: absolute; inset: 0; ' + (fase === 'kamer' ? 'opacity: 0; pointer-events: none' : 'opacity: 1; transition-delay: ' + (fase === 'zoom' ? '1.3s' : '0s')),
+    plek: bijBureau ? 'Drie sloten' : 'Sotterraneo',
+    introTitel: bijBureau ? 'Het bureau van Don Vittorio' : 'Het archief van Don Vittorio',
+    introTekst: bijBureau ? 'Elk slot vraagt één cijfer. Tik op een lade.' : 'Achterin staat zijn bureau, met drie verzegelde lades.',
+    lades: lades,
+    cijfers: cijfers,
+    codeDoos: 'position: absolute; left: 18px; right: 18px; top: 712px; display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: ' + (bijBureau ? 1 : 0) + '; pointer-events: ' + (bijBureau ? 'auto' : 'none'),
+    codeLabel: alleOpen ? 'La cassa si apre con' : 'Codice della cassa',
+    codeGroot: [0, 1, 2].map(cijferVan).join(' · '),
+    toonBericht: !!b && bijBureau,
+    bericht: b ? { n: 'Cassetto ' + b.n, regel: regelVan(st.bericht) } : { n: '', regel: '' },
+    sluitBericht: function () { self.setState({ bericht: null }); },
+    toonSheet: sheetOpen,
+    s: s,
+    toetsen: toetsen,
+    probeer: probeer,
+    sluit: function () { self.setState({ sel: null, keuze: null, melding: '' }); },
+    toonFinale: bijBureau && alleOpen && !v.gezien && !st.wacht,
+    sluitFinale: function () { var w = kopie(v); w.gezien = true; self._v = w; self.onthoud(w); self.setState({ v: w }); },
+    toonDicht: geenToegang || verzegeld,
+    dicht: geenToegang
+      ? { titel: 'L’archivio è riservato', tekst: 'Het archief is open voor de familiehoofden, Sebastiano en Caterina.', heeftTv: true, tv: 'Kijk mee op het grote scherm' }
+      : { titel: 'L’archivio è sigillato', tekst: 'Het archief is nog verzegeld. Donna Serafina opent het later.', heeftTv: false, tv: '' },
+    sheetStijl: 'position: absolute; left: 10px; right: 10px; bottom: 0; box-sizing: border-box; padding: 24px 22px 26px; border-radius: 2px 2px 0 0; color: #2a1610; background: radial-gradient(ellipse 90% 60% at 20% 0%, rgba(255,250,235,0.7) 0%, rgba(255,250,235,0) 70%), linear-gradient(176deg, #f1e7cf 0%, #e6d6b1 100%); box-shadow: 0 -20px 50px rgba(0,0,0,0.7); ' +
+      (sheetOpen ? 'transform: translateY(0)' : 'transform: translateY(110%); pointer-events: none')
+  };
+}
+}
+</script>
 </body>
 </html>

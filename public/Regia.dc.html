@@ -106,6 +106,28 @@ button:focus-visible{outline:2px solid #b8873a;outline-offset:2px}
 </div>
 <div style="margin-top: 8px; font-size: 12.5px; line-height: 1.4; color: #5b4636">Tik op een zegel zodra Sebastiano een geldig, bezegeld contract van die familie bij je inlevert. Uiterlijk vóór je de Sala opent.</div>
 
+<div style="margin-top: 18px; display: flex; align-items: baseline; justify-content: space-between">
+<span style="font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; color: #6e1424">L’Archivio · de drie sloten</span>
+<span style="font-family: 'Bodoni Moda', serif; font-size: 20px; color: #24110b">{{archief.n}} <span style="font-size: 14px; color: #5b4636">van 3 open</span></span>
+</div>
+<div style="margin-top: 6px; display: flex; flex-direction: column">
+<sc-for list="{{archief.lades}}" as="l" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; gap: 10px; padding: 9px 0; border-top: 1px solid rgba(160,122,62,0.35)">
+<span aria-hidden="true" style="{{l.bol}}">{{l.n}}</span>
+<span style="display: flex; flex-direction: column; flex: 1; min-width: 0">
+<span style="font-family: 'Bodoni Moda', serif; font-size: 16.5px; line-height: 1.2; color: #24110b">{{l.naam}}</span>
+<span style="{{l.statusStijl}}">{{l.status}}</span>
+</span>
+<button type="button" onClick="{{l.tip}}" aria-pressed="{{l.tipAan}}" aria-label="{{l.tipLabel}}" style="{{l.tipKnop}}">{{l.tipTekst}}</button>
+<button type="button" onClick="{{l.wissel}}" aria-label="{{l.openLabel}}" style="{{l.openKnop}}">{{l.openTekst}}</button>
+</div>
+</sc-for>
+</div>
+<sc-for list="{{archief.meldingen}}" as="m" hint-placeholder-count="1">
+<div role="status" style="margin-top: 8px; padding: 9px 12px 10px; border: 1px solid rgba(110,20,36,0.55); background: rgba(110,20,36,0.06); font-size: 13px; line-height: 1.4; color: #4a0b17">{{m.tekst}}</div>
+</sc-for>
+<div style="margin-top: 8px; font-size: 12.5px; line-height: 1.4; color: #5b4636">Een hint verschijnt op de archieftelefoon en op de tv. Open een lade alleen zelf als de tafel echt vastzit.</div>
+
 <div style="margin-top: 18px; font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; color: #6e1424">De tv</div>
 <div style="margin-top: 8px; padding: 14px 14px 12px; border: 1px solid rgba(110,20,36,0.5); background: rgba(255,251,240,0.6)">
 <div style="display: flex; align-items: center; gap: 9px">
@@ -557,8 +579,9 @@ class Component extends DCLogic {
 // In de echte app (window.Villa) meldt de Regia zich aan met de pincode en volgt hij de villa live.
 componentDidMount() {
   var self = this, V = window.Villa;
+  this._tik = setInterval(function () { if (self._klemt) self.setState({ tik: Date.now() }); }, 1000);
   if (!V) return;
-  this._uit = V.aan(function () { self.setState({ live: ((self.state && self.state.live) || 0) + 1 }); });
+  this._uit = V.aan(function () { self._ontvangen = Date.now(); self.setState({ live: ((self.state && self.state.live) || 0) + 1 }); });
   if (V.bewaard('regia')) {
     this.setState({ loginBezig: true });
     V.meldAan('regia').then(function () { self.setState({ loginBezig: false }); },
@@ -567,6 +590,7 @@ componentDidMount() {
 }
 componentWillUnmount() {
   if (this._uit) this._uit();
+  if (this._tik) clearInterval(this._tik);
 }
 login() {
   var self = this, V = window.Villa;
@@ -799,6 +823,36 @@ renderVals() {
       } };
   }) };
 
+  // ── L'Archivio: de drie lades, live uit de villa; in het canvas een voorbeeld (zonder cijfers) ──
+  var AR = V ? ((lv && lv.archief) || null) : (st.archiefDemo || { open: [true, false, false], fout: [0, 2, 0], klem: [0, 25000, 0], cijfers: [null, null, null], tips: ['', '', ''] });
+  if (!V && !this._demoTijd) this._demoTijd = Date.now();
+  var ontvangen = V ? (this._ontvangen || Date.now()) : this._demoTijd;
+  var klemNog = function (i) { return AR ? Math.max(0, Math.ceil((((AR.klem && AR.klem[i]) || 0) - (Date.now() - ontvangen)) / 1000)) : 0; };
+  this._klemt = !!AR && [0, 1, 2].some(function (i) { return !AR.open[i] && klemNog(i) > 0; });
+  var mmss = function (t) { var m = Math.floor(t / 60), r = t % 60; return m + ':' + (r < 10 ? '0' : '') + r; };
+  var zetArchief = function (veld, i, waarde) {
+    var n = { open: AR.open.slice(), fout: AR.fout.slice(), klem: AR.klem.slice(), cijfers: AR.cijfers.slice(), tips: AR.tips.slice() };
+    if (veld === 'open') { n.open[i] = waarde; n.fout[i] = 0; n.klem[i] = 0; } else n.tips[i] = waarde ? 'Hint' : '';
+    self._demoTijd = Date.now(); self.setState({ archiefDemo: n });
+  };
+  var archief = { n: AR ? AR.open.filter(Boolean).length : 0, lades: [], meldingen: [] };
+  [['I', 'Il Decreto'], ['II', 'Il Veleno'], ['III', 'Il Pagamento']].forEach(function (x, i) {
+    var open = !!(AR && AR.open[i]), fout = AR ? (AR.fout[i] || 0) : 0, rest = open ? 0 : klemNog(i), tipAan = !!(AR && AR.tips[i]);
+    var cijfer = open && AR.cijfers && AR.cijfers[i] != null ? ' · cijfer ' + AR.cijfers[i] : '';
+    archief.lades.push({ n: x[0], naam: x[1], tipAan: tipAan,
+      status: open ? 'Open' + cijfer : 'Verzegeld' + (fout ? ' · ' + fout + (fout === 1 ? ' foute poging' : ' foute pogingen') : '') + (rest ? ' · klemt nog ' + mmss(rest) : ''),
+      statusStijl: 'font-size: 12.5px; line-height: 1.35; color: ' + (open ? '#3f6a35' : rest ? '#8a1a2c' : '#5b4636'),
+      bol: 'flex: none; width: 30px; height: 30px; border-radius: 50%; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-family: \'Bodoni Moda\', serif; font-size: ' + (x[0].length > 2 ? 11 : 13) + 'px; ' + (open ? 'background: #7a1424; color: #f4ead2' : 'border: 1.5px solid #8a6a4a; color: #4e3b2c'),
+      tipTekst: tipAan ? 'Hint weg' : 'Hint', tipLabel: (tipAan ? 'Haal de hint weg bij lade ' : 'Stuur de hint voor lade ') + x[0],
+      tipKnop: KNOP + 'flex: none; height: 40px; padding: 0 11px; letter-spacing: 0.14em; cursor: pointer; ' + (tipAan ? 'border: 1px solid #7a1424; background: rgba(122,20,36,0.1); color: #6e1424' : 'border: 1px solid #8a6a4a; background: transparent; color: #4e3b2c'),
+      openTekst: open ? 'Sluit' : 'Open', openLabel: (open ? 'Sluit lade ' : 'Open lade ') + x[0] + ' zelf',
+      openKnop: KNOP + 'flex: none; width: 66px; height: 40px; letter-spacing: 0.14em; cursor: pointer; ' + (open ? 'border: 1px solid #8a6a4a; background: transparent; color: #4e3b2c' : 'border: none; color: #f1e7cf; background: linear-gradient(180deg, #741627 0%, #4a0b17 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.15)'),
+      tip: function () { if (V) V.stuur({ t: 'tip', nr: i, aan: !tipAan }); else if (AR) zetArchief('tip', i, !tipAan); },
+      wissel: function () { if (V) V.stuur({ t: 'lade', nr: i, open: !open }); else if (AR) zetArchief('open', i, !open); } });
+  });
+  if (AR && AR.open[1]) archief.meldingen.push({ tekst: 'Lade II is open: deel nu het toxicologisch rapport uit.' });
+  if (AR && AR.open[0] && AR.open[1] && AR.open[2]) archief.meldingen.push({ tekst: 'Alle drie open. De kist gaat open met ' + (AR.cijfers && AR.cijfers[0] != null ? AR.cijfers.join(' · ') : 'de drie cijfers') + '.' });
+
   // ── De fase van de avond: live uit de villa, in het canvas een voorbeeld ──
   var faseId = V ? ((lv && lv.fase) || 'benvenuto') : (st.avondDemo || p.avondfase || 'riunione');
   var ai = Math.max(0, AVOND.map(function (f) { return f.id; }).indexOf(faseId));
@@ -818,6 +872,7 @@ renderVals() {
     knopFaseTerug: KNOP + 'flex: none; width: 96px; border: 1px solid #8a6a4a; background: transparent; color: #4e3b2c; ' + (ai === 0 ? 'opacity: 0.4; cursor: default' : 'cursor: pointer'),
     knopFaseVerder: KNOP + 'flex: 1; border: none; color: #f1e7cf; background: linear-gradient(180deg, #741627 0%, #4a0b17 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 4px 10px rgba(40,6,12,0.35); ' + (ai === AVOND.length - 1 ? 'opacity: 0.45; cursor: default' : 'cursor: pointer'),
     pavone: pavone,
+    archief: archief,
     offline: !!V && !V.verbonden && V.rol === 'regia',
     toonLogin: V ? V.rol !== 'regia' : !!p.aanmelden,
     pinRef: function (el) { self._pin = el; },

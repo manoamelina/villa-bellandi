@@ -15,6 +15,7 @@ const villa :Workerd.Worker = (
     (name = "worker.js", esModule = embed "../src/worker.js"),
     (name = "villa.js", esModule = embed "../src/villa.js"),
     (name = "spel.js", esModule = embed "../src/spel.js"),
+    (name = "lades.js", esModule = embed "../src/lades.js"),
   ],
   compatibilityDate = "2025-10-01",
   bindings = [

@@ -51,6 +51,10 @@ export const DEUREN = ['archivio', 'sala'];
 // De vier families waarvan Il Pavone vóór de finale een zegel moet hebben.
 export const FAMILIES = ['caruso', 'bellaforte', 'ventresca', 'morelli'];
 
+// Wie de lades van L'Archivio mag openen: de vier familiehoofden, Sebastiano en Caterina (samen op één telefoon).
+// De antwoorden zelf staan in lades.js, dat tools/bouw_app.py uit het ontwerp maakt.
+export const ARCHIVARISSEN = ['alessandro', 'alessia', 'matteo', 'salvatore', 'sebastiano', 'caterina'];
+
 // De zes fases van de avond, zoals in Il Tavolo. Donna Serafina zet ze in de Regia; de tv laat ze zien.
 // Een deur openen brengt de avond vanzelf naar de fase met dezelfde naam (archivio, sala).
 export const FASEN = ['benvenuto', 'riunione', 'segreti', 'archivio', 'sala', 'sentenza'];

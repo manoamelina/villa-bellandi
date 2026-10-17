@@ -22,7 +22,13 @@ button:focus-visible{outline:3px solid #e8c784;outline-offset:6px}
 .adem{animation:adem 2.6s ease-in-out infinite}
 .rijs{animation:rijs .8s cubic-bezier(.2,.8,.2,1) both}
 .fade{transition:opacity .7s ease}
-@media (prefers-reduced-motion: reduce){.adem,.rijs{animation:none}.fade{transition:none}}
+@keyframes splijtL{from{transform:none;opacity:1}to{transform:translate(-70px,34px) rotate(-26deg);opacity:0}}
+@keyframes splijtR{from{transform:none;opacity:1}to{transform:translate(70px,-22px) rotate(22deg);opacity:0}}
+@keyframes rammel{0%,100%{transform:translateX(0)}18%{transform:translateX(-9px)}36%{transform:translateX(9px)}54%{transform:translateX(-5px)}72%{transform:translateX(3px)}}
+.splijtL{animation:splijtL .9s cubic-bezier(.3,1.1,.5,1) both}
+.splijtR{animation:splijtR .9s cubic-bezier(.3,1.1,.5,1) both}
+.trilt{animation:rammel .55s ease both}
+@media (prefers-reduced-motion: reduce){.adem,.rijs,.splijtL,.splijtR,.trilt{animation:none}.fade{transition:none}}
 </style>
 </helmet>
 <div style="width: 1920px; height: 1080px; position: relative; overflow: hidden; font-family: 'Jost', sans-serif; color: #efe4cc; background-color: #2a070d; background-image: url(/beeld/083078b8daec0ebf830e9b1ac26be6e4.jpg); background-size: 520px 610px; background-position: 50% 0">
@@ -66,6 +72,7 @@ Begin
 </sc-if>
 
 <sc-if value="{{opWacht}}" hint-placeholder-val="{{ true }}">
+<sc-if value="{{nietArchief}}" hint-placeholder-val="{{ true }}">
 <div class="rijs" style="position: absolute; left: 0; right: 0; top: 0; bottom: 230px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center">
 <img src="/beeld/19dd30608b3e08bae5cb31ee458bf822.webp" alt="" style="width: 130px; filter: drop-shadow(0 10px 18px rgba(0,0,0,0.7))">
 <sc-if value="{{welkom}}" hint-placeholder-val="{{ true }}">
@@ -86,7 +93,9 @@ Begin
 <div style="margin-top: 28px; max-width: 1200px; font-family: 'EB Garamond', serif; font-size: 34px; line-height: 1.35; color: #d9c9a6">{{fase.uitleg}}</div>
 </sc-if>
 </div>
+</sc-if>
 <!-- het verloop van de avond: zes fases, de huidige licht op -->
+<sc-if value="{{nietArchief}}" hint-placeholder-val="{{ true }}">
 <div class="rijs" style="position: absolute; left: 50%; bottom: 92px; width: 1560px; margin-left: -780px; animation-delay: .25s" aria-label="{{spoorLabel}}">
 <div style="position: absolute; left: 130px; right: 130px; top: 46px; height: 2px; background: rgba(201,163,92,0.28)"></div>
 <div style="{{spoorLijn}}"></div>
@@ -102,6 +111,69 @@ Begin
 </div>
 </sc-if>
 
+<!-- L'Archivio: de hele zaal kijkt mee terwijl de zes op één telefoon de lades openen -->
+<sc-if value="{{inArchief}}" hint-placeholder-val="{{ false }}">
+<div class="rijs" style="position: absolute; left: 0; right: 0; top: 50px; display: flex; flex-direction: column; align-items: center; text-align: center">
+<div style="display: flex; align-items: center; gap: 22px; font-size: 20px; letter-spacing: 0.42em; text-transform: uppercase; color: #c9a35c">
+<span style="width: 90px; height: 1px; background: linear-gradient(90deg, rgba(201,163,92,0), rgba(201,163,92,0.8))"></span>{{fase.kop}}<span style="width: 90px; height: 1px; background: linear-gradient(90deg, rgba(201,163,92,0.8), rgba(201,163,92,0))"></span>
+</div>
+<div style="margin-top: 10px; font-family: 'Bodoni Moda', serif; font-style: italic; font-size: 96px; line-height: 1.05; color: #f4ead2; text-shadow: 0 6px 30px rgba(0,0,0,0.7)">L’Archivio</div>
+<div style="margin-top: 6px; font-family: 'EB Garamond', serif; font-style: italic; font-size: 34px; line-height: 1.2; color: #e6d8b8">{{archief.onder}}</div>
+</div>
+<div style="position: absolute; left: 110px; right: 110px; top: 296px; height: 520px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 44px">
+<sc-for list="{{archief.lades}}" as="l" hint-placeholder-count="3">
+<div style="{{l.kaart}}">
+<div style="display: flex; align-items: center; gap: 18px">
+<span style="{{l.bol}}">{{l.n}}</span>
+<span style="display: flex; flex-direction: column; align-items: flex-start; min-width: 0">
+<span style="font-size: 15px; letter-spacing: 0.3em; text-transform: uppercase; color: #c9a35c">Cassetto {{l.n}}</span>
+<span style="font-family: 'Bodoni Moda', serif; font-size: 42px; line-height: 1.1; color: #f4ead2">{{l.naam}}</span>
+</span>
+</div>
+<p style="margin: 18px 0 0; font-family: 'EB Garamond', serif; font-size: 29px; line-height: 1.3; color: #e6d8b8; text-align: left">{{l.vraag}}</p>
+<div style="position: relative; margin-top: auto; min-height: 200px; display: flex; flex-direction: column; justify-content: flex-end">
+<sc-if value="{{l.isOpen}}" hint-placeholder-val="{{ false }}">
+<div class="rijs" style="{{l.onthul}}">
+<span style="flex: none; display: flex; flex-direction: column; align-items: center; width: 116px">
+<span style="font-size: 14px; letter-spacing: 0.3em; text-transform: uppercase; color: #c9a35c">Cifra</span>
+<span style="font-family: 'Bodoni Moda', serif; font-size: 112px; line-height: 1; color: #f4ead2; text-shadow: 0 0 30px rgba(232,199,132,0.45)">{{l.cijfer}}</span>
+</span>
+<span style="font-family: 'EB Garamond', serif; font-style: italic; font-size: 27px; line-height: 1.3; color: #efe4cc">{{l.regel}}</span>
+</div>
+<sc-if value="{{l.breekt}}" hint-placeholder-val="{{ false }}">
+<span aria-hidden="true" style="position: absolute; left: 50%; top: 0; width: 108px; margin-left: -54px; pointer-events: none">
+<img class="splijtL" src="/beeld/19dd30608b3e08bae5cb31ee458bf822.webp" alt="" style="display: block; width: 108px; clip-path: polygon(0 0, 50% 0, 44% 22%, 56% 41%, 46% 63%, 54% 82%, 49% 100%, 0 100%); filter: drop-shadow(0 8px 14px rgba(0,0,0,0.7))">
+<img class="splijtR" src="/beeld/19dd30608b3e08bae5cb31ee458bf822.webp" alt="" style="position: absolute; left: 0; top: 0; width: 108px; clip-path: polygon(50% 0, 100% 0, 100% 100%, 49% 100%, 54% 82%, 46% 63%, 56% 41%, 44% 22%); filter: drop-shadow(0 8px 14px rgba(0,0,0,0.7))">
+</span>
+</sc-if>
+</sc-if>
+<sc-if value="{{l.dicht}}" hint-placeholder-val="{{ true }}">
+<sc-if value="{{l.heeftTip}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 14px 18px 16px; border: 1px dashed rgba(216,182,112,0.6); background: rgba(20,8,8,0.5); text-align: left">
+<div style="font-size: 14px; letter-spacing: 0.26em; text-transform: uppercase; color: #e8c784">Hint van Donna Serafina</div>
+<div style="margin-top: 6px; font-family: 'EB Garamond', serif; font-size: 24px; line-height: 1.3; color: #efe4cc">{{l.tip}}</div>
+</div>
+</sc-if>
+<sc-if value="{{l.geenTip}}" hint-placeholder-val="{{ true }}">
+<span class="{{l.zegelKlasse}}" style="align-self: center; display: block; width: 108px"><img src="/beeld/19dd30608b3e08bae5cb31ee458bf822.webp" alt="" style="display: block; width: 108px; filter: drop-shadow(0 8px 14px rgba(0,0,0,0.7))"></span>
+</sc-if>
+<div style="{{l.statusStijl}}">{{l.status}}</div>
+</sc-if>
+</div>
+</div>
+</sc-for>
+</div>
+<div class="rijs" style="position: absolute; left: 0; right: 0; bottom: 64px; display: flex; flex-direction: column; align-items: center; gap: 14px; animation-delay: .2s">
+<span style="font-size: 18px; letter-spacing: 0.4em; text-transform: uppercase; color: #c9a35c">{{archief.codeLabel}}</span>
+<div style="display: flex; gap: 22px">
+<sc-for list="{{archief.code}}" as="c" hint-placeholder-count="3">
+<span style="{{c.vak}}">{{c.tekst}}</span>
+</sc-for>
+</div>
+</div>
+</sc-if>
+</sc-if>
+
 <video ref="{{vidRef}}" class="fade" playsinline preload="auto" onEnded="{{klaar}}" onError="{{videoFout}}" aria-hidden="true" style="{{videoStyle}}"></video>
 
 <sc-if value="{{offline}}" hint-placeholder-val="{{ false }}">
@@ -109,11 +181,13 @@ Begin
 </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"fase":{"editor":"enum","options":["verbinden","koppelen","start","wacht","video"],"default":"wacht","section":"Voorbeeld"},"avondfase":{"editor":"enum","options":["benvenuto","riunione","segreti","archivio","sala","sentenza"],"default":"benvenuto","section":"Voorbeeld"},"$preview":{"width":1920,"height":1080}}'>
+<script type="text/x-dc" data-dc-script data-props='{"fase":{"editor":"enum","options":["verbinden","koppelen","start","wacht","video"],"default":"wacht","section":"Voorbeeld"},"archief":{"editor":null},"avondfase":{"editor":"enum","options":["benvenuto","riunione","segreti","archivio","sala","sentenza"],"default":"benvenuto","section":"Voorbeeld"},"$preview":{"width":1920,"height":1080}}'>
 // Lo Schermo: de tv in de woonkamer. Hij koppelt zich één keer via een code in de Regia;
 // daarna bepaalt Donna Serafina vanaf haar telefoon wat er op de tv staat.
 // Video's worden vooraf helemaal geladen, zodat ze op de avond niet haperen.
 // Het wachtscherm toont de fase van de avond die Donna Serafina in de Regia kiest (de teksten uit Il Tavolo).
+// In fase IV, met het archief open, toont het de drie lades: de zaal kijkt mee terwijl de zes intikken.
+// Cijfers, onthullingen en hints komen van de server, en alleen voor lades die open zijn of een hint hebben.
 var AVOND = [
   { id: 'benvenuto', it: 'Il Benvenuto', nl: 'De ontvangst', uitleg: 'Neem plaats, maak kennis met de aanwezigen en ontdek Villa Bellandi.' },
   { id: 'riunione', it: 'La Riunione', nl: 'De bijeenkomst', uitleg: 'Voer gesprekken, wissel informatie uit en onderzoek wat anderen u vertellen.' },
@@ -129,7 +203,8 @@ componentDidMount() {
   if (!V) return;
   this._gezien = 0;
   this._geladen = {};
-  this._uit = V.aan(function () { self.volg(); self.setState({ live: ((self.state && self.state.live) || 0) + 1 }); });
+  this._uit = V.aan(function () { self._ontvangen = Date.now(); self.volgArchief(); self.volg(); self.setState({ live: ((self.state && self.state.live) || 0) + 1 }); });
+  this._tik = setInterval(function () { if (self._klemt) self.setState({ tik: Date.now() }); }, 1000);
   V.meldAan('scherm').catch(function () {});
   this._toets = function (e) {
     if (self.state && self.state.gestart) return;
@@ -141,6 +216,7 @@ componentDidMount() {
 }
 componentWillUnmount() {
   if (this._uit) this._uit();
+  if (this._tik) clearInterval(this._tik);
   document.removeEventListener('keydown', this._toets);
   document.removeEventListener('visibilitychange', this._zicht);
 }
@@ -228,6 +304,26 @@ begin() {
   }
   this.wakker();
 }
+// Een lade die net opengaat laat zijn zegel breken; een foute poging laat het zegel trillen.
+volgArchief() {
+  var V = window.Villa, A = V && V.staat && V.staat.archief, self = this;
+  if (!A || !A.open) return;
+  var oud = this._arch;
+  if (oud) {
+    for (var i = 0; i < 3; i++) {
+      if (A.open[i] && !oud.open[i]) {
+        this.setState({ breek: i });
+        if (this._tb) clearTimeout(this._tb);
+        this._tb = setTimeout(function () { self.setState({ breek: null }); }, 1300);
+      } else if ((A.fout[i] || 0) > (oud.fout[i] || 0)) {
+        this.setState({ schud: i });
+        if (this._ts) clearTimeout(this._ts);
+        this._ts = setTimeout(function () { self.setState({ schud: null }); }, 650);
+      }
+    }
+  }
+  this._arch = { open: A.open.slice(), fout: A.fout.slice() };
+}
 wakker() {
   var self = this;
   try { if (navigator.wakeLock) navigator.wakeLock.request('screen').then(function (l) { self._slot = l; }, function () {}); } catch (e) {}
@@ -250,7 +346,37 @@ renderVals() {
       stip: 'display: block; margin-top: 8px; width: 18px; height: 18px; box-sizing: border-box; border-radius: 50%; ' + (nu ? 'background: #e8c784; box-shadow: 0 0 0 7px rgba(232,199,132,0.16), 0 0 22px rgba(232,199,132,0.55)' : voorbij ? 'background: #c9a35c' : 'background: #14060a; border: 2px solid rgba(201,163,92,0.45)'),
       naamStijl: 'display: block; margin-top: 14px; max-width: 240px; font-size: 15px; line-height: 1.3; letter-spacing: 0.16em; text-transform: uppercase; ' + (nu ? 'font-weight: 500; color: #f4ead2' : voorbij ? 'color: rgba(216,182,112,0.75)' : 'color: rgba(216,182,112,0.4)') };
   });
+  // L'Archivio: live uit de villa; in het canvas uit de props (een voorbeeld)
+  var AR = V ? (V.staat && V.staat.archief) : (this.props.archief || null);
+  var deurOpen = V ? !!(V.staat && V.staat.deuren && V.staat.deuren.archivio) : true;
+  var inArchief = avondId === 'archivio' && deurOpen && !!AR && AR.mag !== false && !!AR.vragen;
+  var ontvangen = V ? (this._ontvangen || Date.now()) : Date.now();
+  var klemNog = function (i) { return AR ? Math.max(0, Math.ceil((((AR.klem && AR.klem[i]) || 0) - (Date.now() - ontvangen)) / 1000)) : 0; };
+  this._klemt = inArchief && [0, 1, 2].some(function (i) { return !AR.open[i] && klemNog(i) > 0; });
+  var mmss = function (t) { var m = Math.floor(t / 60), r = t % 60; return m + ':' + (r < 10 ? '0' : '') + r; };
+  var alle = inArchief && AR.open[0] && AR.open[1] && AR.open[2];
+  var archief = { onder: alle ? 'Alle drie de sloten zijn open.' : 'Elk slot vraagt één cijfer. Samen openen ze de kist.', codeLabel: alle ? 'La cassa si apre con' : 'Codice della cassa', lades: [], code: [] };
+  if (inArchief) {
+    [0, 1, 2].forEach(function (i) {
+      var open = !!AR.open[i], rest = open ? 0 : klemNog(i), fout = AR.fout[i] || 0, tip = (AR.tips && AR.tips[i]) || '';
+      var cijfer = AR.cijfers && AR.cijfers[i] != null ? String(AR.cijfers[i]) : '';
+      archief.lades.push({ n: ROMEINS[i], naam: AR.namen[i], vraag: AR.vragen[i], isOpen: open, dicht: !open,
+        cijfer: cijfer, regel: (AR.regels && AR.regels[i]) || '', breekt: st.breek === i,
+        onthul: 'display: flex; align-items: center; gap: 22px; text-align: left' + (st.breek === i ? '; animation-delay: .45s' : ''),
+        heeftTip: !open && !!tip, geenTip: !open && !tip, tip: tip,
+        zegelKlasse: st.schud === i ? 'trilt' : '',
+        status: rest ? 'Fout · het slot klemt nog ' + mmss(rest) : 'Verzegeld' + (fout ? ' · ' + fout + (fout === 1 ? ' foute poging' : ' foute pogingen') : ''),
+        statusStijl: 'margin-top: 14px; text-align: center; font-size: 17px; letter-spacing: 0.24em; text-transform: uppercase; color: ' + (rest ? '#f2a0a8' : 'rgba(216,182,112,0.72)'),
+        kaart: 'position: relative; display: flex; flex-direction: column; box-sizing: border-box; padding: 30px 32px 28px; border: 1px solid rgba(216,182,112,' + (open ? '0.75' : '0.4') + '); background: ' + (open ? 'linear-gradient(180deg, rgba(74,11,23,0.55) 0%, rgba(20,6,8,0.78) 100%)' : 'rgba(12,4,6,0.64)') + '; box-shadow: inset 0 0 40px rgba(0,0,0,0.55)' + (open ? ', 0 0 40px rgba(232,199,132,0.12)' : ''),
+        bol: 'flex: none; width: 64px; height: 64px; border-radius: 50%; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-family: \'Bodoni Moda\', serif; font-size: ' + (i === 2 ? 22 : 26) + 'px; ' + (open ? 'background: #7a1424; color: #f4ead2; box-shadow: 0 0 0 3px rgba(232,199,132,0.25)' : 'border: 1.5px solid rgba(216,182,112,0.6); color: #e8c784') });
+      archief.code.push({ tekst: open && cijfer ? cijfer : '·',
+        vak: 'width: 96px; height: 112px; display: flex; align-items: center; justify-content: center; border-radius: 2px; font-family: \'Bodoni Moda\', serif; font-size: 66px; line-height: 1; background: linear-gradient(180deg, rgba(18,10,7,0.92) 0%, rgba(30,18,12,0.92) 100%); ' + (open ? 'color: #f4ead2; ' : 'color: rgba(233,220,192,0.3); ') + (alle ? 'border: 1px solid #e2c27e; box-shadow: inset 0 2px 6px rgba(0,0,0,0.8), 0 0 26px rgba(226,194,126,0.4)' : 'border: 1px solid rgba(216,182,112,0.45); box-shadow: inset 0 2px 6px rgba(0,0,0,0.8)') });
+    });
+  }
   return {
+    inArchief: inArchief,
+    nietArchief: !inArchief,
+    archief: archief,
     welkom: ai === 0,
     inFase: ai > 0,
     fase: { kop: 'Villa Bellandi · ' + ROMEINS[ai], it: af.it, nl: af.nl, uitleg: af.uitleg },

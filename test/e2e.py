@@ -1,6 +1,7 @@
 """End-to-end test van de eerste versie: tv, Regia en drie telefoons tegen de lokale Worker (poort 8790).
 Gebruik: python3 villa/test/e2e.py [uitmap-voor-schermafbeeldingen]"""
 import re
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -43,6 +44,8 @@ def nieuw(browser, naam, w, h, mobiel):
     pg.on('pageerror', lambda e: logs.append(f'[{naam}] pageerror: {e}'))
     return pg
 
+
+subprocess.run(['node', str(Path(__file__).resolve().parent / 'opnieuw.mjs')], check=True)   # elke run begint schoon
 
 with sync_playwright() as p:
     b = p.chromium.launch(args=['--autoplay-policy=document-user-activation-required'])
@@ -128,7 +131,7 @@ with sync_playwright() as p:
     check(wacht_op(lambda: all(s.get_by_text('Het geheime archief · nu open').is_visible() for s in spelers)), 'archief gaat open op alle drie de telefoons')
     regia.screenshot(path=str(UIT / 'regia-3-avond.png'), full_page=False)
     spelers[0].screenshot(path=str(UIT / 'speler-3-archief-open.png'))
-    regia.get_by_role('button', name='Sluit').first.click()
+    regia.get_by_role('button', name='Sluit', exact=True).first.click()
     check(wacht_op(lambda: all(not s.get_by_text('Het geheime archief · nu open').is_visible() for s in spelers)), 'archief gaat weer dicht op alle telefoons')
 
     # ── de fase van de avond ──
@@ -140,6 +143,54 @@ with sync_playwright() as p:
     regia.get_by_role('button', name='Volgende fase').click()
     check(wacht_op(lambda: tv.get_by_text('Het archief', exact=True).is_visible()), 'Regia: Volgende fase zet de tv weer op L’Archivio')
     check(all(s.evaluate('window.Villa.staat && window.Villa.staat.fase === undefined') for s in spelers[:2]), 'de telefoons van de spelers krijgen de fase niet')
+
+    # ── het archief: de zes op één telefoon, de zaal kijkt mee op de tv ──
+    regia.get_by_role('button', name='Open de deur').first.click()
+    check(wacht_op(lambda: spelers[0].get_by_text('Het geheime archief · nu open').is_visible()), 'archief weer open')
+    a = spelers[0]   # Don Alessandro, familiehoofd
+    a.goto(BASIS + '/Archivio.dc.html')
+    naar_bureau = a.get_by_role('button', name='Loop naar het bureau van Don Vittorio')
+    check(wacht_op(lambda: naar_bureau.is_visible(), 10), 'Alessandro komt in het archief')
+    naar_bureau.click(); a.wait_for_timeout(2500)
+    a.get_by_role('button', name='Lade I, Il Decreto, verzegeld').click(); a.wait_for_timeout(500)
+    a.get_by_role('button', name='Cijfer 5').click()
+    a.get_by_role('button', name='Probeer het slot').click()
+    check(wacht_op(lambda: a.get_by_text('Het slot geeft niet mee.').is_visible()), 'fout cijfer: het slot geeft niet mee')
+    check(wacht_op(lambda: 'Het klemt nog 0:1' in a.inner_text('body')), 'het slot klemt 15 seconden')
+    check(wacht_op(lambda: '1 foute poging' in regia.inner_text('body') and 'klemt nog 0:1' in regia.inner_text('body')), 'Regia ziet de foute poging en de wachttijd')
+    check(wacht_op(lambda: tv.get_by_text('het slot klemt nog', exact=False).is_visible()), 'de tv toont dat lade I klemt')
+    a.screenshot(path=str(UIT / 'archief-1-fout.png'))
+    tv.screenshot(path=str(UIT / 'tv-6-archief-fout.png'))
+    a.get_by_role('button', name='Sluiten').click(); a.wait_for_timeout(500)
+    regia.get_by_role('button', name='Stuur de hint voor lade II', exact=True).click()
+    a.get_by_role('button', name='Lade II, Il Veleno, verzegeld').click(); a.wait_for_timeout(500)
+    check(wacht_op(lambda: a.get_by_text('Hint van Donna Serafina').is_visible()), 'de hint verschijnt op de archieftelefoon')
+    check(wacht_op(lambda: tv.get_by_text('Hint van Donna Serafina').is_visible()), 'en op de tv')
+    a.get_by_role('button', name='Cijfer 8').click()
+    a.get_by_role('button', name='Probeer het slot').click()
+    check(wacht_op(lambda: a.get_by_text('Acht keer zijn dosis', exact=False).first.is_visible()), 'goed cijfer: lade II gaat open, met de onthulling')
+    check(wacht_op(lambda: 'toxicologisch rapport' in regia.inner_text('body')), 'Regia: deel nu het toxicologisch rapport uit')
+    check(wacht_op(lambda: tv.get_by_text('Acht keer zijn dosis', exact=False).is_visible()), 'de tv toont lade II open')
+    tv.screenshot(path=str(UIT / 'tv-7-archief-open.png'))
+    regia.get_by_role('button', name='Open lade III zelf').click()
+    regia.get_by_role('button', name='Open lade I zelf').click()
+    check(wacht_op(lambda: a.get_by_text('L’archivio è aperto').is_visible(), 10), 'alle drie open: de kist op de telefoon')
+    check('2 · 8 · 3' in a.inner_text('body'), 'de code van de kist is 2 · 8 · 3')
+    check(wacht_op(lambda: tv.get_by_text('La cassa si apre con', exact=False).is_visible()), 'de tv toont de code van de kist')
+    check(wacht_op(lambda: 'De kist gaat open met 2 · 8 · 3' in regia.inner_text('body')), 'Regia: de kist gaat open met 2 · 8 · 3')
+    a.screenshot(path=str(UIT / 'archief-2-kist.png'))
+    tv.screenshot(path=str(UIT / 'tv-8-archief-kist.png'))
+    regia.screenshot(path=str(UIT / 'regia-7-archief.png'))
+    m = spelers[1]   # Marco mag niet in het archief
+    m.goto(BASIS + '/Archivio.dc.html')
+    check(wacht_op(lambda: m.get_by_text('Het archief is open voor de familiehoofden', exact=False).is_visible(), 10), 'Marco ziet: het archief is voor de familiehoofden, kijk mee op de tv')
+    check('Acht keer' not in m.content() and 'Twee dagen' not in m.content(), 'Marco’s pagina bevat geen onthulling')
+    m.screenshot(path=str(UIT / 'archief-3-marco.png'))
+    for n in ('I', 'II', 'III'):
+        regia.get_by_role('button', name=f'Sluit lade {n} zelf').click()
+    check(wacht_op(lambda: '0 van 3 open' in regia.inner_text('body')), 'Regia sluit de lades weer')
+    regia.get_by_role('button', name='Sluit', exact=True).first.click()
+    m.goto(BASIS + '/Foyer.dc.html')
 
     # ── de testvideo ──
     regia.get_by_role('button', name='Test: speel de uitnodiging af').click()
@@ -170,7 +221,7 @@ with sync_playwright() as p:
     check(wacht_op(lambda: not regia.get_by_text('Geen verbinding met de villa.', exact=False).is_visible(), 15), 'regia herstelt de verbinding vanzelf')
     regia.get_by_role('button', name='Open de deur').first.click()
     check(wacht_op(lambda: spelers[1].get_by_text('Het geheime archief · nu open').is_visible()), 'na herstel werkt de deurknop weer')
-    regia.get_by_role('button', name='Sluit').first.click()
+    regia.get_by_role('button', name='Sluit', exact=True).first.click()
 
     # ── tv herladen: geen nieuwe koppeling nodig ──
     tv.reload()

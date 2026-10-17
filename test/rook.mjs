@@ -105,7 +105,34 @@ regia.stuur({ t: 'deur', deur: 'archivio', open: false }); await wacht(100);
 regia.stuur({ t: 'deur', deur: 'archivio', open: true }); await wacht(200);
 check(laatste(tv2, 'staat')?.staat?.fase === 'sala', 'een deur zet de fase nooit terug');
 
+// het archief: alleen de familiehoofden, Sebastiano en Caterina; de antwoorden blijven op de server
+const { LADES } = await import('../src/lades.js');
+const arch = (c) => laatste(c, 'staat')?.staat?.archief;
+check(arch(p[0])?.mag === true && arch(p[1])?.mag === false, 'Alessandro mag in het archief, Marco niet');
+p[1].stuur({ t: 'lade', nr: 1, cijfer: LADES[1].antwoord }); await wacht(150);
+check(arch(regia)?.open?.[1] === false, 'Marco kan geen lade openen');
+regia.stuur({ t: 'deur', deur: 'archivio', open: false }); await wacht(150);
+p[0].stuur({ t: 'lade', nr: 1, cijfer: LADES[1].antwoord }); await wacht(150);
+check(arch(regia)?.open?.[1] === false, 'met de deur dicht gaat geen lade open');
+regia.stuur({ t: 'deur', deur: 'archivio', open: true }); await wacht(150);
+p[0].stuur({ t: 'lade', nr: 0, cijfer: (LADES[0].antwoord + 1) % 10 }); await wacht(200);
+check(arch(regia)?.fout?.[0] === 1 && arch(regia)?.klem?.[0] > 10000, 'fout antwoord: lade I klemt 15 seconden');
+check(arch(p[0])?.cijfers?.[0] === null && arch(p[0])?.regels?.[0] === '', 'een dichte lade verraadt zijn cijfer niet');
+p[0].stuur({ t: 'lade', nr: 0, cijfer: LADES[0].antwoord }); await wacht(200);
+check(arch(regia)?.open?.[0] === false, 'zolang het slot klemt, helpt ook het goede cijfer niet');
+p[0].stuur({ t: 'lade', nr: 1, cijfer: LADES[1].antwoord }); await wacht(200);
+check(arch(p[0])?.open?.[1] === true && arch(p[0])?.cijfers?.[1] === LADES[1].antwoord && arch(p[0])?.regels?.[1] === LADES[1].regel, 'goed antwoord: lade II gaat open, met cijfer en onthulling');
+check(arch(tv2)?.open?.[1] === true && arch(tv2)?.cijfers?.[1] === LADES[1].antwoord, 'de tv ziet lade II open');
+regia.stuur({ t: 'tip', nr: 2, aan: true }); await wacht(200);
+check(arch(p[0])?.tips?.[2] === LADES[2].tip, 'de hint van Donna Serafina komt aan bij lade III');
+check(!JSON.stringify(p[1].inbox).includes(LADES[2].tip) && !JSON.stringify(p[1].inbox).includes(LADES[1].regel), 'Marco krijgt geen hint en geen onthulling');
+regia.stuur({ t: 'lade', nr: 2, open: true }); await wacht(200);
+check(arch(p[0])?.open?.[2] === true, 'Donna Serafina opent lade III zelf');
+p[0].stuur({ t: 'lade', nr: 5, cijfer: 1 }); p[0].stuur({ t: 'lade', nr: 0, cijfer: 'x' }); await wacht(150);
+check(arch(regia)?.open?.[0] === false && arch(regia)?.fout?.[0] === 1, 'onzin wordt genegeerd');
+
 regia.stuur({ t: 'opnieuw' }); await wacht(200);
+check(arch(regia)?.open?.every((o) => !o) && arch(regia)?.tips?.every((t) => !t) && arch(regia)?.fout?.every((f) => f === 0), 'opnieuw beginnen sluit de lades en haalt de hints weg');
 check(laatste(tv2, 'staat')?.staat?.fase === 'benvenuto', 'opnieuw beginnen zet de fase op Il Benvenuto');
 check(laatste(p[0], 'staat')?.staat?.deuren?.archivio === false, 'opnieuw beginnen sluit de deuren weer');
 check(laatste(regia, 'staat')?.staat?.zegels?.morelli === false, 'opnieuw beginnen wist de zegels');
