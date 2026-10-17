@@ -51,6 +51,10 @@ export const DEUREN = ['archivio', 'sala'];
 // De vier families waarvan Il Pavone vóór de finale een zegel moet hebben.
 export const FAMILIES = ['caruso', 'bellaforte', 'ventresca', 'morelli'];
 
+// De zes fases van de avond, zoals in Il Tavolo. Donna Serafina zet ze in de Regia; de tv laat ze zien.
+// Een deur openen brengt de avond vanzelf naar de fase met dezelfde naam (archivio, sala).
+export const FASEN = ['benvenuto', 'riunione', 'segreti', 'archivio', 'sala', 'sentenza'];
+
 export function normCode(c) {
   return String(c || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
 }

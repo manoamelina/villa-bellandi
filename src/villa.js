@@ -1,9 +1,10 @@
 // Villa: één Durable Object dat de hele avond bijhoudt en live doorgeeft aan alle schermen.
 // Rollen: 'speler' (telefoon met envelopcode), 'regia' (Donna Serafina, pincode) en 'scherm' (de tv, gekoppeld vanuit de Regia).
 import { DurableObject } from 'cloudflare:workers';
-import { REGIA_PIN, VIDEOS, DEUREN, FAMILIES, spelerBijCode } from './spel.js';
+import { REGIA_PIN, VIDEOS, DEUREN, FAMILIES, FASEN, spelerBijCode } from './spel.js';
 
 const BEGIN = () => ({
+  fase: 'benvenuto',
   deuren: { archivio: false, sala: false },
   scherm: { scene: 'wacht', video: '', nonce: 1 },
   // de vier zegels van Il Pavone (alleen de Regia en de tv zien ze)
@@ -24,6 +25,7 @@ export class Villa extends DurableObject {
       if (s) {
         const b = BEGIN();
         this.staat = { ...b, ...s, deuren: { ...b.deuren, ...(s.deuren || {}) }, scherm: { ...b.scherm, ...(s.scherm || {}) }, zegels: { ...b.zegels, ...(s.zegels || {}) } };
+        if (!FASEN.includes(this.staat.fase)) this.staat.fase = b.fase;
       }
       if (t) this.tokens = { regia: t.regia || [], scherm: t.scherm || [] };
     });
@@ -109,6 +111,14 @@ export class Villa extends DurableObject {
   async vanRegia(ws, m) {
     if (m.t === 'deur' && DEUREN.includes(m.deur)) {
       this.staat.deuren[m.deur] = !!m.open;
+      // Opent het Archivio of de Sala, dan schuift de fase mee vooruit (nooit terug).
+      if (m.open && FASEN.indexOf(m.deur) > FASEN.indexOf(this.staat.fase)) this.staat.fase = m.deur;
+      await this.bewaar();
+      return this.zendStaat();
+    }
+
+    if (m.t === 'fase' && FASEN.includes(m.fase)) {
+      this.staat.fase = m.fase;
       await this.bewaar();
       return this.zendStaat();
     }
@@ -201,8 +211,8 @@ export class Villa extends DurableObject {
 
   staatVoor(rol, behalve) {
     if (rol === 'speler') return { deuren: this.staat.deuren };
-    if (rol === 'scherm') return { deuren: this.staat.deuren, scherm: this.staat.scherm, zegels: this.staat.zegels, videos: VIDEOS };
-    return { deuren: this.staat.deuren, scherm: this.staat.scherm, zegels: this.staat.zegels, videos: VIDEOS, status: this.status(behalve) };
+    if (rol === 'scherm') return { fase: this.staat.fase, deuren: this.staat.deuren, scherm: this.staat.scherm, zegels: this.staat.zegels, videos: VIDEOS };
+    return { fase: this.staat.fase, deuren: this.staat.deuren, scherm: this.staat.scherm, zegels: this.staat.zegels, videos: VIDEOS, status: this.status(behalve) };
   }
 
   zendStaat() {

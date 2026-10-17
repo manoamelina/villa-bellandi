@@ -88,7 +88,25 @@ regia.stuur({ t: 'zegel', fam: 'falcone', aan: true }); await wacht(100);
 check(laatste(regia, 'staat')?.staat?.zegels?.falcone === undefined, 'onbekende familie genegeerd');
 p[0].stuur({ t: 'zegel', fam: 'caruso', aan: true }); await wacht(150);
 check(laatste(regia, 'staat')?.staat?.zegels?.caruso === false, 'speler kan geen zegel zetten');
+
+// de fase van de avond
+regia.stuur({ t: 'fase', fase: 'riunione' }); await wacht(200);
+check(laatste(regia, 'staat')?.staat?.fase === 'riunione', 'regia zet de fase op La Riunione');
+check(laatste(tv2, 'staat')?.staat?.fase === 'riunione', 'de tv kent de fase');
+check(p.every((c) => c.inbox.filter((m) => m.t === 'staat').every((m) => m.staat.fase === undefined)), 'telefoons van spelers krijgen de fase niet');
+regia.stuur({ t: 'fase', fase: 'feest' }); await wacht(100);
+check(laatste(regia, 'staat')?.staat?.fase === 'riunione', 'onbekende fase genegeerd');
+p[0].stuur({ t: 'fase', fase: 'sentenza' }); await wacht(150);
+check(laatste(regia, 'staat')?.staat?.fase === 'riunione', 'speler kan de fase niet zetten');
+regia.stuur({ t: 'deur', deur: 'archivio', open: true }); await wacht(200);
+check(laatste(tv2, 'staat')?.staat?.fase === 'archivio', 'Archivio openen brengt de avond naar L’Archivio');
+regia.stuur({ t: 'fase', fase: 'sala' }); await wacht(150);
+regia.stuur({ t: 'deur', deur: 'archivio', open: false }); await wacht(100);
+regia.stuur({ t: 'deur', deur: 'archivio', open: true }); await wacht(200);
+check(laatste(tv2, 'staat')?.staat?.fase === 'sala', 'een deur zet de fase nooit terug');
+
 regia.stuur({ t: 'opnieuw' }); await wacht(200);
+check(laatste(tv2, 'staat')?.staat?.fase === 'benvenuto', 'opnieuw beginnen zet de fase op Il Benvenuto');
 check(laatste(p[0], 'staat')?.staat?.deuren?.archivio === false, 'opnieuw beginnen sluit de deuren weer');
 check(laatste(regia, 'staat')?.staat?.zegels?.morelli === false, 'opnieuw beginnen wist de zegels');
 

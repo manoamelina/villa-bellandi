@@ -47,6 +47,7 @@ def nieuw(browser, naam, w, h, mobiel):
 with sync_playwright() as p:
     b = p.chromium.launch(args=['--autoplay-policy=document-user-activation-required'])
     tv = nieuw(b, 'tv', 1920, 1080, False)
+    op_wacht = lambda: tv.get_by_text('La Sentenza').first.is_visible()   # de tijdlijn onderaan staat alleen op het wachtscherm
     if WEBM:
         data = (Path(__file__).resolve().parent / 'test-6s.webm').read_bytes()
         tv.route('**/media/uitnodiging.mp4', lambda r: r.fulfill(status=200, body=data, headers={'Content-Type': 'video/webm'}))
@@ -88,7 +89,7 @@ with sync_playwright() as p:
     tv.screenshot(path=str(UIT / 'tv-2-gekoppeld.png'))
     check(tv.evaluate('document.activeElement && document.activeElement.textContent.trim()') == 'Begin', 'knop "Begin" heeft focus (OK op de afstandsbediening)')
     tv.keyboard.press('Enter')
-    check(wacht_op(lambda: tv.get_by_text('Benvenuti a').is_visible()), 'tv toont het wachtscherm na OK')
+    check(wacht_op(op_wacht), 'tv toont het wachtscherm na OK')
     check(wacht_op(lambda: 'Het geluid staat aan.' in regia.inner_text('body')), 'regia ziet: geluid staat aan')
     tv.screenshot(path=str(UIT / 'tv-3-wachtscherm.png'))
 
@@ -130,6 +131,16 @@ with sync_playwright() as p:
     regia.get_by_role('button', name='Sluit').first.click()
     check(wacht_op(lambda: all(not s.get_by_text('Het geheime archief · nu open').is_visible() for s in spelers)), 'archief gaat weer dicht op alle telefoons')
 
+    # ── de fase van de avond ──
+    check(wacht_op(lambda: tv.get_by_text('Het archief', exact=True).is_visible()), 'archief openen zette de tv op fase IV, L’Archivio')
+    check(tv.get_by_text('Het archief', exact=True).is_visible(), 'de fase blijft staan als de deur weer dicht gaat')
+    tv.screenshot(path=str(UIT / 'tv-5-fase.png'))
+    regia.get_by_role('button', name='Vorige fase', exact=True).click()
+    check(wacht_op(lambda: tv.get_by_text('De geheimen', exact=True).is_visible()), 'Regia: Vorige zet de tv op I Segreti')
+    regia.get_by_role('button', name='Volgende fase').click()
+    check(wacht_op(lambda: tv.get_by_text('Het archief', exact=True).is_visible()), 'Regia: Volgende fase zet de tv weer op L’Archivio')
+    check(all(s.evaluate('window.Villa.staat && window.Villa.staat.fase === undefined') for s in spelers[:2]), 'de telefoons van de spelers krijgen de fase niet')
+
     # ── de testvideo ──
     regia.get_by_role('button', name='Test: speel de uitnodiging af').click()
     if kan_h264:
@@ -140,14 +151,14 @@ with sync_playwright() as p:
         check(wacht_op(lambda: 'Speelt nu de uitnodiging.' in regia.inner_text('body')), 'regia ziet: speelt nu de uitnodiging')
         tv.screenshot(path=str(UIT / 'tv-4-video.png'))
         regia.get_by_role('button', name='Stop de video').click()
-        check(wacht_op(lambda: tv.get_by_text('Benvenuti a').is_visible() and tv.evaluate('document.querySelector("video").paused')), 'stop: tv terug naar het wachtscherm')
+        check(wacht_op(lambda: op_wacht() and tv.evaluate('document.querySelector("video").paused')), 'stop: tv terug naar het wachtscherm')
         regia.get_by_role('button', name='Test: speel de uitnodiging af').click()
         check(wacht_op(lambda: not tv.evaluate('document.querySelector("video").paused')), 'nogmaals afspelen begint opnieuw')
-        check(wacht_op(lambda: tv.get_by_text('Benvenuti a').is_visible() and regia.get_by_role('button', name='Test: speel de uitnodiging af').is_visible(), 20), 'na afloop vanzelf terug naar het wachtscherm, ook in de Regia')
+        check(wacht_op(lambda: op_wacht() and regia.get_by_role('button', name='Test: speel de uitnodiging af').is_visible(), 20), 'na afloop vanzelf terug naar het wachtscherm, ook in de Regia')
     else:
         # Deze testbrowser kan geen H.264 afspelen: dan moet de tv netjes terugvallen en de Regia het melden.
         check(wacht_op(lambda: 'kon niet afspelen op deze tv' in regia.inner_text('body')), 'regia meldt dat de tv de video niet kon afspelen')
-        check(wacht_op(lambda: tv.get_by_text('Benvenuti a').is_visible()), 'tv valt terug op het wachtscherm')
+        check(wacht_op(op_wacht), 'tv valt terug op het wachtscherm')
         check(tv.evaluate('document.querySelector("video").src.slice(0, 5)') == 'blob:', 'tv probeerde de vooraf geladen blob')
         check(wacht_op(lambda: regia.get_by_role('button', name='Test: speel de uitnodiging af').is_visible()), 'regia-knop staat weer op afspelen')
         regia.screenshot(path=str(UIT / 'regia-4-videofout.png'))

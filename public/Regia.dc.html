@@ -41,7 +41,29 @@ button:focus-visible{outline:2px solid #b8873a;outline-offset:2px}
 <sc-if value="{{opScherm}}" hint-placeholder-val="{{ true }}">
 <div class="rijs">
 <div style="font-family: 'Bodoni Moda', serif; font-weight: 500; font-size: 26px; line-height: 1.1; color: #24110b">De avond</div>
-<div style="margin-top: 4px; font-size: 13px; line-height: 1.4; color: #5b4636">Wie er binnen is, de deuren van de villa en de tv.</div>
+<div style="margin-top: 4px; font-size: 13px; line-height: 1.4; color: #5b4636">De fase, wie er binnen is, de deuren van de villa en de tv.</div>
+
+<div style="margin-top: 16px; padding: 14px 14px 12px; border: 1px solid rgba(110,20,36,0.5); background: rgba(255,251,240,0.6)">
+<div style="display: flex; align-items: baseline; justify-content: space-between">
+<span style="font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: #6e1424">Fase van de avond · op de tv</span>
+<span style="font-family: 'Bodoni Moda', serif; font-size: 20px; color: #24110b">{{avondFase.nr}} <span style="font-size: 14px; color: #5b4636">van {{avondFase.totaal}}</span></span>
+</div>
+<div style="margin-top: 4px; font-family: 'Bodoni Moda', serif; font-size: 22px; line-height: 1.15; color: #24110b">{{avondFase.it}}</div>
+<div style="margin-top: 2px; font-family: 'EB Garamond', serif; font-size: 16.5px; line-height: 1.3; color: #3a2618">{{avondFase.nl}}</div>
+<div style="margin-top: 12px; display: flex; gap: 4px">
+<sc-for list="{{avondFase.streepjes}}" as="s" hint-placeholder-count="6">
+<span title="{{s.naam}}" style="{{s.stijl}}"></span>
+</sc-for>
+</div>
+<div style="display: flex; gap: 10px; margin-top: 14px">
+<button type="button" onClick="{{avondFase.terug}}" disabled="{{avondFase.eerste}}" aria-label="Vorige fase" style="{{knopFaseTerug}}">Vorige</button>
+<button type="button" onClick="{{avondFase.verder}}" disabled="{{avondFase.laatste}}" style="{{knopFaseVerder}}">Volgende fase</button>
+</div>
+<sc-if value="{{avondFase.heeftHierna}}" hint-placeholder-val="{{ true }}">
+<div style="margin-top: 10px; font-size: 12.5px; line-height: 1.4; color: #5b4636"><span style="letter-spacing: 0.18em; text-transform: uppercase; color: #6e1424">Hierna</span> · {{avondFase.hierna}}</div>
+</sc-if>
+<div style="margin-top: 6px; font-size: 12.5px; line-height: 1.4; color: #5b4636">Zeg een nieuwe fase ook hardop. Open je L’Archivio of de Sala, dan schuift de fase vanzelf mee.</div>
+</div>
 
 <div style="margin-top: 16px; display: flex; align-items: baseline; justify-content: space-between">
 <span style="font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; color: #6e1424">Binnen</span>
@@ -333,7 +355,7 @@ button:focus-visible{outline:2px solid #b8873a;outline-offset:2px}
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"tab":{"editor":"enum","options":["scherm","oordelen","winnaar","prijzen"],"default":"scherm","section":"Voorbeeld"},"detail":{"editor":"enum","options":["","alessandro","marco","luca","alessia","raffaele","stefano","matteo","enzo","nico","sofia","salvatore","lucia","giulia","sebastiano","caterina"],"default":"","section":"Voorbeeld"},"bezegeld":{"editor":"int","min":0,"max":15,"step":1,"default":11,"section":"Voorbeeld"},"scene":{"editor":"int","min":0,"max":30,"step":1,"default":0,"section":"Voorbeeld"},"bonuslijst":{"editor":"boolean","default":false,"section":"Voorbeeld"},"aanmelden":{"editor":"boolean","default":false,"section":"Voorbeeld"},"pavone":{"editor":"int","min":0,"max":4,"step":1,"default":3,"section":"Voorbeeld"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"tab":{"editor":"enum","options":["scherm","oordelen","winnaar","prijzen"],"default":"scherm","section":"Voorbeeld"},"detail":{"editor":"enum","options":["","alessandro","marco","luca","alessia","raffaele","stefano","matteo","enzo","nico","sofia","salvatore","lucia","giulia","sebastiano","caterina"],"default":"","section":"Voorbeeld"},"bezegeld":{"editor":"int","min":0,"max":15,"step":1,"default":11,"section":"Voorbeeld"},"scene":{"editor":"int","min":0,"max":30,"step":1,"default":0,"section":"Voorbeeld"},"bonuslijst":{"editor":"boolean","default":false,"section":"Voorbeeld"},"aanmelden":{"editor":"boolean","default":false,"section":"Voorbeeld"},"pavone":{"editor":"int","min":0,"max":4,"step":1,"default":3,"section":"Voorbeeld"},"avondfase":{"editor":"enum","options":["benvenuto","riunione","segreti","archivio","sala","sentenza"],"default":"riunione","section":"Voorbeeld"},"$preview":{"width":390,"height":844}}'>
 // La Regia: alleen voor Donna Serafina. Hier bedient zij het grote scherm,
 // geeft zij elk oordeel goed of fout, kiest zij de winnaar en ziet zij de stemmen voor de prijzen.
 // In dit prototype zijn de antwoorden voorbeeldantwoorden.
@@ -435,9 +457,11 @@ function speurVan(a, vals) {
   var gekozen = a.vervalst || [], goed = gekozen.filter(function (s) { return !!vals[s]; }).length, fout = gekozen.length - goed;
   return { goed: goed, fout: fout, punten: Math.max(0, goed - fout), gemist: Object.keys(vals).filter(function (k) { return vals[k] && gekozen.indexOf(k) < 0; }) };
 }
+// de dader kent de antwoorden: zij doet niet mee voor de winnaar en De scherpste speurder
+function zonderDader(antwoorden) { return antwoorden.filter(function (a) { return a.speler !== DADER; }); }
 // ranglijst voor de prijs: meeste punten, bij gelijke stand wie het eerst bezegelde
 function speurders(antwoorden, vals) {
-  return antwoorden.map(function (a) { var s = speurVan(a, vals); return { id: a.speler, n: s.punten, goed: s.goed, fout: s.fout, tijd: a.tijd }; })
+  return zonderDader(antwoorden).map(function (a) { var s = speurVan(a, vals); return { id: a.speler, n: s.punten, goed: s.goed, fout: s.fout, tijd: a.tijd }; })
     .sort(function (x, y) { return y.n - x.n || x.tijd - y.tijd; });
 }
 // hoe vaak elke verdachte is aangewezen, van minst naar meest (gelijke stand: Galleria-volgorde)
@@ -449,8 +473,9 @@ function telling(antwoorden) {
 }
 // ranglijst volgens de spelregel: wie wie, waarom én hoe goed heeft, wint; hebben meer mensen alles goed,
 // dan wint wie het eerst bezegelde. Daaronder de rest: meeste goed, dan wie het eerst bezegelde.
+// De dader staat er niet in: zij wint alleen als de Commissione haar niet ontmaskert.
 function ranglijst(antwoorden, oordeel) {
-  return antwoorden.map(function (a) {
+  return zonderDader(antwoorden).map(function (a) {
     var o = oordeel[a.speler] || voorstel(a);
     var hoofd = (o.wie ? 1 : 0) + (o.waarom ? 1 : 0) + (o.hoe ? 1 : 0);
     return { speler: a.speler, o: o, hoofd: hoofd, alles: hoofd === 3, tijd: a.tijd, a: a };
@@ -508,6 +533,15 @@ var FASES = [
   { id: 'testament', t: 'Het testament', uitleg: 'De vier zegels van Il Pavone: opvolger of lege stoel.' },
   { id: 'winnaar', t: 'De winnaar', uitleg: 'Wie jij kiest bij Winnaar.' },
   { id: 'prijzen', t: 'De prijzen', uitleg: 'Outfit, scherpste speurder en leugenaar.' }
+];
+// de zes fases van de avond, zoals in Il Tavolo; de tv laat de huidige fase zien
+var AVOND = [
+  { id: 'benvenuto', it: 'Il Benvenuto', nl: 'De ontvangst' },
+  { id: 'riunione', it: 'La Riunione', nl: 'De bijeenkomst' },
+  { id: 'segreti', it: 'I Segreti', nl: 'De geheimen' },
+  { id: 'archivio', it: 'L’Archivio', nl: 'Het archief' },
+  { id: 'sala', it: 'La Sala del Giudizio', nl: 'Het oordeel' },
+  { id: 'sentenza', it: 'La Sentenza', nl: 'Het vonnis' }
 ];
 var PRIJS_TITELS = { outfit: 'Beste outfit', speurder: 'De scherpste speurder', leugenaar: 'Beste leugenaar' };
 var PRIJS_IDS = ['outfit', 'speurder', 'leugenaar'];
@@ -601,7 +635,7 @@ renderVals() {
       if (x.deel === 1) return { titel: 'Het testament · de vier zegels', tekst: 'Vittorio’s testament; de zegels van de families verschijnen een voor een.', kort: 'het testament: de vier zegels' };
       return nPavone === 4
         ? { titel: 'Het testament · de opvolger', tekst: 'Sebastiano Valenti wordt het nieuwe hoofd van La Commissione.', kort: 'het testament: Sebastiano wordt Don Supremo' }
-        : { titel: 'Het testament · de lege stoel', tekst: nPavone + ' van de 4 zegels: de stoel van Don Vittorio blijft leeg.', kort: 'het testament: de lege stoel' };
+        : { titel: 'Het testament · de lege stoel', tekst: nPavone + ' van de 4 zegels: de stoel van Don Vittorio blijft leeg. Laat La Commissione nu kiezen: wie de stoel opeist, noemt zijn steun; daarna stemt iedereen met handopsteken.', kort: 'het testament: de lege stoel, La Commissione kiest' };
     }
     if (x.fase === 'winnaar') return { titel: 'De winnaar', tekst: (wSpeler ? wSpeler.naam : '—') + ' staat groot in beeld.', kort: 'de winnaar: ' + (wSpeler ? wSpeler.naam : '—') };
     if (x.prijs === 0) return { titel: 'De prijzen', tekst: 'Drie prijzen, nog bezegeld.', kort: 'de prijzen, nog bezegeld' };
@@ -628,11 +662,12 @@ renderVals() {
     var a = DEMO.filter(function (x) { return x.speler === s.id; })[0], b = !!binnenIds[s.id];
     var o = b ? oordeelVan(a) : null, h = b ? herken(a.wie) : null, hp = h && h.id ? spelerVan(h.id) : null;
     var punten3 = o ? (o.wie ? 1 : 0) + (o.waarom ? 1 : 0) + (o.hoe ? 1 : 0) : 0;
+    var isDader = s.id === DADER;   // de dader telt niet mee voor de winnaar en De scherpste speurder
     return { naam: s.naam, portret: s.mini, heeftPortret: !!s.mini, binnen: b, dicht: !b,
       aria: b ? 'Oordeel van ' + s.naam : s.naam + ', nog niet bezegeld',
-      sub: b ? 'Wees aan: ' + (hp ? hp.naam : '‘' + a.wie + '’') : 'Nog niet bezegeld',
+      sub: b ? (isDader ? 'De dader · wees aan: ' : 'Wees aan: ') + (hp ? hp.naam : '‘' + a.wie + '’') : 'Nog niet bezegeld',
       subStijl: 'font-size: 12.5px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ' + (b ? 'color: #5b4636' : 'color: #8a6a4a; font-style: italic'),
-      score: punten3 + '/3', bonus: b ? speurVan(a, vals).punten + ' ptn' : '',
+      score: b && isDader ? '—' : punten3 + '/3', bonus: b ? (isDader ? 'telt niet' : speurVan(a, vals).punten + ' ptn') : '',
       scoreStijl: 'font-family: \'Bodoni Moda\', serif; font-size: 18px; line-height: 1.1; ' + (punten3 === 3 ? 'color: #6e1424; font-weight: 500' : 'color: #24110b'),
       mini: mini(38, 46),
       rij: 'display: flex; align-items: center; gap: 12px; width: 100%; min-height: 60px; padding: 7px 2px; box-sizing: border-box; border: none; border-top: 1px solid rgba(160,122,62,0.35); background: transparent; font-family: \'Jost\', sans-serif; color: #24110b; ' + (b ? 'cursor: pointer' : 'cursor: default; opacity: 0.6'),
@@ -721,7 +756,7 @@ renderVals() {
   var speeltTest = schermNu.scene === 'video';
   var koppelFout = !!st.koppelFout || !!(V && V.fout === 'koppelcode' && this._koppelPoging);
   var DEUR_INFO = [
-    { id: 'archivio', it: "L'Archivio", dicht: 'Verzegeld. Open hem wanneer het archief aan de beurt is.', open: 'Open. Iedereen kan nu naar beneden.' },
+    { id: 'archivio', it: "L'Archivio", dicht: 'Verzegeld. Zeg bij het openen: ‘Elk stuk dat het archief nodig heeft, gaat nu op tafel.’ Caterina legt dan ook haar akte neer.', open: 'Open. Iedereen kan nu naar beneden.' },
     { id: 'sala', it: 'La Sala del Giudizio', dicht: 'Verzegeld. Open hem voor de finale, als de zegels van Il Pavone binnen zijn.', open: 'Open. Iedereen kan nu zijn oordeel bezegelen.' }
   ];
   var avond = {
@@ -764,8 +799,24 @@ renderVals() {
       } };
   }) };
 
+  // ── De fase van de avond: live uit de villa, in het canvas een voorbeeld ──
+  var faseId = V ? ((lv && lv.fase) || 'benvenuto') : (st.avondDemo || p.avondfase || 'riunione');
+  var ai = Math.max(0, AVOND.map(function (f) { return f.id; }).indexOf(faseId));
+  var zetFase = function (i) {
+    if (i < 0 || i >= AVOND.length) return;
+    if (V) V.stuur({ t: 'fase', fase: AVOND[i].id }); else self.setState({ avondDemo: AVOND[i].id });
+  };
+  var avondFase = { nr: ai + 1, totaal: AVOND.length, it: AVOND[ai].it, nl: AVOND[ai].nl,
+    eerste: ai === 0, laatste: ai === AVOND.length - 1,
+    heeftHierna: ai < AVOND.length - 1, hierna: ai < AVOND.length - 1 ? AVOND[ai + 1].it + ', ' + AVOND[ai + 1].nl.toLowerCase() : '',
+    terug: function () { zetFase(ai - 1); }, verder: function () { zetFase(ai + 1); },
+    streepjes: AVOND.map(function (f, i) { return { naam: (i + 1) + ' · ' + f.it, stijl: 'display: block; flex: 1; height: 4px; border-radius: 2px; background: ' + (i <= ai ? '#7a1424' : 'rgba(160,122,62,0.35)') }; }) };
+
   return {
     avond: avond,
+    avondFase: avondFase,
+    knopFaseTerug: KNOP + 'flex: none; width: 96px; border: 1px solid #8a6a4a; background: transparent; color: #4e3b2c; ' + (ai === 0 ? 'opacity: 0.4; cursor: default' : 'cursor: pointer'),
+    knopFaseVerder: KNOP + 'flex: 1; border: none; color: #f1e7cf; background: linear-gradient(180deg, #741627 0%, #4a0b17 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 4px 10px rgba(40,6,12,0.35); ' + (ai === AVOND.length - 1 ? 'opacity: 0.45; cursor: default' : 'cursor: pointer'),
     pavone: pavone,
     offline: !!V && !V.verbonden && V.rol === 'regia',
     toonLogin: V ? V.rol !== 'regia' : !!p.aanmelden,
