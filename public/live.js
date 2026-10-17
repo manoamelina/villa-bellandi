@@ -172,27 +172,79 @@
     return blobs[url];
   }
 
-  // ── Het ontwerp (390 × 844 of 1920 × 1080) passend maken op elk scherm ──
-  var vorige = '';
+  // ── Het ontwerp passend maken op elk scherm ──
+  // Een telefoonpagina (ontworpen op 390 × 844) vult de hele breedte; haar hoogte past zich aan het scherm aan
+  // (tussen 600 en 900), zodat er geen zwarte randen overblijven. Is het scherm lager dan dat, dan staat de pagina
+  // met 600 hoogte in het midden. Op een liggend scherm, tablet of computer staat het hele ontwerp in het midden.
+  // De tv (1920 × 1080) past altijd als geheel.
+  var vorige = '', vorigeBreedte = 0;
+  function typt() {
+    var a = document.activeElement;
+    return !!a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable);
+  }
   function pas() {
     var root = document.getElementById('dc-root');
-    var bord = root && root.firstElementChild;
+    var laag = root && root.firstElementChild;     // de laag die de runtime om het ontwerp legt
+    var bord = laag && laag.firstElementChild;     // het ontwerp zelf
     if (!bord) return;
-    var w = bord.offsetWidth, h = bord.offsetHeight;
-    if (!w || !h) return;
-    var s = Math.min(window.innerWidth / w, window.innerHeight / h);
-    var sleutel = w + 'x' + h + '@' + s.toFixed(4);
+    volgDom();
+    var vw = window.innerWidth, vh = window.innerHeight, w = bord.offsetWidth;
+    if (!w || !vw || !vh) return;
+    // Gaat het toetsenbord open, dan blijft de pagina staan zoals ze stond (anders springt ze tijdens het typen).
+    if (vorige && typt() && vw === vorigeBreedte) return;
+    var tel = w === 390, s, h, x = 0, y = 0;
+    if (tel && vw / vh <= 0.72) {
+      s = vw / 390; h = vh / s;
+      if (h < 600) { h = 600; s = vh / 600; x = (vw - 390 * s) / 2; }
+      else if (h > 900) { h = 900; y = (vh - 900 * s) / 2; }
+      h = Math.ceil(h);
+    } else {
+      h = tel ? 844 : bord.offsetHeight;
+      if (!h) return;
+      s = Math.min(vw / w, vh / h); x = (vw - w * s) / 2; y = (vh - h * s) / 2;
+    }
+    if (tel) hoogte(bord, h);
+    var sleutel = [w, h, s.toFixed(4), x.toFixed(1), y.toFixed(1)].join('|');
     if (sleutel === vorige) return;
-    vorige = sleutel;
+    vorige = sleutel; vorigeBreedte = vw;
     root.style.position = 'fixed';
-    root.style.left = '50%';
-    root.style.top = '50%';
-    root.style.width = w + 'px';
-    root.style.height = h + 'px';
-    root.style.transformOrigin = '50% 50%';
-    root.style.transform = 'translate(-50%, -50%) scale(' + s + ')';
+    root.style.left = '0';
+    root.style.top = '0';
+    root.style.width = '100%';
+    root.style.height = '100%';
+    root.style.overflow = 'hidden';
+    root.style.transform = '';
+    laag.style.width = w + 'px';
+    laag.style.height = h + 'px';
+    laag.style.transformOrigin = '0 0';
+    laag.style.transform = 'translate(' + x.toFixed(2) + 'px, ' + y.toFixed(2) + 'px) scale(' + s.toFixed(5) + ')';
   }
-  window.addEventListener('resize', function () { vorige = ''; pas(); });
+  // Het ontwerp, en elk telefoonontwerp dat erin staat (zoals de foyer achter de voordeur), krijgt de hoogte van het scherm.
+  function hoogte(bord, h) {
+    var lijst = [bord].concat([].slice.call(bord.querySelectorAll('[style*="844px"], [data-villa-hoogte]')));
+    for (var i = 0; i < lijst.length; i++) {
+      var el = lijst[i], st = el.style;
+      if (!el.hasAttribute('data-villa-hoogte')) {
+        if (st.height !== '844px' || st.width !== '390px') continue;
+        el.setAttribute('data-villa-hoogte', '');
+      }
+      if (st.height !== h + 'px') st.height = h + 'px';
+    }
+  }
+  var waarnemer = null;
+  function volgDom() {
+    var root = document.getElementById('dc-root');
+    if (waarnemer || !root || !window.MutationObserver) return;
+    waarnemer = new MutationObserver(function () { pas(); });
+    waarnemer.observe(root, { childList: true, subtree: true });
+  }
+  function opnieuwPassen() { vorige = ''; pas(); }
+  window.addEventListener('resize', opnieuwPassen);
+  window.addEventListener('orientationchange', opnieuwPassen);
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', function () { pas(); });
+  // Toetsenbord weer dicht: opnieuw passen (even wachten tot het scherm weer zijn volle hoogte heeft).
+  document.addEventListener('focusout', function () { setTimeout(opnieuwPassen, 350); });
+  try { document.documentElement.style.webkitTextSizeAdjust = '100%'; } catch (e) {}
   setInterval(pas, 400);
 
   // Spelerspagina's (behalve de entree) openen alleen met een bewaarde code.

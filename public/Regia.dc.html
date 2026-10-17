@@ -214,6 +214,12 @@ button:focus-visible{outline:2px solid #b8873a;outline-offset:2px}
 </div>
 </sc-if>
 <div role="status" style="margin-top: 8px; min-height: 18px; font-size: 12.5px; line-height: 1.4; color: #3f6a35">{{opnieuw.melding}}</div>
+
+<!-- uitloggen: deze telefoon verliest zijn toegang tot de Regia -->
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 12px; padding-top: 14px; border-top: 1px solid rgba(160,122,62,0.35)">
+<span style="font-size: 12.5px; line-height: 1.4; color: #5b4636">Klaar op deze telefoon? Na het uitloggen vraagt de Regia weer om de pincode.</span>
+<button type="button" onClick="{{uitloggen}}" style="{{knopUitloggen}}">Uitloggen</button>
+</div>
 </div>
 </sc-if>
 
@@ -631,6 +637,14 @@ zetAllesTerug() {
   if (this._klaar) clearTimeout(this._klaar);
   this._klaar = setTimeout(function () { self.setState({ opnieuwKlaar: false }); }, 6000);
 }
+// Uitloggen: de villa trekt de toegang van deze telefoon in, de Regia vergeet hem en vraagt weer om de pincode.
+logUit() {
+  var V = window.Villa;
+  if (!V) { this.setState({ uitgelogd: true }); return; }
+  V.stuur({ t: 'uitloggen' });
+  V.vergeet('regia');
+  setTimeout(function () { window.location.reload(); }, 300);
+}
 // Het bevestigingsvak staat onderaan: schuif het in beeld zodra het verschijnt.
 naarOnder() {
   var c = this._scroll;
@@ -638,7 +652,7 @@ naarOnder() {
 }
 login() {
   var self = this, V = window.Villa;
-  if (!V) return;
+  if (!V) { this.setState({ uitgelogd: false }); return; }
   var pin = this._pin ? this._pin.value.replace(/\D/g, '') : '';
   if (pin.length < 6) { this.setState({ loginFout: 'Een pincode heeft zes cijfers.' }); return; }
   this.setState({ loginBezig: true, loginFout: '' });
@@ -937,7 +951,9 @@ renderVals() {
     pavone: pavone,
     archief: archief,
     offline: !!V && !V.verbonden && V.rol === 'regia',
-    toonLogin: V ? V.rol !== 'regia' : !!p.aanmelden,
+    toonLogin: V ? V.rol !== 'regia' : (!!p.aanmelden || !!st.uitgelogd),
+    uitloggen: function () { self.logUit(); },
+    knopUitloggen: KNOP + 'flex: none; width: 120px; height: 44px; letter-spacing: 0.16em; cursor: pointer; border: 1px solid #8a6a4a; background: transparent; color: #4e3b2c',
     pinRef: function (el) { self._pin = el; },
     pinToets: function (e) { if (e.key === 'Enter') { e.preventDefault(); self.login(); } },
     login: function () { self.login(); },

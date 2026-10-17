@@ -288,6 +288,37 @@ with sync_playwright() as p:
     check('3' in regia.locator('text=van 15').first.locator('..').inner_text(), 'de spelers blijven ingelogd (3 van 15 binnen)')
     check(wacht_op(lambda: not regia.get_by_text('Alles staat weer op het begin.').is_visible(), 10), 'de melding verdwijnt vanzelf')
 
+    # ── uitloggen: een speler, via het overzicht van alle ruimtes in de foyer ──
+    s = spelers[2]
+    s.goto(BASIS + '/Foyer.dc.html')
+    check(wacht_op(lambda: s.get_by_role('button', name='Overzicht van alle ruimtes').is_visible(), 10), 'speler in de foyer')
+    s.get_by_role('button', name='Overzicht van alle ruimtes').click()
+    check(wacht_op(lambda: s.get_by_text('Ingelogd als').is_visible() and CODES[2][1].capitalize() in s.inner_text('body')), 'het overzicht toont: ingelogd als ' + CODES[2][1].capitalize())
+    s.get_by_role('button', name='Uitloggen', exact=True).click()
+    vraag = s.get_by_role('group', name='Uitloggen?')
+    check(wacht_op(lambda: vraag.is_visible()), 'eerst de vraag: uitloggen?')
+    s.screenshot(path=str(UIT / 'speler-3-uitloggen.png'))
+    vraag.get_by_role('button', name='Blijf').click()
+    check(wacht_op(lambda: not vraag.is_visible()) and s.evaluate("localStorage.getItem('villa-code')") is not None, 'Blijf laat je ingelogd')
+    s.get_by_role('button', name='Uitloggen', exact=True).click()
+    vraag.get_by_role('button', name='Log uit').click()
+    check(wacht_op(lambda: s.url.endswith('/Entree.dc.html') and s.get_by_text("CODICE D'ACCESSO").is_visible(), 10), 'na uitloggen sta je weer bij de voordeur')
+    check(s.evaluate("localStorage.getItem('villa-code')") is None and s.input_value('#toegang') == '', 'de code is vergeten en het codeveld is leeg')
+    check(wacht_op(lambda: '2' in regia.locator('text=van 15').first.locator('..').inner_text()), 'de Regia telt nog 2 van 15 binnen')
+    s.goto(BASIS + '/Galleria.dc.html')
+    check(wacht_op(lambda: s.url.endswith('/Entree.dc.html'), 10), 'zonder code stuurt een kamer je terug naar de voordeur')
+
+    # ── uitloggen: de Regia ──
+    oud_token = regia.evaluate("localStorage.getItem('villa-regia')")
+    regia.get_by_role('tab', name='Scherm').click()
+    regia.get_by_role('button', name='Uitloggen', exact=True).click()
+    check(wacht_op(lambda: regia.get_by_text('Alleen voor Donna Serafina').is_visible(), 10), 'Regia uitgelogd: de pincode wordt weer gevraagd')
+    check(regia.evaluate("localStorage.getItem('villa-regia')") is None, 'de Regia is zijn toegang vergeten')
+    regia.fill('#regia-pin', PIN)
+    regia.get_by_role('button', name='Open de Regia').click()
+    check(wacht_op(lambda: not regia.get_by_text('Alleen voor Donna Serafina').is_visible(), 10), 'met de pincode weer binnen')
+    check(regia.evaluate("localStorage.getItem('villa-regia')") not in (None, oud_token), 'met een nieuwe toegang')
+
     b.close()
 
 print()

@@ -39,7 +39,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #d8b670;outline-offset:3p
 </helmet>
 <div style="width: 390px; height: 844px; position: relative; overflow: hidden; font-family: 'Jost', sans-serif; color: #e9dcc0; background: #050303">
 
-<div style="position: absolute; top: 0; left: 50%; height: 100%; aspect-ratio: 1536 / 2720; transform: translateX(-50%)">
+<div style="position: absolute; bottom: 0; left: 50%; height: max(100%, 691px); aspect-ratio: 1536 / 2720; transform: translateX(-50%)">
 
 <div class="zoom" style="{{kamerStijl}}">
 <img src="/beeld/6eb4e54828cda236512e04bcab6851ab.jpg" alt="Het archief in de kelder van Villa Bellandi, met achterin het bureau van Don Vittorio" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block; user-select: none; pointer-events: none">
@@ -105,7 +105,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #d8b670;outline-offset:3p
 </div>
 
 <sc-if value="{{toonBericht}}" hint-placeholder-val="{{ false }}">
-<button type="button" class="rijs" onClick="{{sluitBericht}}" style="position: absolute; left: 18px; right: 18px; top: 612px; display: flex; align-items: center; gap: 12px; padding: 10px 14px 11px; border: none; border-radius: 2px; cursor: pointer; text-align: left; color: #2a1a10; background: radial-gradient(ellipse 90% 60% at 20% 0%, rgba(255,250,235,0.7) 0%, rgba(255,250,235,0) 70%), linear-gradient(176deg, #f3ead3 0%, #e4d3ac 100%); box-shadow: 0 10px 26px rgba(0,0,0,0.7), inset 0 0 0 1px rgba(122,96,72,0.3)">
+<button type="button" class="rijs" onClick="{{sluitBericht}}" style="position: absolute; left: 18px; right: 18px; top: calc(100% - 232px); display: flex; align-items: center; gap: 12px; padding: 10px 14px 11px; border: none; border-radius: 2px; cursor: pointer; text-align: left; color: #2a1a10; background: radial-gradient(ellipse 90% 60% at 20% 0%, rgba(255,250,235,0.7) 0%, rgba(255,250,235,0) 70%), linear-gradient(176deg, #f3ead3 0%, #e4d3ac 100%); box-shadow: 0 10px 26px rgba(0,0,0,0.7), inset 0 0 0 1px rgba(122,96,72,0.3)">
 <span style="flex: none; font-family: 'Courier Prime', monospace; font-size: 11px; letter-spacing: 0.08em; color: #6e1424">{{bericht.n}}</span>
 <span style="font-family: 'EB Garamond', serif; font-style: italic; font-size: 15.5px; line-height: 1.35">{{bericht.regel}}</span>
 </button>
@@ -472,7 +472,7 @@ renderVals() {
     introTekst: bijBureau ? 'Elk slot vraagt één cijfer. Tik op een lade.' : 'Achterin staat zijn bureau, met drie verzegelde lades.',
     lades: lades,
     cijfers: cijfers,
-    codeDoos: 'position: absolute; left: 18px; right: 18px; top: 712px; display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: ' + (bijBureau ? 1 : 0) + '; pointer-events: ' + (bijBureau ? 'auto' : 'none'),
+    codeDoos: 'position: absolute; left: 18px; right: 18px; top: calc(100% - 132px); display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: ' + (bijBureau ? 1 : 0) + '; pointer-events: ' + (bijBureau ? 'auto' : 'none'),
     codeLabel: alleOpen ? 'La cassa si apre con' : 'Codice della cassa',
     codeGroot: [0, 1, 2].map(cijferVan).join(' · '),
     toonBericht: !!b && bijBureau,

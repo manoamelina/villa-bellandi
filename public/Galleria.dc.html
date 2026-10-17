@@ -42,7 +42,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #d8b670;outline-offset:3p
 </helmet>
 <div style="width: 390px; height: 844px; position: relative; overflow: hidden; font-family: 'Jost', sans-serif; color: #e9dcc0; background: #070404">
 
-<div onPointerDown="{{veegStart}}" onPointerUp="{{veegEind}}" style="position: absolute; left: 0; top: 0; right: 0; height: 760px; overflow: hidden; touch-action: pan-y; background: #0b0605">
+<div onPointerDown="{{veegStart}}" onPointerUp="{{veegEind}}" style="position: absolute; left: 0; top: 0; right: 0; height: calc(100% - 84px); overflow: hidden; touch-action: pan-y; background: #0b0605">
 <div class="zoom" style="{{doos}}">
 
 <sc-for list="{{muren}}" as="w" hint-placeholder-count="1">
@@ -76,7 +76,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #d8b670;outline-offset:3p
 </div>
 <div style="position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 90px 18px rgba(0,0,0,0.55)"></div>
 <div style="position: absolute; left: 0; right: 0; top: 0; height: 100px; pointer-events: none; background: linear-gradient(180deg, rgba(5,2,2,0.7) 0%, rgba(5,2,2,0) 100%)"></div>
-<div style="position: absolute; left: 0; right: 0; top: 724px; text-align: center; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(233,220,192,0.75); text-shadow: 0 1px 6px rgba(0,0,0,0.9); pointer-events: none">‹  Veeg door de galerij  ›</div>
+<div style="position: absolute; left: 0; right: 0; top: calc(100% - 36px); text-align: center; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(233,220,192,0.75); text-shadow: 0 1px 6px rgba(0,0,0,0.9); pointer-events: none">‹  Veeg door de galerij  ›</div>
 </div>
 
 <div style="position: absolute; left: 0; right: 0; top: 0; height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px; box-sizing: border-box">
@@ -114,7 +114,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #d8b670;outline-offset:3p
 <span style="font-family: 'Courier Prime', monospace; font-size: 12px; letter-spacing: 0.14em; color: #d8b670">{{r.teller}}</span>
 </div>
 
-<div class="enter" style="position: absolute; left: 0; right: 0; top: 76px; height: 316px; display: flex; justify-content: center; align-items: flex-end">
+<div class="enter" style="position: absolute; left: 0; right: 0; top: 76px; height: min(316px, calc(100% - 360px)); display: flex; justify-content: center; align-items: flex-end">
 <span style="{{r.doos}}">
 <span style="position: absolute; left: -30%; right: -30%; top: -8%; bottom: -4%; pointer-events: none; mix-blend-mode: screen; background: linear-gradient(180deg, rgba(255,214,150,0.26) 0%, rgba(255,214,150,0.05) 65%, rgba(0,0,0,0) 100%); clip-path: polygon(40% 0, 60% 0, 100% 100%, 0 100%)"></span>
 <span class="{{r.masker}}" style="position: absolute; inset: 0; overflow: hidden">
@@ -127,7 +127,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #d8b670;outline-offset:3p
 </span>
 </div>
 
-<div class="card" style="position: absolute; left: 18px; right: 18px; top: 410px; box-sizing: border-box; padding: 18px 22px 16px; color: #2a1610; background: radial-gradient(ellipse 90% 60% at 20% 0%, rgba(255,250,235,0.7) 0%, rgba(255,250,235,0) 70%), linear-gradient(176deg, #f1e7cf 0%, #e6d6b1 100%); box-shadow: 0 16px 40px rgba(0,0,0,0.7), inset 0 0 0 1px rgba(122,96,72,0.35)">
+<div class="card" style="position: absolute; left: 18px; right: 18px; top: min(410px, calc(100% - 266px)); box-sizing: border-box; padding: 18px 22px 16px; color: #2a1610; background: radial-gradient(ellipse 90% 60% at 20% 0%, rgba(255,250,235,0.7) 0%, rgba(255,250,235,0) 70%), linear-gradient(176deg, #f1e7cf 0%, #e6d6b1 100%); box-shadow: 0 16px 40px rgba(0,0,0,0.7), inset 0 0 0 1px rgba(122,96,72,0.35)">
 <div style="position: absolute; inset: 6px; border: 1px solid rgba(122,96,72,0.3); pointer-events: none"></div>
 <div style="font-family: 'Courier Prime', monospace; font-size: 11px; letter-spacing: 0.1em; color: #7a6048">{{r.nummer}}</div>
 <div style="margin-top: 6px; font-family: 'Bodoni Moda', serif; font-weight: 500; font-size: 26px; line-height: 1.1; color: #24110b">{{r.naam}}</div>
@@ -293,7 +293,7 @@ renderVals() {
       nummer: 'Ritratto n° ' + (i + 1 < 10 ? '0' : '') + (i + 1),
       vorigeNaam: naamVan(pv), volgendeNaam: naamVan(nx),
       masker: L.masker, lijstFoto: L.foto,
-      doos: 'position: relative; display: block; width: ' + Math.round(bw) + 'px; aspect-ratio: ' + r2(L.ratio * 1000) + ' / 1000'
+      doos: 'position: relative; display: block; height: min(100%, ' + (Math.round(bw) / (r2(L.ratio * 1000) / 1000)).toFixed(3) + 'px); aspect-ratio: ' + r2(L.ratio * 1000) + ' / 1000'
     };
     vorige = function () { self.setState({ sel: pv.id, muur: pv.wand === null ? muur : pv.wand }); };
     volgende = function () { self.setState({ sel: nx.id, muur: nx.wand === null ? muur : nx.wand }); };
@@ -305,7 +305,7 @@ renderVals() {
   return {
     muren: muren,
     plek: wand.kort + ' · ' + (muur + 1) + ' di ' + WANDEN.length,
-    doos: 'position: absolute; top: 0; right: 0; height: 100%; aspect-ratio: 1536 / 2752; transform-origin: ' + zoomX + '% ' + zoomY + '%; transform: translateX(0.5%) scale(' + zoom + ')',
+    doos: 'position: absolute; top: 0; right: 0; height: max(100%, 699px); aspect-ratio: 1536 / 2752; transform-origin: ' + zoomX + '% ' + zoomY + '%; transform: translateX(0.5%) scale(' + zoom + ')',
     toonVittorio: open('vittorio'),
     open: !!cur,
     r: r,

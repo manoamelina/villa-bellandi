@@ -92,7 +92,7 @@ animation:verschijn 1.2s ease both;animation-delay:var(--d)}
 </div>
 
 <sc-if value="{{toonHint}}" hint-placeholder-val="{{ true }}">
-<div style="position: absolute; left: 50%; top: 684px; transform: translateX(-50%); white-space: nowrap; padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(216,182,112,0.35); background: rgba(14,6,5,0.72); font-size: 12px; letter-spacing: 0.04em; color: #e9dcc0; pointer-events: none">Tik op een messing bordje om rond te kijken</div>
+<div style="position: absolute; left: 50%; top: calc(100% - max(100%, 691px) * 160 / 844); transform: translateX(-50%); white-space: nowrap; padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(216,182,112,0.35); background: rgba(14,6,5,0.72); font-size: 12px; letter-spacing: 0.04em; color: #e9dcc0; pointer-events: none">Tik op een messing bordje om rond te kijken</div>
 </sc-if>
 
 <sc-if value="{{uitlijnen}}" hint-placeholder-val="{{ false }}">
@@ -144,12 +144,31 @@ animation:verschijn 1.2s ease both;animation-delay:var(--d)}
 </button>
 </sc-for>
 </div>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px">
+<span style="display: flex; flex-direction: column; min-width: 0">
+<span style="font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #6e1424">Ingelogd als</span>
+<span style="font-family: 'Bodoni Moda', serif; font-size: 16px; line-height: 1.25; color: #24110b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{uit.naam}}</span>
+</span>
+<sc-if value="{{uit.knop}}" hint-placeholder-val="{{ true }}">
+<button type="button" onClick="{{uit.vraag}}" style="flex: none; padding: 0 14px; border: 1px solid #8a6a4a; background: transparent; color: #4e3b2c; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 2px; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; ">Uitloggen</button>
+</sc-if>
+</div>
+<sc-if value="{{uit.vragen}}" hint-placeholder-val="{{ false }}">
+<div role="group" aria-label="Uitloggen?" style="margin-top: 12px; padding: 12px 14px 12px; border: 1px solid rgba(110,20,36,0.55); background: rgba(110,20,36,0.06)">
+<div style="font-family: 'Bodoni Moda', serif; font-size: 18px; line-height: 1.2; color: #4a0b17">Uitloggen?</div>
+<div style="margin-top: 3px; font-size: 13px; line-height: 1.4; color: #4a0b17">Om weer binnen te komen heb je de code uit je envelop nodig.</div>
+<div style="display: flex; gap: 10px; margin-top: 10px">
+<button type="button" onClick="{{uit.blijf}}" style="flex: none; width: 96px; border: 1px solid #8a6a4a; background: transparent; color: #4e3b2c; display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 2px; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; ">Blijf</button>
+<button type="button" onClick="{{uit.doe}}" style="flex: 1; border: none; color: #f1e7cf; background: linear-gradient(180deg, #741627 0%, #4a0b17 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 4px 10px rgba(40,6,12,0.3); display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 2px; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; ">Log uit</button>
+</div>
+</div>
+</sc-if>
 </sc-if>
 </div>
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"archivio":{"editor":"boolean","default":false,"section":"Game Master"},"sala":{"editor":"boolean","default":false,"section":"Game Master"},"uitlijnen":{"editor":"boolean","default":false,"section":"Game Master"},"sel":{"editor":null},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"archivio":{"editor":"boolean","default":false,"section":"Game Master"},"sala":{"editor":"boolean","default":false,"section":"Game Master"},"uitlijnen":{"editor":"boolean","default":false,"section":"Game Master"},"sel":{"editor":null},"uitloggen":{"editor":"boolean","default":false,"section":"Voorbeeld"},"$preview":{"width":390,"height":844}}'>
 // ── ACHTERGROND ──
 // Vervang FOTO door een nieuwe foyerfoto; FOTO_VERHOUDING = breedte / hoogte van die foto.
 var FOTO_VERHOUDING = 1536 / 2720;
@@ -244,10 +263,18 @@ renderVals() {
     toonKamer: !!r,
     toonOverzichtLijst: sel === 'overzicht',
     toonHint: !zichtbaar && !uit,
-    toonOverzicht: function () { self.setState({ sel: 'overzicht' }); },
-    sluit: function () { self.setState({ sel: null }); },
+    toonOverzicht: function () { self.setState({ sel: 'overzicht', vraagUit: false }); },
+    sluit: function () { self.setState({ sel: null, vraagUit: false }); },
+    // Uitloggen: de code van deze telefoon vergeten en terug naar de voordeur (in het canvas: Marco als voorbeeld).
+    uit: (function () {
+      var V = window.Villa, vraag = st.vraagUit !== undefined ? st.vraagUit : !!p.uitloggen;
+      return { naam: V && V.speler ? V.speler.naam : 'Marco Caruso', knop: !vraag, vragen: vraag,
+        vraag: function () { self.setState({ vraagUit: true }); },
+        blijf: function () { self.setState({ vraagUit: false }); },
+        doe: function () { if (V) V.vergeet('speler'); window.location.href = 'Entree.dc.html'; } };
+    })(),
     herstel: function () { self.setState({ aanp: {} }); },
-    podium: 'position: absolute; top: 0; left: 50%; height: 100%; aspect-ratio: ' + FOTO_VERHOUDING + '; transform: translateX(-50%); touch-action: ' + (uit ? 'none' : 'auto'),
+    podium: 'position: absolute; bottom: 0; left: 50%; height: max(100%, ' + Math.ceil(390 / FOTO_VERHOUDING) + 'px); aspect-ratio: ' + FOTO_VERHOUDING + '; transform: translateX(-50%); touch-action: ' + (uit ? 'none' : 'auto'),
     sleep: function (e) {
       var s = self._sleep;
       if (!s) return;

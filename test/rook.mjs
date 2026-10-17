@@ -137,6 +137,24 @@ check(laatste(tv2, 'staat')?.staat?.fase === 'benvenuto', 'opnieuw beginnen zet 
 check(laatste(p[0], 'staat')?.staat?.deuren?.archivio === false, 'opnieuw beginnen sluit de deuren weer');
 check(laatste(regia, 'staat')?.staat?.zegels?.morelli === false, 'opnieuw beginnen wist de zegels');
 
-for (const c of [tv, regia, ...p, fout, tv2, r2, r3]) try { c.ws.close(); } catch (e) {}
+// Uitloggen: de Regia verliest zijn toegang; het oude token werkt daarna niet meer, de pincode wel.
+const uit = await verbind('uit');
+uit.stuur({ t: 'hallo', rol: 'regia', pin: REGIA_PIN }); await wacht(150);
+const oudToken = laatste(uit, 'welkom')?.token;
+uit.stuur({ t: 'uitloggen' }); await wacht(150);
+check(!!oudToken && !!laatste(uit, 'uitgelogd'), 'Regia uitgelogd');
+uit.stuur({ t: 'deur', deur: 'sala', open: true }); await wacht(150);
+check(laatste(regia, 'staat')?.staat?.deuren?.sala === false, 'na uitloggen kan die verbinding niets meer');
+const terug = await verbind('terug');
+terug.stuur({ t: 'hallo', rol: 'regia', token: oudToken }); await wacht(150);
+check(laatste(terug, 'fout')?.reden === 'token', 'het oude token werkt niet meer');
+terug.stuur({ t: 'hallo', rol: 'regia', pin: REGIA_PIN }); await wacht(150);
+check(!!laatste(terug, 'welkom')?.token && laatste(terug, 'welkom').token !== oudToken, 'met de pincode kom je er weer in');
+check(!!welkomR?.token && (() => { regia.stuur({ t: 'fase', fase: 'riunione' }); return true; })(), 'andere Regia blijft ingelogd');
+await wacht(150);
+check(laatste(regia, 'staat')?.staat?.fase === 'riunione', 'de andere Regia kan nog steeds bedienen');
+regia.stuur({ t: 'opnieuw' }); await wacht(150);
+
+for (const c of [tv, regia, ...p, fout, tv2, r2, r3, uit, terug]) try { c.ws.close(); } catch (e) {}
 console.log(fouten.length ? `\n${fouten.length} FOUT(EN)` : '\nalles in orde');
 process.exit(fouten.length ? 1 : 0);

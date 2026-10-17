@@ -106,7 +106,7 @@ export class Villa extends DurableObject {
         await this.ctx.storage.put('tokens', this.tokens);
       }
       if (!tk) return this.stuur(ws, { t: 'fout', reden: m.pin ? 'pin' : 'token' });
-      ws.serializeAttachment({ rol: 'regia', ok: true });
+      ws.serializeAttachment({ rol: 'regia', ok: true, token: tk });
       this.stuur(ws, { t: 'welkom', rol: 'regia', token: tk });
       return this.stuur(ws, { t: 'staat', staat: this.staatVoor('regia') });
     }
@@ -130,6 +130,17 @@ export class Villa extends DurableObject {
 
   // ── opdrachten van Donna Serafina ──────────────────────────
   async vanRegia(ws, m) {
+    // Uitloggen: deze telefoon verliest zijn toegang; daarna is de pincode weer nodig.
+    if (m.t === 'uitloggen') {
+      const a = ws.deserializeAttachment() || {};
+      if (a.token) {
+        this.tokens.regia = this.tokens.regia.filter((t) => t !== a.token);
+        await this.ctx.storage.put('tokens', this.tokens);
+      }
+      ws.serializeAttachment({ rol: '', ok: false });
+      return this.stuur(ws, { t: 'uitgelogd' });
+    }
+
     if (m.t === 'deur' && DEUREN.includes(m.deur)) {
       this.staat.deuren[m.deur] = !!m.open;
       // Opent het Archivio of de Sala, dan schuift de fase mee vooruit (nooit terug).
