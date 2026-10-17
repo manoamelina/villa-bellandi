@@ -245,6 +245,49 @@ with sync_playwright() as p:
     check(regia.inner_text('body').count('0/15') >= 1, 'kop van de Regia telt 0/15 bezegeld')
     regia.screenshot(path=str(UIT / 'regia-5-scherm.png'))
 
+    # ── opnieuw beginnen: na een proefronde alles in één keer terug ──
+    tv.keyboard.press('Enter')   # na het herladen staat de tv nog op "Begin"
+    check(wacht_op(op_wacht), 'tv weer op het wachtscherm')
+    # eerst de avond op fase IV met het archief open, zoals midden in een proefronde
+    fasen = ['benvenuto', 'riunione', 'segreti', 'archivio', 'sala', 'sentenza']
+    tv_fase = lambda: tv.evaluate('window.Villa.staat && window.Villa.staat.fase')
+    for _ in range(6):
+        f = tv_fase()
+        if f == 'archivio':
+            break
+        regia.get_by_role('button', name='Vorige fase' if fasen.index(f) > 3 else 'Volgende fase', exact=True).click()
+        wacht_op(lambda: tv_fase() != f, 3)
+    if not tv.evaluate('window.Villa.staat.deuren.archivio'):
+        regia.get_by_role('button', name='Open de deur').first.click()   # het archief staat als eerste deur in de lijst
+    check(wacht_op(lambda: 'cassetto' in tv.inner_text('body').lower()), 'voor het terugzetten: fase IV, archief open, de tv toont de lades')
+    regia.get_by_role('button', name='Famiglia Caruso: nog niet bezegeld').click()
+    regia.get_by_role('button', name='Stuur de hint voor lade I', exact=True).click()
+    regia.get_by_role('button', name='Open lade III zelf').click()
+    check(wacht_op(lambda: '1 van 3 open' in regia.inner_text('body') and regia.get_by_role('button', name='Famiglia Caruso: bezegeld').is_visible()
+                   and regia.get_by_role('button', name='Haal de hint weg bij lade I', exact=True).is_visible()), 'lade III open, hint bij lade I, zegel van Caruso')
+    regia.get_by_role('button', name='Zet alles terug').click()
+    groep = regia.get_by_role('group', name='Alles terugzetten?')
+    check(wacht_op(lambda: groep.is_visible()), 'Regia vraagt eerst: alles terugzetten?')
+    regia.wait_for_timeout(300)
+    check(groep.evaluate('el => el.getBoundingClientRect().bottom <= window.innerHeight - 74 + 1'), 'het vak staat helemaal in beeld, boven de tabbalk')
+    regia.screenshot(path=str(UIT / 'regia-7-opnieuw.png'))
+    groep.get_by_role('button', name='Annuleer').click()
+    check(wacht_op(lambda: not groep.is_visible()) and '1 van 3 open' in regia.inner_text('body'), 'Annuleer laat alles staan')
+    regia.get_by_role('button', name='Zet alles terug').click()
+    groep.get_by_role('button', name='Ja, zet alles terug').click()
+    check(wacht_op(lambda: regia.get_by_text('Alles staat weer op het begin.').is_visible()), 'Regia: alles staat weer op het begin')
+    check(wacht_op(lambda: '0 van 3 open' in regia.inner_text('body') and 'Il Benvenuto' in regia.inner_text('body')), 'Regia: fase I, alle lades dicht')
+    check(regia.get_by_role('button', name='Famiglia Caruso: nog niet bezegeld').is_visible(), 'Regia: de zegels van Il Pavone zijn weer leeg')
+    check(regia.get_by_role('button', name='Stuur de hint voor lade I', exact=True).is_visible(), 'Regia: de hint is weg')
+    check(len(regia.get_by_role('button', name='Open de deur').all()) == 2, 'Regia: beide deuren weer dicht')
+    check(wacht_op(lambda: tv_fase() == 'benvenuto' and 'Villa Bellandi' in tv.inner_text('body') and 'cassetto' not in tv.inner_text('body').lower()),
+          'de tv staat weer op fase I: Benvenuti a Villa Bellandi, geen lades meer')
+    check(tv.evaluate('window.Villa.staat.archief.open.every(o => !o) && window.Villa.staat.archief.tips.every(t => !t)'), 'de tv: lades dicht, geen hint')
+    check(wacht_op(lambda: all(not s.get_by_text('Het geheime archief · nu open').is_visible() for s in spelers)), 'het archief is weer dicht op de telefoons')
+    check(regia.get_by_text('Tv gekoppeld').is_visible(), 'de tv blijft gekoppeld')
+    check('3' in regia.locator('text=van 15').first.locator('..').inner_text(), 'de spelers blijven ingelogd (3 van 15 binnen)')
+    check(wacht_op(lambda: not regia.get_by_text('Alles staat weer op het begin.').is_visible(), 10), 'de melding verdwijnt vanzelf')
+
     b.close()
 
 print()
