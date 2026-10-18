@@ -29,6 +29,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #d8b670;outline-offset:3p
 background:linear-gradient(#e2c27e,#e2c27e) 0 0/12px 1.5px no-repeat,linear-gradient(#e2c27e,#e2c27e) 0 0/1.5px 12px no-repeat,linear-gradient(#e2c27e,#e2c27e) 100% 0/12px 1.5px no-repeat,linear-gradient(#e2c27e,#e2c27e) 100% 0/1.5px 12px no-repeat,linear-gradient(#e2c27e,#e2c27e) 0 100%/12px 1.5px no-repeat,linear-gradient(#e2c27e,#e2c27e) 0 100%/1.5px 12px no-repeat,linear-gradient(#e2c27e,#e2c27e) 100% 100%/12px 1.5px no-repeat,linear-gradient(#e2c27e,#e2c27e) 100% 100%/1.5px 12px no-repeat;
 animation:verschijn 1.2s ease both;animation-delay:var(--d)}
 .lijn.dicht{border-color:rgba(201,163,92,.28)}
+.bordje::before{content:'';position:absolute;inset:-10px -8px}
 .lijn::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,rgba(255,230,180,0) 40%,rgba(255,232,186,.38) 50%,rgba(255,230,180,0) 60%);background-size:260% 100%;animation:glans 2s ease-out 1 both;animation-delay:calc(var(--d) + .4s)}
 .sheet{transition:transform .55s cubic-bezier(.2,.8,.2,1)}
 @media (prefers-reduced-motion: reduce){.flame,.flame2,.haze,.lijn,.lijn::after{animation:none}.sheet{transition:none}}
@@ -61,7 +62,7 @@ animation:verschijn 1.2s ease both;animation-delay:var(--d)}
 </sc-if>
 
 <sc-for list="{{plekken}}" as="b" hint-placeholder-count="4">
-<button type="button" onClick="{{b.pick}}" onPointerDown="{{b.pakBordje}}" style="{{b.bordjeStyle}}">
+<button type="button" class="bordje" onClick="{{b.pick}}" onPointerDown="{{b.pakBordje}}" style="{{b.bordjeStyle}}">
 <sc-if value="{{b.dicht}}" hint-placeholder-val="{{ false }}">
 <span style="flex: none; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #a82638 0%, #5a0f1c 72%); box-shadow: 0 1px 2px rgba(0,0,0,0.7), inset 0 0 0 1px rgba(40,4,10,0.6)"></span>
 </sc-if>
@@ -172,6 +173,9 @@ animation:verschijn 1.2s ease both;animation-delay:var(--d)}
 // ── ACHTERGROND ──
 // Vervang FOTO door een nieuwe foyerfoto; FOTO_VERHOUDING = breedte / hoogte van die foto.
 var FOTO_VERHOUDING = 1536 / 2720;
+// Hoe groot de messing bordjes zijn ten opzichte van het oorspronkelijke ontwerp (1 = zoals eerst).
+// Live schalen ze daarnaast mee met de foto (--villa-foto, uit live.js).
+var BORDJE = 0.85;
 
 // ── RUIMTES VAN DE VILLA ──
 // vlak   = het object in de foto (l/t = linksboven, b/h = breedte/hoogte), in % van de foto.
@@ -230,14 +234,15 @@ renderVals() {
   var plekken = RUIMTES.map(function (r, i) {
     var open = isOpen(r), nieuw = open && !r.altijdOpen, q = pos(r), v = q.vlak, b = q.bordje;
     var verschuif = b.anker === 'links' ? 'translate(0, -50%)' : b.anker === 'rechts' ? 'translate(-100%, -50%)' : 'translate(-50%, -50%)';
+    var oorsprong = b.anker === 'links' ? '0 50%' : b.anker === 'rechts' ? '100% 50%' : '50% 50%';
     return {
       id: r.id, it: r.it, nl: r.nl, dicht: !open,
-      label: open ? (nieuw ? r.nl + ' · nu open' : r.nl) : 'Verzegeld',
+      label: open ? (nieuw ? 'Nu open' : r.nl) : 'Verzegeld',
       status: open ? 'Open' : 'Verzegeld',
       lijnClass: open ? 'lijn' : 'lijn dicht',
       lijnStyle: 'left: ' + v.l + '%; top: ' + v.t + '%; width: ' + v.b + '%; height: ' + v.h + '%; --d: ' + (0.5 + i * 0.35) + 's',
       kaderStyle: 'position: absolute; left: ' + v.l + '%; top: ' + v.t + '%; width: ' + v.b + '%; height: ' + v.h + '%; box-sizing: border-box; border: 2px dashed #f0d494; background: rgba(240,212,148,0.12); cursor: move; touch-action: none',
-      bordjeStyle: 'position: absolute; left: ' + b.x + '%; top: ' + b.y + '%; transform: ' + verschuif + '; display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 6px 12px; box-sizing: border-box; text-align: left; border-radius: 2px; touch-action: ' + (uit ? 'none' : 'manipulation') + '; cursor: ' + (uit ? 'move' : 'pointer') + '; ' +
+      bordjeStyle: 'position: absolute; left: ' + b.x + '%; top: ' + b.y + '%; transform: ' + verschuif + ' scale(var(--villa-foto, 1)) scale(' + BORDJE + '); transform-origin: ' + oorsprong + '; display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 6px 12px; box-sizing: border-box; text-align: left; border-radius: 2px; touch-action: ' + (uit ? 'none' : 'manipulation') + '; cursor: ' + (uit ? 'move' : 'pointer') + '; ' +
         (uit ? 'outline: 2px dashed #f0d494; outline-offset: 2px; ' : '') +
         (nieuw ? 'border: 1px solid rgba(232,200,130,0.95); background: linear-gradient(180deg, rgba(110,20,36,0.94) 0%, rgba(60,10,20,0.94) 100%); box-shadow: 0 6px 18px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,220,170,0.2)'
                : 'border: 1px solid rgba(201,163,92,0.7); background: linear-gradient(180deg, rgba(52,34,20,0.93) 0%, rgba(24,14,9,0.93) 100%); box-shadow: 0 6px 16px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,220,170,0.18)'),

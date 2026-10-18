@@ -203,7 +203,12 @@
       if (!h) return;
       s = Math.min(vw / w, vh / h); x = (vw - w * s) / 2; y = (vh - h * s) / 2;
     }
-    if (tel) hoogte(bord, h);
+    if (tel) {
+      hoogte(bord, h);
+      // Hoe groot de foto van een kamer nu is ten opzichte van het ontwerp: bordjes op de foto schalen daarmee mee.
+      var foto = (Math.max(h, 691) / 844).toFixed(4);
+      if (root.style.getPropertyValue('--villa-foto') !== foto) root.style.setProperty('--villa-foto', foto);
+    }
     var sleutel = [w, h, s.toFixed(4), x.toFixed(1), y.toFixed(1)].join('|');
     if (sleutel === vorige) return;
     vorige = sleutel; vorigeBreedte = vw;

@@ -128,11 +128,11 @@ with sync_playwright() as p:
 
     # ── deuren ──
     regia.get_by_role('button', name='Open de deur').first.click()
-    check(wacht_op(lambda: all(s.get_by_text('Het geheime archief · nu open').is_visible() for s in spelers)), 'archief gaat open op alle drie de telefoons')
+    check(wacht_op(lambda: all(s.get_by_role('button', name="L'Archivio Nu open").is_visible() for s in spelers)), 'archief gaat open op alle drie de telefoons')
     regia.screenshot(path=str(UIT / 'regia-3-avond.png'), full_page=False)
     spelers[0].screenshot(path=str(UIT / 'speler-3-archief-open.png'))
     regia.get_by_role('button', name='Sluit', exact=True).first.click()
-    check(wacht_op(lambda: all(not s.get_by_text('Het geheime archief · nu open').is_visible() for s in spelers)), 'archief gaat weer dicht op alle telefoons')
+    check(wacht_op(lambda: all(not s.get_by_role('button', name="L'Archivio Nu open").is_visible() for s in spelers)), 'archief gaat weer dicht op alle telefoons')
 
     # ── de fase van de avond ──
     check(wacht_op(lambda: tv.get_by_text('Het archief', exact=True).is_visible()), 'archief openen zette de tv op fase IV, L’Archivio')
@@ -146,7 +146,7 @@ with sync_playwright() as p:
 
     # ── het archief: de zes op één telefoon, de zaal kijkt mee op de tv ──
     regia.get_by_role('button', name='Open de deur').first.click()
-    check(wacht_op(lambda: spelers[0].get_by_text('Het geheime archief · nu open').is_visible()), 'archief weer open')
+    check(wacht_op(lambda: spelers[0].get_by_role('button', name="L'Archivio Nu open").is_visible()), 'archief weer open')
     a = spelers[0]   # Don Alessandro, familiehoofd
     a.goto(BASIS + '/Archivio.dc.html')
     naar_bureau = a.get_by_role('button', name='Loop naar het bureau van Don Vittorio')
@@ -220,7 +220,7 @@ with sync_playwright() as p:
     regia.context.set_offline(False)
     check(wacht_op(lambda: not regia.get_by_text('Geen verbinding met de villa.', exact=False).is_visible(), 15), 'regia herstelt de verbinding vanzelf')
     regia.get_by_role('button', name='Open de deur').first.click()
-    check(wacht_op(lambda: spelers[1].get_by_text('Het geheime archief · nu open').is_visible()), 'na herstel werkt de deurknop weer')
+    check(wacht_op(lambda: spelers[1].get_by_role('button', name="L'Archivio Nu open").is_visible()), 'na herstel werkt de deurknop weer')
     regia.get_by_role('button', name='Sluit', exact=True).first.click()
 
     # ── tv herladen: geen nieuwe koppeling nodig ──
@@ -283,7 +283,7 @@ with sync_playwright() as p:
     check(wacht_op(lambda: tv_fase() == 'benvenuto' and 'Villa Bellandi' in tv.inner_text('body') and 'cassetto' not in tv.inner_text('body').lower()),
           'de tv staat weer op fase I: Benvenuti a Villa Bellandi, geen lades meer')
     check(tv.evaluate('window.Villa.staat.archief.open.every(o => !o) && window.Villa.staat.archief.tips.every(t => !t)'), 'de tv: lades dicht, geen hint')
-    check(wacht_op(lambda: all(not s.get_by_text('Het geheime archief · nu open').is_visible() for s in spelers)), 'het archief is weer dicht op de telefoons')
+    check(wacht_op(lambda: all(not s.get_by_role('button', name="L'Archivio Nu open").is_visible() for s in spelers)), 'het archief is weer dicht op de telefoons')
     check(regia.get_by_text('Tv gekoppeld').is_visible(), 'de tv blijft gekoppeld')
     check('3' in regia.locator('text=van 15').first.locator('..').inner_text(), 'de spelers blijven ingelogd (3 van 15 binnen)')
     check(wacht_op(lambda: not regia.get_by_text('Alles staat weer op het begin.').is_visible(), 10), 'de melding verdwijnt vanzelf')
